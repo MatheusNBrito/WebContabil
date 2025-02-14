@@ -7,6 +7,7 @@ const router = express.Router();
 const fs = require("fs");
 const Notification = require("./models/Notification");
 const { checkRole } = require("./middleware/auth");
+const bcrypt = require("bcryptjs");
 
 
 console.log("✅ Arquivo routes.js foi carregado!");
@@ -34,25 +35,22 @@ router.post("/login", async (req, res) => {
     try {
         const { email, password } = req.body;
 
-        // Buscar usuário pelo email e senha
-        const user = await User.findOne({ email, password });
-
+        // Verificar se o usuário existe
+        const user = await User.findOne({ email });
         if (!user) {
-            return res.status(400).json({ error: "Email ou senha incorretos" });
+            return res.status(401).json({ error: "E-mail ou senha incorretos!" });
         }
 
-        return res.json({ 
-            message: "✅ Login bem-sucedido!", 
-            user: {
-                id: user._id,
-                name: user.name,
-                email: user.email,
-                role: user.role // 🔹 Agora retorna a role
-            }
-        });
+        // Comparar senha fornecida com a senha criptografada no banco
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (!isMatch) {
+            return res.status(401).json({ error: "E-mail ou senha incorretos!" });
+        }
+
+        return res.json({ message: "✅ Login bem-sucedido!", user });
     } catch (error) {
-        console.error("❌ Erro no login:", error);
-        return res.status(500).json({ error: "Erro ao fazer login" });
+        console.error("❌ Erro ao fazer login:", error);
+        return res.status(500).json({ error: "Erro ao fazer login." });
     }
 });
 
