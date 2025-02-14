@@ -1,9 +1,10 @@
 const express = require("express");
 const User = require("./models/User").default || require("./models/User");
 const mongoose = require("mongoose"); // 🔹 Certifique-se de importar o mongoose
-
+const upload = require("./config/multer"); // 🔹 Certifique-se de importar o multer corretamente
+const File = require("./models/File");
 const router = express.Router();
-
+const fs = require("fs");
 const { checkRole } = require("./middleware/auth");
 
 
@@ -100,7 +101,7 @@ router.get("/admin/users", checkRole("admin"), async (req, res) => {
     }
 });
 
-const File = require("./models/File");
+
 
 // 🔹 Clientes só podem ver os próprios arquivos
 router.get("/files", checkRole("client"), async (req, res) => {
@@ -125,6 +126,109 @@ router.get("/admin/files", checkRole("admin"), async (req, res) => {
     } catch (error) {
         console.error("❌ Erro ao buscar arquivos:", error);
         return res.status(500).json({ error: "Erro ao buscar arquivos." });
+    }
+});
+
+// 🔹 Rota para upload de arquivos (clientes podem enviar arquivos)
+router.post("/upload", upload.single("file"), async (req, res) => {
+    console.log("📢 Rota /upload foi chamada!");
+
+    try {
+        // 🔹 Pegando userId de forma correta
+        const userId = req.body.userId;
+
+        if (!userId) {
+            return res.status(401).json({ error: "Usuário não autenticado." });
+        }
+
+        const user = await User.findById(userId);
+
+        if (!user) {
+            return res.status(404).json({ error: "Usuário não encontrado." });
+        }
+
+        // 🔹 Pegando informações do arquivo
+        const { originalname, filename, path, mimetype, size } = req.file;
+
+        // Criar o registro no banco de dados
+        const file = await File.create({
+            filename: originalname,
+            path,
+            mimetype,
+            size,
+            uploadedBy: userId
+        });
+
+        return res.json({ message: "✅ Arquivo enviado com sucesso!", file });
+    } catch (error) {
+        console.error("❌ Erro no upload:", error);
+        return res.status(500).json({ error: "Erro ao enviar arquivo" });
+    }
+});
+
+// 🔹 Rota para administradores enviarem arquivos para clientes
+router.post("/admin/upload", upload.single("file"), async (req, res) => {
+    console.log("📢 Rota /admin/upload foi chamada!");
+    console.log("🔍 Dados recebidos:", req.body); // Log dos dados recebidos
+
+    try {
+        const { clientId, userId } = req.body; // Pegando os IDs do body
+
+        if (!clientId) {
+            return res.status(400).json({ error: "O ID do cliente é obrigatório." });
+        }
+
+        if (!userId) {
+            return res.status(400).json({ error: "O ID do administrador é obrigatório." });
+        }
+
+        const client = await User.findById(clientId);
+        if (!client) {
+            return res.status(404).json({ error: "Cliente não encontrado." });
+        }
+
+        const { originalname, filename, path, mimetype, size } = req.file;
+
+        // Criar o registro do arquivo no banco de dados
+        const file = await File.create({
+            filename: originalname,
+            path,
+            mimetype,
+            size,
+            uploadedBy: userId, // ID do admin que enviou
+            assignedTo: clientId // Cliente que receberá o arquivo
+        });
+
+        return res.json({ message: "✅ Arquivo enviado para o cliente!", file });
+    } catch (error) {
+        console.error("❌ Erro no upload pelo admin:", error);
+        return res.status(500).json({ error: "Erro ao enviar arquivo." });
+    }
+});
+
+// 🔹 Rota para download de arquivos pelo cliente
+router.get("/files/download/:fileId", async (req, res) => {
+    console.log(`📢 Rota /files/download/${req.params.fileId} foi chamada!`);
+
+    try {
+        const { fileId } = req.params;
+        const file = await File.findById(fileId);
+
+        if (!file) {
+            return res.status(404).json({ error: "Arquivo não encontrado." });
+        }
+
+        const filePath = file.path;
+
+        if (!fs.existsSync(filePath)) {
+            return res.status(404).json({ error: "O arquivo não foi encontrado no servidor." });
+        }
+
+        console.log("📂 Iniciando download:", filePath);
+        return res.download(filePath, file.filename);
+    } catch (error) {
+        console.error("❌ Erro ao tentar baixar arquivo:", error);
+        return res.status(500).json({ error: "Erro ao baixar arquivo." });
     }
 });
 
