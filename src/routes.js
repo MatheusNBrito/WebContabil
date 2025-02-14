@@ -5,15 +5,11 @@ const upload = require("./config/multer"); // 🔹 Certifique-se de importar o m
 const File = require("./models/File");
 const router = express.Router();
 const fs = require("fs");
+const Notification = require("./models/Notification");
 const { checkRole } = require("./middleware/auth");
 
 
 console.log("✅ Arquivo routes.js foi carregado!");
-
-// Testar se o modelo User está funcionando
-// User.find()
-//     .then(users => console.log("🔍 Teste do User.find():", users))
-//     .catch(err => console.error("❌ Erro no User.find():", err));
 
 // 🔹 Rota de Cadastro
 router.post("/register", async (req, res) => {
@@ -101,8 +97,6 @@ router.get("/admin/users", checkRole("admin"), async (req, res) => {
     }
 });
 
-
-
 // 🔹 Clientes só podem ver os próprios arquivos
 router.get("/files", checkRole("client"), async (req, res) => {
     console.log(`📢 Rota /files foi chamada pelo usuário ${req.user._id}`);
@@ -169,10 +163,9 @@ router.post("/upload", upload.single("file"), async (req, res) => {
 // 🔹 Rota para administradores enviarem arquivos para clientes
 router.post("/admin/upload", upload.single("file"), async (req, res) => {
     console.log("📢 Rota /admin/upload foi chamada!");
-    console.log("🔍 Dados recebidos:", req.body); // Log dos dados recebidos
 
     try {
-        const { clientId, userId } = req.body; // Pegando os IDs do body
+        const { clientId, userId } = req.body;
 
         if (!clientId) {
             return res.status(400).json({ error: "O ID do cliente é obrigatório." });
@@ -182,26 +175,29 @@ router.post("/admin/upload", upload.single("file"), async (req, res) => {
             return res.status(400).json({ error: "O ID do administrador é obrigatório." });
         }
 
-        const client = await User.findById(clientId);
-        if (!client) {
-            return res.status(404).json({ error: "Cliente não encontrado." });
-        }
-
-        const { originalname, filename, path, mimetype, size } = req.file;
-
-        // Criar o registro do arquivo no banco de dados
-        const file = await File.create({
-            filename: originalname,
-            path,
-            mimetype,
-            size,
+        const file = new File({
+            filename: req.file.filename,
+            path: req.file.path,
+            mimetype: req.file.mimetype,
+            size: req.file.size,
             uploadedBy: userId, // ID do admin que enviou
-            assignedTo: clientId // Cliente que receberá o arquivo
+            assignedTo: clientId, // Cliente que recebeu
         });
 
-        return res.json({ message: "✅ Arquivo enviado para o cliente!", file });
+        await file.save();
+
+        // 🔹 Criar a notificação no banco de dados
+        const notification = new Notification({
+            message: `Você recebeu um novo arquivo: ${req.file.filename}`,
+            user: clientId,
+        });
+
+        await notification.save();
+
+        console.log("🔔 Notificação enviada para o cliente:", clientId);
+        return res.json({ message: "✅ Arquivo enviado e notificação criada!", file });
     } catch (error) {
-        console.error("❌ Erro no upload pelo admin:", error);
+        console.error("❌ Erro ao enviar arquivo:", error);
         return res.status(500).json({ error: "Erro ao enviar arquivo." });
     }
 });
@@ -229,6 +225,39 @@ router.get("/files/download/:fileId", async (req, res) => {
     } catch (error) {
         console.error("❌ Erro ao tentar baixar arquivo:", error);
         return res.status(500).json({ error: "Erro ao baixar arquivo." });
+    }
+});
+
+router.get("/notifications", checkRole("client"), async (req, res) => {
+    console.log(`📢 Rota /notifications chamada pelo usuário ${req.user._id}`);
+
+    try {
+        const notifications = await Notification.find({ user: req.user._id, read: false }).sort({ createdAt: -1 });
+
+        return res.json({ notifications });
+    } catch (error) {
+        console.error("❌ Erro ao buscar notificações:", error);
+        return res.status(500).json({ error: "Erro ao buscar notificações." });
+    }
+});
+
+router.get("/notifications/:userId", async (req, res) => {
+    console.log(`📢 Rota /notifications/${req.params.userId} foi chamada!`);
+
+    try {
+        const { userId } = req.params;
+
+        if (!userId) {
+            return res.status(400).json({ error: "O ID do usuário é obrigatório." });
+        }
+
+        // 🔹 Buscar todas as notificações do usuário
+        const notifications = await Notification.find({ user: userId, read: false }).sort({ createdAt: -1 });
+
+        return res.json({ notifications });
+    } catch (error) {
+        console.error("❌ Erro ao buscar notificações:", error);
+        return res.status(500).json({ error: "Erro ao buscar notificações." });
     }
 });
 
