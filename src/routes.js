@@ -4,6 +4,9 @@ const mongoose = require("mongoose"); // 🔹 Certifique-se de importar o mongoo
 
 const router = express.Router();
 
+const { checkRole } = require("./middleware/auth");
+
+
 console.log("✅ Arquivo routes.js foi carregado!");
 
 // Testar se o modelo User está funcionando
@@ -81,6 +84,47 @@ router.post("/admin/register", async (req, res) => {
     } catch (error) {
         console.error("❌ Erro ao criar administrador:", error);
         return res.status(500).json({ error: "Erro ao criar administrador" });
+    }
+});
+
+// 🔹 Apenas administradores podem listar todos os usuários
+router.get("/admin/users", checkRole("admin"), async (req, res) => {
+    console.log("📢 Rota /admin/users foi chamada!");
+
+    try {
+        const users = await User.find({}, "-password"); // 🔹 Não retorna a senha dos usuários
+        return res.json({ users });
+    } catch (error) {
+        console.error("❌ Erro ao buscar usuários:", error);
+        return res.status(500).json({ error: "Erro ao buscar usuários." });
+    }
+});
+
+const File = require("./models/File");
+
+// 🔹 Clientes só podem ver os próprios arquivos
+router.get("/files", checkRole("client"), async (req, res) => {
+    console.log(`📢 Rota /files foi chamada pelo usuário ${req.user._id}`);
+
+    try {
+        const files = await File.find({ uploadedBy: req.user._id });
+        return res.json({ files });
+    } catch (error) {
+        console.error("❌ Erro ao buscar arquivos:", error);
+        return res.status(500).json({ error: "Erro ao buscar arquivos." });
+    }
+});
+
+// 🔹 Apenas administradores podem ver TODOS os arquivos
+router.get("/admin/files", checkRole("admin"), async (req, res) => {
+    console.log("📢 Rota /admin/files foi chamada!");
+
+    try {
+        const files = await File.find().populate("uploadedBy", "name email");
+        return res.json({ files });
+    } catch (error) {
+        console.error("❌ Erro ao buscar arquivos:", error);
+        return res.status(500).json({ error: "Erro ao buscar arquivos." });
     }
 });
 
