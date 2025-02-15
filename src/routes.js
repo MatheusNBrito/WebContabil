@@ -259,4 +259,43 @@ router.get("/notifications/:userId", async (req, res) => {
     }
 });
 
+router.delete("/files/:fileId", async (req, res) => {
+    console.log(`📢 Rota /files/${req.params.fileId} foi chamada!`);
+
+    try {
+        const { fileId } = req.params;
+        const { userId } = req.body; // Pegamos o ID do usuário enviado no body
+
+        if (!userId) {
+            return res.status(400).json({ error: "O ID do usuário é obrigatório." });
+        }
+
+        // 🔹 Buscar o arquivo no banco de dados
+        const file = await File.findById(fileId);
+        if (!file) {
+            return res.status(404).json({ error: "Arquivo não encontrado." });
+        }
+
+        // 🔹 Permitir exclusão apenas para quem enviou o arquivo
+        if (file.uploadedBy.toString() !== userId) {
+            return res.status(403).json({ error: "Você não tem permissão para excluir este arquivo." });
+        }
+
+        // 🔹 Remover o arquivo do servidor
+        const filePath = file.path;
+        if (fs.existsSync(filePath)) {
+            fs.unlinkSync(filePath);
+            console.log("📂 Arquivo deletado do servidor:", filePath);
+        }
+
+        // 🔹 Remover o arquivo do banco de dados
+        await File.findByIdAndDelete(fileId);
+
+        return res.json({ message: "✅ Arquivo excluído com sucesso!" });
+    } catch (error) {
+        console.error("❌ Erro ao excluir arquivo:", error);
+        return res.status(500).json({ error: "Erro ao excluir arquivo." });
+    }
+});
+
 module.exports = router;
