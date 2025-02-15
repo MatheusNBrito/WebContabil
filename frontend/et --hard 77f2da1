@@ -1,0 +1,4 @@
+[33mcf79909[m[33m ([m[1;36mHEAD[m[33m, [m[1;31morigin/main[m[33m)[m HEAD@{0}: pull origin main --rebase (start): checkout cf799095d50e9836e5501d7f4cdc9554ecb710dc
+[33m77f2da1[m[33m ([m[1;32mmain[m[33m)[m HEAD@{1}: Branch: renamed refs/heads/master to refs/heads/main
+[33m77f2da1[m[33m ([m[1;32mmain[m[33m)[m HEAD@{3}: commit: front
+[33ma34ac86[m HEAD@{4}: commit (initial): Initialize project using Create React App
