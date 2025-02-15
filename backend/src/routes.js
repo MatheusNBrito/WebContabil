@@ -9,7 +9,6 @@ const Notification = require("./models/Notification");
 const { checkRole } = require("./middleware/auth");
 const bcrypt = require("bcryptjs");
 
-
 console.log("✅ Arquivo routes.js foi carregado!");
 
 // 🔹 Rota de Cadastro
