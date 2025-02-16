@@ -8,17 +8,28 @@
 }
 
 body {
-  font-family: Arial, sans-serif;
-  background-color: var(--dark-gray);
+  font-family: "Poppins", sans-serif;
   color: white;
   margin: 0;
   padding: 0;
+  background-image: url('../../assets/background3.jpg'); 
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 /* Estrutura */
 .container {
-  max-width: 1200px;
-  margin: 0 auto;
+  width: 90%;
+  max-width: 1100px;
+  text-align: center;
+  backdrop-filter: blur(8px);
+  border-radius: 15px;
   padding: 20px;
 }
 
@@ -27,14 +38,18 @@ header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: var(--medium-gray);
-  padding: 15px 30px;
-  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.4);
+  padding: 12px 25px;
+  border-radius: 12px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
+  margin-bottom: 10px; /* 🔹 Adicionado espaçamento entre header e main */
 }
 
 header h1 {
-  font-size: 24px;
+  font-size: 20px;
   margin: 0;
+  color: var(--soft-green);
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7);
 }
 
 nav a {
@@ -42,10 +57,12 @@ nav a {
   text-decoration: none;
   margin-left: 20px;
   font-weight: bold;
+  transition: all 0.3s ease;
 }
 
 nav a:hover {
   color: var(--soft-green);
+  transform: scale(1.1);
 }
 
 .client-area {
@@ -57,36 +74,62 @@ nav a:hover {
 main {
   text-align: center;
   padding: 50px 20px;
-  background: var(--light-gray);
+  background: rgba(0, 0, 0, 0.25); /* Fundo transparente */
   border-radius: 10px;
-  margin-top: 20px;
+  animation: fadeIn 1s ease-in-out;
 }
 
 h2 {
-  font-size: 32px;
-  color: var(--deep-green);
+  font-size: 38px;
+  font-weight: bold;
+  color: var(--soft-green);
+  text-shadow: 3px 3px 8px rgba(0, 0, 0, 0.8);
+  margin-bottom: 10px;
+}
+
+p {
+  font-size: 18px;
+  color: white;
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.6);
 }
 
 .btn {
   background-color: var(--soft-green);
   color: var(--dark-gray);
-  padding: 10px 20px;
+  padding: 12px 24px;
   font-size: 18px;
   border: none;
-  border-radius: 5px;
+  border-radius: 6px;
   cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
 }
 
 .btn:hover {
   background-color: var(--deep-green);
   color: white;
+  transform: scale(1.05);
 }
 
-/* Rodapé */
+/* Rodapé menor e discreto */
 footer {
   text-align: center;
-  padding: 20px;
-  margin-top: 20px;
-  background: var(--medium-gray);
-  border-radius: 10px;
+  padding: 5px;
+  font-size: 10px;
+  margin-top: 10px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 5px;
+  color: var(--light-gray);
+}
+
+/* Animação de entrada */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

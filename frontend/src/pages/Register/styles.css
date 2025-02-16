@@ -1,0 +1,124 @@
+/* Paleta de cores */
+:root {
+  --dark-gray: #2C302E;
+  --medium-gray: #474A48;
+  --light-gray: #909590;
+  --soft-green: #9AE19D;
+  --deep-green: #537A5A;
+}
+
+.register-container {
+  font-family: "Poppins", sans-serif;
+  color: white;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-image: url('../../assets/background3.jpg');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+}
+
+/* Cabeçalho */
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  max-width: 900px;
+  padding: 15px 30px;
+  background: rgba(0, 0, 0, 0.6);
+  border-radius: 12px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+header h1 {
+  font-size: 24px;
+  margin: 0;
+  color: var(--soft-green);
+}
+
+nav a {
+  color: white;
+  text-decoration: none;
+  margin-left: 20px;
+  font-weight: bold;
+  transition: all 0.3s ease;
+}
+
+nav a:hover {
+  color: var(--soft-green);
+  transform: scale(1.1);
+}
+
+/* Formulário */
+.register-box {
+  background: rgba(0, 0, 0, 0.7);
+  padding: 30px;
+  border-radius: 12px;
+  text-align: center;
+  width: 90%;
+  max-width: 400px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
+}
+
+.register-box h2 {
+  font-size: 28px;
+  color: var(--soft-green);
+  margin-bottom: 20px;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+input {
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  padding: 12px;
+  margin-bottom: 12px;
+  border-radius: 6px;
+  color: white;
+  font-size: 16px;
+}
+
+input::placeholder {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+button {
+  background-color: var(--soft-green);
+  color: var(--dark-gray);
+  padding: 12px;
+  font-size: 18px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: bold;
+}
+
+button:hover {
+  background-color: var(--deep-green);
+  color: white;
+  transform: scale(1.05);
+}
+
+/* Link para login */
+p {
+  margin-top: 15px;
+  font-size: 14px;
+}
+
+p a {
+  color: var(--soft-green);
+  text-decoration: none;
+  font-weight: bold;
+}
+
+p a:hover {
+  text-decoration: underline;
+}
