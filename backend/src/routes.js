@@ -16,12 +16,22 @@ router.post("/register", async (req, res) => {
     console.log("📢 Rota /register foi chamada!");
 
     try {
-        const { name, email, password } = req.body; // 🔹 Removemos `role`
+        const { name, email, password } = req.body;
 
-        // Criar usuário no banco de dados como CLIENTE
-        const user = await User.create({ name, email, password, role: "client" });
+        // 🔹 Verifica se o usuário já existe
+        const userExists = await User.findOne({ email });
+        if (userExists) {
+            return res.status(400).json({ error: "E-mail já cadastrado!" });
+        }
 
-        return res.json({ message: "✅ Usuário cadastrado com sucesso!", user });
+        // 🔹 Criptografar a senha antes de salvar
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(password, salt);
+
+        // 🔹 Criar usuário no banco de dados com a senha criptografada
+        const user = await User.create({ name, email, password: hashedPassword, role: "client" });
+
+        return res.status(201).json({ message: "✅ Usuário cadastrado com sucesso!", user });
     } catch (error) {
         console.error("❌ Erro ao registrar usuário:", error);
         return res.status(500).json({ error: "Erro ao registrar usuário" });
