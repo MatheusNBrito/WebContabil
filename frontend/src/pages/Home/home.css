@@ -12,114 +12,140 @@ body {
   color: white;
   margin: 0;
   padding: 0;
-  background-image: url('../../assets/background3.jpg'); 
+  background-image: url('../../assets/background3.jpg');
   background-size: cover;
   background-position: center;
   background-attachment: fixed;
-  height: 100vh;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
 }
 
-/* Estrutura */
-.container {
-  width: 90%;
-  max-width: 1100px;
+/* Estrutura Principal */
+.home-container {
+  width: 100%;
+  max-width: 900px;
   text-align: center;
   backdrop-filter: blur(8px);
   border-radius: 15px;
   padding: 20px;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center; /* 🔹 Mantém tudo centralizado */
 }
 
 /* Cabeçalho */
-header {
+.home-header {
+  width: 90%;
+  max-width: 900px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: rgba(0, 0, 0, 0.4);
-  padding: 12px 25px;
+  background: rgba(0, 0, 0, 0.6);
+  padding: 15px 30px;
   border-radius: 12px;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
-  margin-bottom: 10px; /* 🔹 Adicionado espaçamento entre header e main */
+  margin-bottom: 20px; /* 🔹 Espaço maior para separar do conteúdo */
 }
 
-header h1 {
-  font-size: 20px;
+.home-header-title {
+  font-size: 24px;
   margin: 0;
   color: var(--soft-green);
   text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7);
 }
 
-nav a {
+.home-nav {
+  display: flex;
+  gap: 20px; /* 🔹 Melhor espaçamento entre os links */
+}
+
+.home-nav a {
   color: white;
   text-decoration: none;
-  margin-left: 20px;
   font-weight: bold;
   transition: all 0.3s ease;
 }
 
-nav a:hover {
+.home-nav a:hover {
   color: var(--soft-green);
   transform: scale(1.1);
 }
 
-.client-area {
+.home-client-area {
   color: var(--soft-green);
   font-weight: bold;
 }
 
 /* Corpo Principal */
-main {
+.home-main {
   text-align: center;
-  padding: 50px 20px;
-  background: rgba(0, 0, 0, 0.25); /* Fundo transparente */
-  border-radius: 10px;
+  padding: 40px;
+  background: rgba(0, 0, 0, 0.4); /* 🔹 Fundo mais escuro para contraste */
+  border-radius: 15px;
   animation: fadeIn 1s ease-in-out;
+  width: 90%;
+  max-width: 900px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center; /* 🔹 Centraliza todos os elementos */
 }
 
-h2 {
+.home-title {
   font-size: 38px;
   font-weight: bold;
   color: var(--soft-green);
   text-shadow: 3px 3px 8px rgba(0, 0, 0, 0.8);
-  margin-bottom: 10px;
+  margin-bottom: 20px;
 }
 
-p {
+.home-description {
   font-size: 18px;
   color: white;
   text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.6);
+  margin-bottom: 20px;
 }
 
-.btn {
+.home-btn {
   background-color: var(--soft-green);
   color: var(--dark-gray);
-  padding: 12px 24px;
-  font-size: 18px;
+  padding: 10px 20px; /* 🔹 Reduzi o padding para diminuir o tamanho */
+  font-size: 16px; /* 🔹 Tamanho da fonte um pouco menor */
+  width: auto; /* 🔹 Define um tamanho adequado ao conteúdo */
+  min-width: 150px; /* 🔹 Largura mínima para evitar distorção */
+  max-width: 200px; /* 🔹 Máximo que o botão pode crescer */
   border: none;
-  border-radius: 6px;
+  border-radius: 6px; /* 🔹 Cantos arredondados suaves */
   cursor: pointer;
   transition: all 0.3s ease;
   box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center; /* 🔹 Centraliza o texto dentro do botão */
+  align-items: center;
 }
 
-.btn:hover {
+.home-btn:hover {
   background-color: var(--deep-green);
   color: white;
   transform: scale(1.05);
 }
 
 /* Rodapé menor e discreto */
-footer {
+.home-footer {
+  width: 100%;
+  max-width: 900px;
   text-align: center;
-  padding: 5px;
-  font-size: 10px;
-  margin-top: 10px;
+  padding: 10px;
+  font-size: 12px;
+  margin-top: auto;
   background: rgba(0, 0, 0, 0.3);
   border-radius: 5px;
   color: var(--light-gray);
+  margin-top: 15px; /* 🔹 Melhor espaçamento */
 }
 
 /* Animação de entrada */
