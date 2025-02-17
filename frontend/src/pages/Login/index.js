@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import api from "../../api"; // Configuração do Axios
+import api from "../../api"; 
 import "./login.css";
 
 export default function Login() {
@@ -8,9 +8,8 @@ export default function Login() {
     email: "",
     password: "",
   });
-
-  const [error, setError] = useState(""); // Estado para erro no login
-  const navigate = useNavigate(); // Para redirecionamento
+  const [error, setError] = useState(""); 
+  const navigate = useNavigate(); 
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -18,14 +17,14 @@ export default function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError(""); // Limpa erros anteriores
+    setError(""); 
 
     try {
       const response = await api.post("/login", formData);
       console.log("✅ Login realizado com sucesso!", response.data);
 
       alert("✅ Login realizado com sucesso!");
-      navigate("/dashboard"); // Redireciona após sucesso
+      navigate("/dashboard"); 
     } catch (error) {
       console.error("❌ Erro no login:", error);
       setError(error.response?.data?.error || "Erro ao fazer login.");
@@ -35,7 +34,7 @@ export default function Login() {
   return (
     <div className="login-container">
       <header className="login-header">
-        <h1 className="login-title">Login</h1>
+        <h1>Login</h1>
         <nav className="login-nav">
           <Link to="/">Home</Link>
           <Link to="/register">Cadastre-se</Link>
@@ -43,33 +42,30 @@ export default function Login() {
       </header>
 
       <main className="login-box">
-        <h2 className="login-heading">Entre na sua conta</h2>
-
-        {error && <p className="login-error">{error}</p>}
-
-        <form onSubmit={handleSubmit} className="login-form">
+        <h2>Entre na sua conta</h2>
+        {error && <p className="error-message">{error}</p>}
+        <form onSubmit={handleSubmit}>
           <input
             type="email"
             name="email"
-            className="login-input"
             placeholder="E-mail"
             value={formData.email}
             onChange={handleChange}
             required
+            className="login-input"
           />
           <input
             type="password"
             name="password"
-            className="login-input"
             placeholder="Senha"
             value={formData.password}
             onChange={handleChange}
             required
+            className="login-input"
           />
           <button type="submit" className="login-btn">Entrar</button>
         </form>
-
-        <p className="login-register-link">
+        <p className="login-footer">
           Não tem uma conta? <Link to="/register">Cadastre-se</Link>
         </p>
       </main>

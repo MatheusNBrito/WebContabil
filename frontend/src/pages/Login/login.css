@@ -7,101 +7,110 @@
   --deep-green: #537A5A;
 }
 
-/* Container Principal */
-.login-container {
+/* Corpo */
+body {
   font-family: "Poppins", sans-serif;
   color: white;
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  margin: 0;
+  padding: 0;
   background-image: url('../../assets/background3.jpg');
   background-size: cover;
   background-position: center;
   background-attachment: fixed;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+/* Container Principal */
+.login-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 400px;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(10px);
+  border-radius: 12px;
+  padding: 30px 45px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
 }
 
 /* Cabeçalho */
 .login-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-  max-width: 900px;
-  padding: 15px 30px;
-  background: rgba(0, 0, 0, 0.6);
-  border-radius: 12px;
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
-  margin-bottom: 20px;
+  text-align: center;
+  margin-bottom: 15px;
 }
 
-.login-title {
-  font-size: 24px;
-  margin: 0;
+.login-header h1 {
+  font-size: 26px;
   color: var(--soft-green);
+  margin-bottom: 25px;
+}
+
+/* Navegação */
+.login-nav {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-bottom: 20px;
 }
 
 .login-nav a {
   color: white;
   text-decoration: none;
-  margin-left: 20px;
   font-weight: bold;
-  transition: all 0.3s ease;
+  transition: 0.3s ease;
 }
 
 .login-nav a:hover {
   color: var(--soft-green);
-  transform: scale(1.1);
-}
-
-/* Caixa de Login */
-.login-box {
-  background: rgba(0, 0, 0, 0.7);
-  padding: 30px;
-  border-radius: 12px;
-  text-align: center;
-  width: 90%;
-  max-width: 400px;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
-}
-
-.login-heading {
-  font-size: 28px;
-  color: var(--soft-green);
-  margin-bottom: 20px;
 }
 
 /* Formulário */
-.login-form {
-  display: flex;
-  flex-direction: column;
+.login-box {
+  text-align: center;
+  width: 100%;
 }
 
+.login-box h2 {
+  font-size: 22px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+/* Campos de Input */
 .login-input {
-  background: rgba(255, 255, 255, 0.1);
-  border: none;
+  width: 100%;
   padding: 12px;
-  margin-bottom: 12px;
-  border-radius: 6px;
-  color: white;
+  margin-bottom: 15px;
+  border: none;
+  border-radius: 8px;
   font-size: 16px;
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  text-align: left;
 }
 
 .login-input::placeholder {
   color: rgba(255, 255, 255, 0.7);
 }
 
+/* Botão */
 .login-btn {
-  background-color: var(--soft-green);
-  color: var(--dark-gray);
+  width: 50%;
   padding: 12px;
   font-size: 18px;
   border: none;
-  border-radius: 6px;
+  border-radius: 8px;
+  background-color: var(--soft-green);
+  color: var(--dark-gray);
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: 0.3s;
   font-weight: bold;
+  margin-top: 10px;
 }
 
 .login-btn:hover {
@@ -111,24 +120,24 @@
 }
 
 /* Mensagem de Erro */
-.login-error {
+.error-message {
   color: red;
   font-size: 14px;
   margin-bottom: 10px;
 }
 
-/* Link para Registro */
-.login-register-link {
-  margin-top: 15px;
+/* Link para cadastro */
+.login-footer {
+  margin-top: 20px;
   font-size: 14px;
 }
 
-.login-register-link a {
+.login-footer a {
   color: var(--soft-green);
   text-decoration: none;
   font-weight: bold;
 }
 
-.login-register-link a:hover {
+.login-footer a:hover {
   text-decoration: underline;
 }

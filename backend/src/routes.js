@@ -8,6 +8,8 @@ const fs = require("fs");
 const Notification = require("./models/Notification");
 const { checkRole } = require("./middleware/auth");
 const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken"); // Importa o JWT
+const SECRET_KEY = "seu_segredo_super_secreto"; // Defina uma chave segura
 
 console.log("✅ Arquivo routes.js foi carregado!");
 
@@ -56,7 +58,18 @@ router.post("/login", async (req, res) => {
             return res.status(401).json({ error: "E-mail ou senha incorretos!" });
         }
 
-        return res.json({ message: "✅ Login bem-sucedido!", user });
+         // Criar o token JWT
+         const token = jwt.sign(
+            { id: user._id, email: user.email, role: user.role }, // Payload do token
+            SECRET_KEY, // Chave secreta
+            { expiresIn: "1h" } // Tempo de expiração (1 hora)
+        );
+        
+        return res.json({ 
+            message: "✅ Login bem-sucedido!", 
+            user: { id: user._id, name: user.name, email: user.email, role: user.role }, 
+            token 
+        });
     } catch (error) {
         console.error("❌ Erro ao fazer login:", error);
         return res.status(500).json({ error: "Erro ao fazer login." });
