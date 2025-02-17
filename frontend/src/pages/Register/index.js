@@ -50,24 +50,25 @@ export default function Register() {
 
   return (
     <div className="register-container">
-      <header>
-        <h1>Cadastro</h1>
-        <nav>
+      <header className="register-header">
+        <h1 className="register-title">Cadastro</h1>
+        <nav className="register-nav">
           <Link to="/">Home</Link>
           <Link to="/login">Login</Link>
         </nav>
       </header>
 
       <main className="register-box">
-        <h2>Crie sua conta</h2>
+        <h2 className="register-heading">Crie sua conta</h2>
 
-        {errorMessage && <p className="error-message">{errorMessage}</p>}
-        {successMessage && <p className="success-message">{successMessage}</p>}
+        {errorMessage && <p className="register-error">{errorMessage}</p>}
+        {successMessage && <p className="register-success">{successMessage}</p>}
 
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className="register-form">
           <input
             type="text"
             name="name"
+            className="register-input"
             placeholder="Nome Completo"
             value={formData.name}
             onChange={handleChange}
@@ -76,6 +77,7 @@ export default function Register() {
           <input
             type="email"
             name="email"
+            className="register-input"
             placeholder="E-mail"
             value={formData.email}
             onChange={handleChange}
@@ -84,6 +86,7 @@ export default function Register() {
           <input
             type="password"
             name="password"
+            className="register-input"
             placeholder="Senha"
             value={formData.password}
             onChange={handleChange}
@@ -92,14 +95,15 @@ export default function Register() {
           <input
             type="password"
             name="confirmPassword"
+            className="register-input"
             placeholder="Confirme sua Senha"
             value={formData.confirmPassword}
             onChange={handleChange}
             required
           />
-          <button type="submit">Cadastrar</button>
+          <button type="submit" className="register-btn">Cadastrar</button>
         </form>
-        <p>
+        <p className="register-login-link">
           Já tem uma conta? <Link to="/login">Faça login</Link>
         </p>
       </main>
