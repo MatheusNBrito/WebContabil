@@ -8,6 +8,7 @@ export default function Login() {
     email: "",
     password: "",
   });
+
   const [error, setError] = useState(""); // Estado para erro no login
   const navigate = useNavigate(); // Para redirecionamento
 
@@ -33,21 +34,24 @@ export default function Login() {
 
   return (
     <div className="login-container">
-      <header>
-        <h1>Login</h1>
-        <nav>
+      <header className="login-header">
+        <h1 className="login-title">Login</h1>
+        <nav className="login-nav">
           <Link to="/">Home</Link>
           <Link to="/register">Cadastre-se</Link>
         </nav>
       </header>
 
       <main className="login-box">
-        <h2>Entre na sua conta</h2>
-        {error && <p className="error-message">{error}</p>}
-        <form onSubmit={handleSubmit}>
+        <h2 className="login-heading">Entre na sua conta</h2>
+
+        {error && <p className="login-error">{error}</p>}
+
+        <form onSubmit={handleSubmit} className="login-form">
           <input
             type="email"
             name="email"
+            className="login-input"
             placeholder="E-mail"
             value={formData.email}
             onChange={handleChange}
@@ -56,14 +60,18 @@ export default function Login() {
           <input
             type="password"
             name="password"
+            className="login-input"
             placeholder="Senha"
             value={formData.password}
             onChange={handleChange}
             required
           />
-          <button type="submit">Entrar</button>
+          <button type="submit" className="login-btn">Entrar</button>
         </form>
-        <p>Não tem uma conta? <Link to="/register">Cadastre-se</Link></p>
+
+        <p className="login-register-link">
+          Não tem uma conta? <Link to="/register">Cadastre-se</Link>
+        </p>
       </main>
     </div>
   );
