@@ -20,17 +20,17 @@ router.post("/register", async (req, res) => {
     try {
         const { name, email, password } = req.body;
 
-        // 🔹 Verifica se o usuário já existe
-        const userExists = await User.findOne({ email });
-        if (userExists) {
-            return res.status(400).json({ error: "E-mail já cadastrado!" });
-        }
+        // 🔹 Exibir a senha digitada ANTES da criptografia
+        console.log("🔑 Senha recebida:", password);
 
         // 🔹 Criptografar a senha antes de salvar
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
 
-        // 🔹 Criar usuário no banco de dados com a senha criptografada
+        // 🔹 Exibir a senha criptografada
+        console.log("🔐 Senha criptografada antes de salvar no MongoDB:", hashedPassword);
+
+        // Criar usuário no banco de dados com a senha criptografada
         const user = await User.create({ name, email, password: hashedPassword, role: "client" });
 
         return res.status(201).json({ message: "✅ Usuário cadastrado com sucesso!", user });
