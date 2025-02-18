@@ -4,28 +4,62 @@ import axios from "axios";
 import "./dashboard.css";
 
 export default function Dashboard() {
-  const [files, setFiles] = useState([]); // Estado para armazenar arquivos
+  const [files, setFiles] = useState([]);
+  const [selectedFile, setSelectedFile] = useState(null);
+  const token = localStorage.getItem("token");
+  const userId = JSON.parse(localStorage.getItem("user"))?.id;
 
   useEffect(() => {
-    const fetchFiles = async () => {
-      try {
-        const token = localStorage.getItem("token"); // Obtém o token salvo
-        console.log("📌 Token enviado na requisição:", token); // 🔍 Log do token
-
-        const response = await axios.get("http://localhost:3000/files", {
-          headers: { Authorization: `Bearer ${token}` }, // Envia o token no header
-        });
-        
-        console.log("✅ Arquivos recebidos:", response.data.files); // Debug
-
-        setFiles(response.data.files); // Atualiza o estado com os arquivos recebidos
-      } catch (error) {
-        console.error("❌ Erro ao buscar arquivos:", error);
-      }
-    };
-
     fetchFiles();
   }, []);
+
+  const fetchFiles = async () => {
+    try {
+      const response = await axios.get("http://localhost:3000/files", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setFiles(response.data.files);
+    } catch (error) {
+      console.error("❌ Erro ao buscar arquivos:", error);
+    }
+  };
+
+  const handleFileChange = (e) => {
+    setSelectedFile(e.target.files[0]);
+  };
+
+  const handleUpload = async () => {
+    if (!selectedFile) {
+      alert("Selecione um arquivo para enviar.");
+      return;
+    }
+    const formData = new FormData();
+    formData.append("file", selectedFile);
+    formData.append("userId", userId);
+
+    try {
+      await axios.post("http://localhost:3000/upload", formData, {
+        headers: { Authorization: `Bearer ${token}`, "Content-Type": "multipart/form-data" },
+      });
+      alert("✅ Arquivo enviado com sucesso!");
+      fetchFiles(); // Atualiza a lista de arquivos
+    } catch (error) {
+      console.error("❌ Erro ao enviar arquivo:", error);
+    }
+  };
+
+  const handleDelete = async (fileId) => {
+    try {
+      await axios.delete(`http://localhost:3000/files/${fileId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+        data: { userId },
+      });
+      alert("🗑 Arquivo excluído com sucesso!");
+      fetchFiles();
+    } catch (error) {
+      console.error("❌ Erro ao excluir arquivo:", error);
+    }
+  };
 
   return (
     <div className="dashboard-container">
@@ -38,8 +72,13 @@ export default function Dashboard() {
       </header>
 
       <main className="dashboard-content">
-        <h2>Meus Arquivos</h2>
+        <h2>Upload de Arquivos</h2>
+        <div className="upload-box">
+          <input type="file" onChange={handleFileChange} />
+          <button onClick={handleUpload}>Enviar</button>
+        </div>
 
+        <h2>Meus Arquivos</h2>
         {files.length === 0 ? (
           <p>Nenhum arquivo encontrado.</p>
         ) : (
@@ -65,6 +104,7 @@ export default function Dashboard() {
                     >
                       Baixar
                     </a>
+                    <button className="delete-btn" onClick={() => handleDelete(file._id)}>Excluir</button>
                   </td>
                 </tr>
               ))}
