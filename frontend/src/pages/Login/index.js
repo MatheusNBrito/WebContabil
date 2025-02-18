@@ -23,6 +23,10 @@ export default function Login() {
       const response = await api.post("/login", formData);
       console.log("✅ Login realizado com sucesso!", response.data);
 
+       // 🔹 Salvar o token no localStorage
+      localStorage.setItem("token", response.data.token);
+      localStorage.setItem("user", JSON.stringify(response.data.user)); // Se precisar armazenar info do user
+
       alert("✅ Login realizado com sucesso!");
       navigate("/dashboard"); 
     } catch (error) {
