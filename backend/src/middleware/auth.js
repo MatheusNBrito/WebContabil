@@ -1,15 +1,22 @@
+const jwt = require("jsonwebtoken");
 const User = require("../models/User");
+const SECRET_KEY = "seu_segredo_super_secreto"; // 🔹 Defina isso no .env
 
 function checkRole(requiredRole) {
     return async (req, res, next) => {
         try {
-            const { userId } = req.body; // O cliente deve enviar seu ID no corpo da requisição
-
-            if (!userId) {
-                return res.status(401).json({ error: "Usuário não autenticado." });
+            const authHeader = req.headers.authorization;
+            if (!authHeader) {
+                return res.status(401).json({ error: "Token não fornecido." });
             }
 
-            const user = await User.findById(userId);
+            const token = authHeader.split(" ")[1]; // 🔹 Extrai o token do header
+            if (!token) {
+                return res.status(401).json({ error: "Token inválido." });
+            }
+
+            const decoded = jwt.verify(token, SECRET_KEY); // 🔹 Decodifica o token
+            const user = await User.findById(decoded.id);
 
             if (!user) {
                 return res.status(404).json({ error: "Usuário não encontrado." });
@@ -19,7 +26,7 @@ function checkRole(requiredRole) {
                 return res.status(403).json({ error: `Acesso negado. Apenas ${requiredRole}s podem acessar esta rota.` });
             }
 
-            req.user = user; // Adiciona o usuário ao request para uso futuro
+            req.user = user; // 🔹 Adiciona usuário autenticado ao request
             next();
         } catch (error) {
             console.error("❌ Erro na autenticação:", error);

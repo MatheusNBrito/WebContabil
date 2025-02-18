@@ -10,9 +10,14 @@ export default function Dashboard() {
     const fetchFiles = async () => {
       try {
         const token = localStorage.getItem("token"); // Obtém o token salvo
+        console.log("📌 Token enviado na requisição:", token); // 🔍 Log do token
+
         const response = await axios.get("http://localhost:3000/files", {
           headers: { Authorization: `Bearer ${token}` }, // Envia o token no header
         });
+        
+        console.log("✅ Arquivos recebidos:", response.data.files); // Debug
+
         setFiles(response.data.files); // Atualiza o estado com os arquivos recebidos
       } catch (error) {
         console.error("❌ Erro ao buscar arquivos:", error);
