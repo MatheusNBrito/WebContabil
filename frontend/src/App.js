@@ -5,6 +5,7 @@ import Register from "./pages/Register";
 import Login from "./pages/Login"; 
 import Dashboard from "./pages/Dashboard";
 import Sobre from "./pages/Sobre";
+import Contato from "./pages/Contato";
 
 export default function App() {
   return (
@@ -14,6 +15,7 @@ export default function App() {
       <Route path="/login" element={<Login />} />
       <Route path="/dashboard" element={<Dashboard />} />
       <Route path="/about" element={<Sobre />} />
+      <Route path="/contact" element={<Contato />} />
     </Routes>
   );
 }
