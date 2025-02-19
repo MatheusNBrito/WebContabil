@@ -5,22 +5,27 @@ import "./home.css";
 export default function Home() {
   return (
     <div className="home-container">
+      {/* 🔹 Cabeçalho */}
       <header className="home-header">
-        <h1 className="home-header-title">Calveludo Contábil</h1>
+        <Link to="/" className="home-header-title">Calveludo Contábil</Link>
         <nav className="home-nav">
-          <Link to="/">Home</Link>
           <Link to="/about">Sobre</Link>
           <Link to="/contact">Contato</Link>
+          <Link to="/login" className="home-client-area">Área do Cliente</Link>
           <Link to="/register" className="home-client-area">Cadastrar</Link>
         </nav>
       </header>
 
+      {/* 🔹 Conteúdo Principal */}
       <main className="home-main">
         <h2 className="home-title">Bem-vindo ao sistema do Ramos, o ex Calvo!</h2>
         <p className="home-description">Aguardamos ansiosamente pelo seu dinheiro</p>
-        <button className="home-btn">Conheça mais</button>
+        <Link to="/about">
+          <button className="home-btn">Conheça mais</button>
+        </Link>
       </main>
 
+      {/* 🔹 Rodapé */}
       <footer className="home-footer">
         <p>&copy; {new Date().getFullYear()} Nome da Empresa. Todos os direitos reservados.</p>
       </footer>

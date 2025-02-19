@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom"; // 🔹 Importado para criar o redirecionamento
 import "./sobre.css";
 
 export default function Sobre() {
@@ -45,11 +46,16 @@ export default function Sobre() {
       {/* Seção de Contato */}
       <section className="contato">
         <h2>Entre em Contato</h2>
-        <p>
-          Ficou interessado em nossos serviços? Entre em contato e saiba mais!
-        </p>
-        <button className="contato-btn">Fale Conosco</button>
+        <p>Ficou interessado em nossos serviços? Entre em contato e saiba mais!</p>
+        <Link to="/contact">
+          <button className="contato-btn">Fale Conosco</button>
+        </Link>
       </section>
+
+      {/* 🔹 Botão para voltar para a Home */}
+      <div className="voltar-container">
+        <Link to="/" className="voltar-btn">Voltar para Home</Link>
+      </div>
     </div>
   );
 }
