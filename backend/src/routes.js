@@ -38,7 +38,7 @@ router.post("/register", async (req, res) => {
         // console.log("🔐 Senha criptografada antes de salvar no MongoDB:", hashedPassword);
 
         // Criar usuário no banco de dados com a senha criptografada
-        const user = await User.create({ name, email, password: hashedPassword, role: "admin" });
+        const user = await User.create({ name, email, password: hashedPassword, role: "client" });
 
         return res.status(201).json({ message: "✅ Usuário cadastrado com sucesso!", user });
     } catch (error) {
@@ -137,13 +137,19 @@ router.get("/files", checkRole("client"), async (req, res) => {
     }
 });
 
-// 🔹 Apenas administradores podem ver TODOS os arquivos
 router.get("/admin/files", checkRole("admin"), async (req, res) => {
     console.log("📢 Rota /admin/files foi chamada!");
 
     try {
-        const files = await File.find().populate("uploadedBy", "name email");
-        return res.json({ files });
+        const files = await File.find().populate({
+            path: "uploadedBy",
+            select: "name email",
+        }).lean(); // 🔹 Converte para JSON puro
+
+        // 🔹 Filtra arquivos sem um usuário associado
+        const validFiles = files.filter(file => file.uploadedBy !== null);
+
+        return res.json({ files: validFiles });
     } catch (error) {
         console.error("❌ Erro ao buscar arquivos:", error);
         return res.status(500).json({ error: "Erro ao buscar arquivos." });

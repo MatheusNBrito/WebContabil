@@ -8,80 +8,106 @@
     --black-transparent: rgba(0, 0, 0, 0.7);
   }
   
-  /* 🔹 Estrutura Principal */
-  .admin-page {
+  /* 🔹 Configuração Geral */
+  body {
     font-family: "Poppins", sans-serif;
     color: white;
+    margin: 0;
+    padding: 0;
     background-image: url('../../assets/background3.jpg');
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
     display: flex;
-    flex-direction: column;
+    justify-content: center;
     align-items: center;
-    gap: 50px;
-    padding-bottom: 50px;
+    min-height: 100vh;
+  }
+  
+  /* 🔹 Container Principal */
+  .admin-page {
+    width: 95%;
+    max-width: 1200px;
+    background: var(--black-transparent);
+    backdrop-filter: blur(10px);
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
   }
   
   /* 🔹 Cabeçalho */
   .admin-header {
     display: flex;
     justify-content: space-between;
-    width: 90%;
-    max-width: 1200px;
-    background: var(--black-transparent);
-    padding: 15px;
-    border-radius: 12px;
-    margin-top: 20px;
+    align-items: center;
+    padding-bottom: 20px;
+    border-bottom: 2px solid var(--soft-green);
   }
   
   .admin-header h1 {
+    font-size: 26px;
     color: var(--soft-green);
   }
   
   .admin-nav {
     display: flex;
-    gap: 20px;
+    gap: 15px;
   }
   
   .nav-btn, .logout-btn {
-    color: white;
-    text-decoration: none;
-    font-weight: bold;
     background: transparent;
-    border: none;
+    color: var(--soft-green);
+    border: 2px solid var(--soft-green);
+    padding: 8px 15px;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: bold;
     cursor: pointer;
-    transition: 0.3s ease;
+    text-decoration: none;
+    transition: all 0.3s ease;
   }
   
   .nav-btn:hover, .logout-btn:hover {
-    color: var(--soft-green);
+    background: var(--soft-green);
+    color: var(--dark-gray);
   }
   
-  /* 🔹 Seção de Clientes */
+  /* 🔹 Lista de Clientes */
   .clientes-container {
+    margin-top: 20px;
+  }
+  
+  .clientes-container h2 {
     text-align: center;
-    background: var(--black-transparent);
-    padding: 30px;
-    border-radius: 12px;
-    width: 90%;
-    max-width: 1200px;
+    font-size: 22px;
+    color: var(--soft-green);
+    margin-bottom: 15px;
   }
   
   .clientes-lista {
     display: flex;
+    flex-wrap: wrap;
     justify-content: center;
     gap: 20px;
-    flex-wrap: wrap;
   }
   
   .cliente-item {
     background: rgba(255, 255, 255, 0.1);
     padding: 15px;
     border-radius: 8px;
+    width: 300px;
     text-align: center;
-    width: 30%;
-    min-width: 250px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s ease;
+  }
+  
+  .cliente-item:hover {
+    transform: scale(1.03);
+  }
+  
+  .cliente-item h3 {
+    font-size: 20px;
+    color: var(--soft-green);
   }
   
   .ver-arquivos-btn {
@@ -89,9 +115,9 @@
     background: var(--soft-green);
     color: var(--dark-gray);
     padding: 8px 15px;
-    font-size: 14px;
     border: none;
     border-radius: 6px;
+    font-size: 14px;
     cursor: pointer;
     font-weight: bold;
     transition: 0.3s;
@@ -102,57 +128,82 @@
     color: white;
   }
   
-  /* 🔹 Seção de Gerenciamento de Arquivos */
-  .arquivos-container {
-    text-align: center;
-    background: var(--black-transparent);
-    padding: 30px;
-    border-radius: 12px;
-    width: 90%;
-    max-width: 1200px;
+  /* 🔹 Seção de Arquivos */
+  .arquivos-lista {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 2px solid var(--soft-green);
   }
   
-  .select-cliente {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 15px;
+  .arquivo-item {
+    background: rgba(0, 0, 0, 0.3);
+    padding: 8px;
     border-radius: 6px;
-    background: rgba(255, 255, 255, 0.1);
-    color: white;
-    border: none;
-    outline: none;
+    margin-top: 8px;
+    text-align: center;
   }
   
-  .input-arquivo {
-    margin-bottom: 15px;
+  .arquivo-item p {
+    font-size: 14px;
     color: white;
   }
   
-  .upload-btn {
+  .download-btn {
+    display: inline-block;
     background: var(--soft-green);
     color: var(--dark-gray);
-    padding: 10px 15px;
-    font-size: 16px;
+    padding: 6px 12px;
+    font-size: 14px;
     border: none;
     border-radius: 6px;
     cursor: pointer;
     font-weight: bold;
     transition: 0.3s;
+    text-decoration: none;
   }
   
-  .upload-btn:hover {
+  .download-btn:hover {
     background: var(--deep-green);
     color: white;
   }
   
+  /* 🔹 Mensagens de Erro & Loading */
+  .loading, .error {
+    text-align: center;
+    font-size: 16px;
+    font-weight: bold;
+    margin-top: 15px;
+  }
+  
+  .error {
+    color: red;
+  }
+  
   /* 🔹 Responsividade */
   @media screen and (max-width: 768px) {
+    .admin-page {
+      padding: 20px;
+    }
+  
+    .admin-header {
+      flex-direction: column;
+      text-align: center;
+    }
+  
     .clientes-lista {
       flex-direction: column;
+      align-items: center;
     }
   
     .cliente-item {
-      width: 100%;
+      width: 90%;
+    }
+  
+    .admin-nav {
+      flex-direction: column;
+      gap: 10px;
+      align-items: center;
+      margin-top: 10px;
     }
   }
   
