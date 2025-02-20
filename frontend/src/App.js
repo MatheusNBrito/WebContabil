@@ -6,6 +6,7 @@ import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import Sobre from "./pages/Sobre";
 import Contato from "./pages/Contato";
+import Admin from "./pages/Admin";
 
 export default function App() {
   return (
@@ -16,6 +17,7 @@ export default function App() {
       <Route path="/dashboard" element={<Dashboard />} />
       <Route path="/about" element={<Sobre />} />
       <Route path="/contact" element={<Contato />} />
+      <Route path="/admin" element={<Admin />} />
     </Routes>
   );
 }

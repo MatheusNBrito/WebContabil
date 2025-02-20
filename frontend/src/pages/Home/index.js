@@ -7,7 +7,7 @@ export default function Home() {
     <div className="home-container">
       {/* 🔹 Cabeçalho */}
       <header className="home-header">
-        <Link to="/" className="home-header-title">Calveludo Contábil</Link>
+      <h2 className="home-title">Calveludo</h2>
         <nav className="home-nav">
           <Link to="/about">Sobre</Link>
           <Link to="/contact">Contato</Link>

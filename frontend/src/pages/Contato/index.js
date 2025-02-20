@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate, Link } from "react-router-dom"; // 🔹 Importando para navegação
+import { useNavigate, Link } from "react-router-dom"; 
 import "./contato.css";
 
 export default function Contato() {
@@ -9,7 +9,7 @@ export default function Contato() {
     mensagem: "",
   });
   const [successMessage, setSuccessMessage] = useState("");
-  const navigate = useNavigate(); // 🔹 Hook para navegação
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -17,26 +17,32 @@ export default function Contato() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    // Simulação de envio (pode ser substituído por uma requisição real)
     console.log("📩 Mensagem enviada:", formData);
 
     setSuccessMessage("Mensagem enviada com sucesso! Redirecionando...");
     
-    // 🔹 Aguarda 2 segundos antes de redirecionar para a página inicial
     setTimeout(() => {
       navigate("/");
     }, 4000);
 
-    // Limpa o formulário
     setFormData({ nome: "", email: "", mensagem: "" });
   };
 
   return (
     <div className="contato-container">
-      <div className="contato-box">
+      {/* 🔹 Cabeçalho igual ao Login */}
+      <header className="contato-header">
         <h1>Entre em Contato</h1>
-        <p>Envie sua mensagem e retornaremos o mais breve possível.</p>
+        <nav className="contato-nav">
+          <Link to="/" className="nav-btn">Home</Link>
+          <Link to="/register" className="nav-btn">Cadastrar-se</Link>
+        </nav>
+      </header>
+
+      {/* 🔹 Formulário de Contato */}
+      <main className="contato-box">
+        <h2>Envie sua mensagem</h2>
+        <p>Retornaremos o mais breve possível.</p>
 
         {successMessage && <p className="success-message">{successMessage}</p>}
 
@@ -48,6 +54,7 @@ export default function Contato() {
             value={formData.nome}
             onChange={handleChange}
             required
+            className="contato-input"
           />
           <input
             type="email"
@@ -56,6 +63,7 @@ export default function Contato() {
             value={formData.email}
             onChange={handleChange}
             required
+            className="contato-input"
           />
           <textarea
             name="mensagem"
@@ -64,13 +72,13 @@ export default function Contato() {
             value={formData.mensagem}
             onChange={handleChange}
             required
+            className="contato-input"
           />
           <button type="submit" className="contato-btn">Enviar</button>
         </form>
 
-        {/* 🔹 Botão para voltar para a Home */}
-        <Link to="/" className="voltar-btn">Voltar para Home</Link>
-      </div>
+        
+      </main>
     </div>
   );
 }

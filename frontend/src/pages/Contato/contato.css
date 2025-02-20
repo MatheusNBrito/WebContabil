@@ -1,136 +1,161 @@
 /* 🎨 Paleta de Cores */
 :root {
-    --dark-gray: #2C302E;
-    --medium-gray: #474A48;
-    --light-gray: #909590;
-    --soft-green: #9AE19D;
-    --deep-green: #537A5A;
-    --black-transparent: rgba(0, 0, 0, 0.7);
-  }
-  
-  /* 🔹 Configuração Geral */
-  .contato-container {
-    font-family: "Poppins", sans-serif;
-    color: white;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    background-image: url('../../assets/background3.jpg');
-    background-size: cover;
-    background-position: center;
-    background-attachment: fixed;
-    padding: 50px 20px;
-  }
-  
-  /* 🔹 Estrutura do Formulário */
-  .contato-box {
-    background: var(--black-transparent);
-    padding: 30px;
-    border-radius: 12px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
-    text-align: center;
-    width: 90%;
-    max-width: 500px;
-  }
-  
-  .contato-box h1 {
-    font-size: 28px;
-    color: var(--soft-green);
-    margin-bottom: 15px;
-  }
-  
-  /* 🔹 Estilização do Formulário */
-  .contato-form {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    width: 100%;
-  }
-  
-  .contato-form input,
-  .contato-form textarea {
-    width: 100%;
-    padding: 12px;
-    border-radius: 6px;
-    border: none;
-    font-size: 16px;
-    background: rgba(255, 255, 255, 0.1);
-    color: white;
-    outline: none;
-    transition: 0.3s;
-  }
-  /* 🔹 Estilização do botão de voltar */
+  --dark-gray: #2C302E;
+  --medium-gray: #474A48;
+  --light-gray: #909590;
+  --soft-green: #9AE19D;
+  --deep-green: #537A5A;
+  --black-transparent: rgba(0, 0, 0, 0.7);
+}
+
+/* 🔹 Corpo */
+body {
+  font-family: "Poppins", sans-serif;
+  color: white;
+  margin: 0;
+  padding: 0;
+  background-image: url('../../assets/background3.jpg');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+/* 🔹 Container Principal */
+.contato-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 400px;
+  background: var(--black-transparent);
+  backdrop-filter: blur(10px);
+  border-radius: 12px;
+  padding: 30px 45px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+/* 🔹 Cabeçalho */
+.contato-header {
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+.contato-header h1 {
+  font-size: 26px;
+  color: var(--soft-green);
+  margin-bottom: 10px;
+}
+
+/* 🔹 Navegação (Home e Cadastrar-se) */
+.contato-nav {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.contato-nav a {
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+  transition: 0.3s ease;
+}
+
+.contato-nav a:hover {
+  color: var(--soft-green);
+}
+
+/* 🔹 Caixa Principal */
+.contato-box {
+  text-align: center;
+  width: 100%;
+}
+
+.contato-box h2 {
+  font-size: 22px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+/* 🔹 Campos de Input */
+.contato-input {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 15px;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  text-align: left;
+}
+
+.contato-input::placeholder {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* 🔹 Botão de Envio */
+.contato-btn {
+  width: 50%;
+  padding: 12px;
+  font-size: 18px;
+  border: none;
+  border-radius: 8px;
+  background-color: var(--soft-green);
+  color: var(--dark-gray);
+  cursor: pointer;
+  transition: 0.3s;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+.contato-btn:hover {
+  background-color: var(--deep-green);
+  color: white;
+  transform: scale(1.05);
+}
+
+/* 🔹 Botão Voltar para Home */
 .voltar-btn {
   display: inline-block;
   margin-top: 15px;
   padding: 10px 20px;
-  background: var(--soft-green);
-  color: var(--dark-gray);
+  background: transparent;
+  color: var(--soft-green);
   text-decoration: none;
-  font-size: 16px;
+  font-size: 14px;
   font-weight: bold;
   border-radius: 6px;
+  border: 2px solid var(--soft-green);
   transition: all 0.3s ease;
   text-align: center;
 }
 
 .voltar-btn:hover {
-  background: var(--deep-green);
-  color: white;
+  background: var(--soft-green);
+  color: var(--dark-gray);
 }
 
+/* 🔹 Responsividade */
+@media screen and (max-width: 768px) {
+  .contato-container {
+    padding: 20px;
+  }
 
-  .contato-form input::placeholder,
-  .contato-form textarea::placeholder {
-    color: var(--light-gray);
+  .contato-header h1 {
+    font-size: 24px;
   }
-  
-  .contato-form input:focus,
-  .contato-form textarea:focus {
-    background: rgba(255, 255, 255, 0.2);
-    border-left: 4px solid var(--soft-green);
+
+  .contato-input {
+    font-size: 14px;
   }
-  
-  /* 🔹 Botão de Envio */
+
   .contato-btn {
-    background: var(--soft-green);
-    color: var(--dark-gray);
-    padding: 12px;
-    font-size: 18px;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-weight: bold;
-    transition: all 0.3s ease;
-    width: 100%;
+    font-size: 16px;
   }
-  
-  .contato-btn:hover {
-    background: var(--deep-green);
-    color: white;
-  }
-  
-  /* 🔹 Responsividade */
-  @media screen and (max-width: 768px) {
-    .contato-box {
-      padding: 20px;
-    }
-  
-    .contato-box h1 {
-      font-size: 24px;
-    }
-  
-    .contato-form input,
-    .contato-form textarea {
-      font-size: 14px;
-    }
-  
-    .contato-btn {
-      font-size: 16px;
-    }
-
-    
-  }
-  
+}

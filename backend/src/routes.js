@@ -38,7 +38,7 @@ router.post("/register", async (req, res) => {
         // console.log("🔐 Senha criptografada antes de salvar no MongoDB:", hashedPassword);
 
         // Criar usuário no banco de dados com a senha criptografada
-        const user = await User.create({ name, email, password: hashedPassword, role: "client" });
+        const user = await User.create({ name, email, password: hashedPassword, role: "admin" });
 
         return res.status(201).json({ message: "✅ Usuário cadastrado com sucesso!", user });
     } catch (error) {
