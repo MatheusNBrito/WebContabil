@@ -33,13 +33,45 @@ export default function Admin() {
     fetchData();
   }, []);
 
+  // 🔹 Função para agrupar arquivos por extensão
+  const organizarArquivosPorTipo = (arquivos) => {
+    const tipos = {
+      pdf: [],
+      xls: [],
+      docx: [],
+      outros: [],
+    };
+
+    arquivos.forEach((arquivo) => {
+      if (arquivo.filename.endsWith(".pdf")) {
+        tipos.pdf.push(arquivo);
+      } else if (
+        arquivo.filename.endsWith(".xls") ||
+        arquivo.filename.endsWith(".xlsx")
+      ) {
+        tipos.xls.push(arquivo);
+      } else if (
+        arquivo.filename.endsWith(".docx") ||
+        arquivo.filename.endsWith(".doc")
+      ) {
+        tipos.docx.push(arquivo);
+      } else {
+        tipos.outros.push(arquivo);
+      }
+    });
+
+    return tipos;
+  };
+
   return (
     <div className="admin-page">
       {/* 🔹 Cabeçalho do Admin */}
       <header className="admin-header">
         <h1>Painel do Administrador</h1>
         <nav className="admin-nav">
-          <Link to="/" className="nav-btn">Home</Link>
+          <Link to="/" className="nav-btn">
+            Home
+          </Link>
           <button className="logout-btn">Logout</button>
         </nav>
       </header>
@@ -61,17 +93,47 @@ export default function Admin() {
                 {/* 🔹 Seção de Arquivos do Cliente */}
                 <div className="arquivos-do-cliente">
                   <h4>Arquivos Enviados</h4>
-                  {arquivos.some(arquivo => arquivo.uploadedBy?._id === cliente._id) ? (
-                    arquivos
-                      .filter(arquivo => arquivo.uploadedBy?._id === cliente._id)
-                      .map((arquivo) => (
-                        <div key={arquivo._id} className="arquivo-item">
-                          <p><strong>Arquivo:</strong> {arquivo.filename}</p>
-                          <a href={`http://localhost:3000/files/download/${arquivo._id}`} className="download-btn">
-                            📥 Baixar Arquivo
-                          </a>
+
+                  {arquivos.some(
+                    (arquivo) => arquivo.uploadedBy?._id === cliente._id
+                  ) ? (
+                    (() => {
+                      const arquivosCliente = arquivos.filter(
+                        (arquivo) => arquivo.uploadedBy?._id === cliente._id
+                      );
+                      const arquivosOrganizados =
+                        organizarArquivosPorTipo(arquivosCliente);
+
+                      return (
+                        <div className="arquivos-categorias">
+                          {Object.entries(arquivosOrganizados).map(
+                            ([tipo, lista]) =>
+                              lista.length > 0 && (
+                                <div key={tipo} className="categoria-arquivos">
+                                  <h5>{tipo.toUpperCase()}</h5>
+                                  {lista.map((arquivo) => (
+                                    <div
+                                      key={arquivo._id}
+                                      className="arquivo-item"
+                                    >
+                                      <p>
+                                        <strong>Arquivo:</strong>{" "}
+                                        {arquivo.filename}
+                                      </p>
+                                      <a
+                                        href={`http://localhost:3000/files/download/${arquivo._id}`}
+                                        className="download-btn"
+                                      >
+                                        📥 Baixar Arquivo
+                                      </a>
+                                    </div>
+                                  ))}
+                                </div>
+                              )
+                          )}
                         </div>
-                      ))
+                      );
+                    })()
                   ) : (
                     <p className="nenhum-arquivo">Nenhum arquivo enviado.</p>
                   )}
