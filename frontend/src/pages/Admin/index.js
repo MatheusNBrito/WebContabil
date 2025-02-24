@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { getClients, getClientFiles } from "../../api"; // 🔹 Importando funções da API
+import { getClients, uploadFileToClient, getClientFiles } from "../../api";
 import "./admin.css";
 
 export default function Admin() {
@@ -8,7 +8,10 @@ export default function Admin() {
   const [arquivos, setArquivos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [currentClient, setCurrentClient] = useState(null);
 
+  // Buscar clientes ao carregar o componente
   useEffect(() => {
     async function fetchData() {
       try {
@@ -63,6 +66,39 @@ export default function Admin() {
     return tipos;
   };
 
+  // 🔹 Função para lidar com o upload de arquivos
+  const handleFileUpload = async (clientId) => {
+    if (!selectedFile) {
+      alert("Selecione um arquivo primeiro!");
+      return;
+    }
+
+    try {
+      // 🔹 Extrair userId e role do localStorage
+      const user = JSON.parse(localStorage.getItem("user"));
+      const adminId = user.id;
+      const userRole = user.role;
+
+      // Verificar se o usuário é um admin
+      if (userRole !== "admin") {
+        throw new Error("Apenas administradores podem enviar arquivos.");
+      }
+
+      // Enviar arquivo para o cliente
+      await uploadFileToClient(clientId, adminId, selectedFile);
+      alert("Arquivo enviado com sucesso!");
+
+      // Atualizar a lista de arquivos
+      const novosArquivos = await getClientFiles(clientId);
+      setArquivos(novosArquivos);
+    } catch (error) {
+      alert(`Erro ao enviar arquivo: ${error.message}`);
+    } finally {
+      setSelectedFile(null);
+      setCurrentClient(null);
+    }
+  };
+
   return (
     <div className="admin-page">
       {/* 🔹 Cabeçalho do Admin */}
@@ -90,16 +126,30 @@ export default function Admin() {
                 <h3>{cliente.name}</h3>
                 <p>Email: {cliente.email}</p>
 
+                {/* 🔹 Seção de Upload de Arquivos */}
+                <div className="upload-section">
+                  <input
+                    type="file"
+                    onChange={(e) => {
+                      setSelectedFile(e.target.files[0]);
+                      setCurrentClient(cliente._id);
+                    }}
+                  />
+                  <button onClick={() => handleFileUpload(cliente._id)}>
+                    Enviar Arquivo
+                  </button>
+                </div>
+
                 {/* 🔹 Seção de Arquivos do Cliente */}
                 <div className="arquivos-do-cliente">
                   <h4>Arquivos Enviados</h4>
 
                   {arquivos.some(
-                    (arquivo) => arquivo.uploadedBy?._id === cliente._id
+                    (arquivo) => arquivo.assignedTo === cliente._id
                   ) ? (
                     (() => {
                       const arquivosCliente = arquivos.filter(
-                        (arquivo) => arquivo.uploadedBy?._id === cliente._id
+                        (arquivo) => arquivo.assignedTo === cliente._id
                       );
                       const arquivosOrganizados =
                         organizarArquivosPorTipo(arquivosCliente);

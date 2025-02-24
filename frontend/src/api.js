@@ -44,4 +44,24 @@ export const getClientFiles = async () => {
   }
 };
 
+// 🔹 Função para enviar arquivo para um cliente específico
+export const uploadFileToClient = async (clientId, adminId, file) => {
+  const formData = new FormData();
+  formData.append("file", file);
+  formData.append("clientId", clientId);
+  formData.append("adminId", adminId);
+
+  try {
+    const response = await api.post("/admin/upload", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Erro ao enviar arquivo:", error);
+    throw error;
+  }
+};
+
 export default api;

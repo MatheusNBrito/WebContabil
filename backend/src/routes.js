@@ -6,7 +6,7 @@ const File = require("./models/File");
 const router = express.Router();
 const fs = require("fs");
 const Notification = require("./models/Notification");
-const { checkRole } = require("./middleware/auth");
+const { checkRole, authenticate } = require("./middleware/auth");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken"); // Importa o JWT
 const SECRET_KEY = "seu_segredo_super_secreto"; // Defina uma chave segura
@@ -56,27 +56,37 @@ router.post("/login", async (req, res) => {
         // Verificar se o usuário existe
         const user = await User.findOne({ email });
         if (!user) {
+            console.error("❌ Usuário não encontrado:", email);
             return res.status(401).json({ error: "E-mail ou senha incorretos!" });
         }
 
         // Comparar senha fornecida com a senha criptografada no banco
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
+            console.error("❌ Senha incorreta para o usuário:", email);
             return res.status(401).json({ error: "E-mail ou senha incorretos!" });
         }
 
-         // Criar o token JWT
-         const token = jwt.sign(
+        // Criar o token JWT
+        const token = jwt.sign(
             { id: user._id, email: user.email, role: user.role }, // Payload do token
             SECRET_KEY, // Chave secreta
             { expiresIn: "1h" } // Tempo de expiração (1 hora)
         );
-        
+
+        console.log(`🔑 Usuário ${user.email} autenticado com sucesso!`);
+
         return res.json({ 
             message: "✅ Login bem-sucedido!", 
-            user: { id: user._id, name: user.name, email: user.email, role: user.role }, 
+            user: { 
+                id: user._id, 
+                name: user.name, 
+                email: user.email, 
+                role: user.role 
+            }, 
             token 
         });
+
     } catch (error) {
         console.error("❌ Erro ao fazer login:", error);
         return res.status(500).json({ error: "Erro ao fazer login." });
@@ -129,7 +139,10 @@ router.get("/files", checkRole("client"), async (req, res) => {
     console.log(`📢 Rota /files foi chamada pelo usuário ${req.user._id}`);
 
     try {
-        const files = await File.find({ uploadedBy: req.user._id });
+        // Buscar arquivos DESTINADOS ao cliente logado (assignedTo)
+        const files = await File.find({ assignedTo: req.user._id })
+            .populate("uploadedBy", "name email"); // Popula dados do admin que enviou
+
         return res.json({ files });
     } catch (error) {
         console.error("❌ Erro ao buscar arquivos:", error);
@@ -158,82 +171,88 @@ router.get("/admin/files", checkRole("admin"), async (req, res) => {
 
 // 🔹 Rota para upload de arquivos (clientes podem enviar arquivos)
 router.post("/upload", upload.single("file"), async (req, res) => {
-    console.log("📢 Rota /upload foi chamada!");
-
     try {
-        // 🔹 Pegando userId de forma correta
-        const userId = req.body.userId;
+        // 🔹 Temporariamente: userId é enviado pelo frontend (NÃO SEGURO!)
+        const { userId } = req.body;
 
         if (!userId) {
-            return res.status(401).json({ error: "Usuário não autenticado." });
+            return res.status(400).json({ error: "userId é obrigatório." });
         }
 
+        // Verificar se o usuário existe
         const user = await User.findById(userId);
-
         if (!user) {
             return res.status(404).json({ error: "Usuário não encontrado." });
         }
 
-        // 🔹 Pegando informações do arquivo
-        const { originalname, filename, path, mimetype, size } = req.file;
-
-        // Criar o registro no banco de dados
+        // Criar arquivo (vinculado ao userId fornecido)
         const file = await File.create({
-            filename: originalname,
-            path,
-            mimetype,
-            size,
-            uploadedBy: userId
+            filename: req.file.originalname,
+            path: req.file.path,
+            mimetype: req.file.mimetype,
+            size: req.file.size,
+            uploadedBy: userId,
+            assignedTo: userId, // Assume que o arquivo é para o próprio usuário
         });
 
-        return res.json({ message: "✅ Arquivo enviado com sucesso!", file });
+        return res.json({ message: "✅ Arquivo enviado!", file });
+
     } catch (error) {
-        console.error("❌ Erro no upload:", error);
-        return res.status(500).json({ error: "Erro ao enviar arquivo" });
+        console.error("Erro:", error);
+        return res.status(500).json({ error: "Erro no servidor." });
     }
 });
 
 // 🔹 Rota para administradores enviarem arquivos para clientes
 router.post("/admin/upload", upload.single("file"), async (req, res) => {
-    console.log("📢 Rota /admin/upload foi chamada!");
-
     try {
-        const { clientId, userId } = req.body;
-
-        if (!clientId) {
-            return res.status(400).json({ error: "O ID do cliente é obrigatório." });
-        }
-
-        if (!userId) {
-            return res.status(400).json({ error: "O ID do administrador é obrigatório." });
-        }
-
-        const file = new File({
-            filename: req.file.filename,
-            path: req.file.path,
-            mimetype: req.file.mimetype,
-            size: req.file.size,
-            uploadedBy: userId, // ID do admin que enviou
-            assignedTo: clientId, // Cliente que recebeu
-        });
-
-        await file.save();
-
-        // 🔹 Criar a notificação no banco de dados
-        const notification = new Notification({
-            message: `Você recebeu um novo arquivo: ${req.file.filename}`,
-            user: clientId,
-        });
-
-        await notification.save();
-
-        console.log("🔔 Notificação enviada para o cliente:", clientId);
-        return res.json({ message: "✅ Arquivo enviado e notificação criada!", file });
+      const { clientId, adminId } = req.body;
+  
+      // Validação básica
+      if (!clientId || !adminId) {
+        return res.status(400).json({ error: "IDs do cliente e admin são obrigatórios." });
+      }
+  
+      // Criar arquivo vinculado ao cliente
+      const file = new File({
+        filename: req.file.originalname,
+        path: req.file.path,
+        mimetype: req.file.mimetype,
+        size: req.file.size,
+        uploadedBy: adminId, // ID do admin
+        assignedTo: clientId, // ID do cliente
+      });
+  
+      await file.save();
+  
+      // Criar notificação para o cliente
+      const notification = new Notification({
+        message: `Você recebeu um novo arquivo: ${req.file.originalname}`,
+        user: clientId, // Notificar o cliente
+      });
+  
+      await notification.save();
+  
+      return res.json({ 
+        message: "✅ Arquivo enviado com sucesso!", 
+        file 
+      });
+  
     } catch (error) {
-        console.error("❌ Erro ao enviar arquivo:", error);
-        return res.status(500).json({ error: "Erro ao enviar arquivo." });
+      console.error("Erro:", error);
+      return res.status(500).json({ error: "Erro interno no servidor." });
     }
-});
+  });
+
+  router.get("/files/client/:clientId", async (req, res) => {
+    try {
+      const files = await File.find({ assignedTo: req.params.clientId })
+        .populate("uploadedBy", "name email"); // Informações do admin
+      res.json({ files });
+    } catch (error) {
+      res.status(500).json({ error: "Erro ao buscar arquivos." });
+    }
+  });
 
 // 🔹 Rota para download de arquivos pelo cliente
 router.get("/files/download/:fileId", async (req, res) => {
@@ -294,16 +313,13 @@ router.get("/notifications/:userId", async (req, res) => {
     }
 });
 
-router.delete("/files/:fileId", async (req, res) => {
+router.delete("/files/:fileId", authenticate, async (req, res) => {
     console.log(`📢 Rota /files/${req.params.fileId} foi chamada!`);
 
     try {
         const { fileId } = req.params;
-        const { userId } = req.body; // Pegamos o ID do usuário enviado no body
-
-        if (!userId) {
-            return res.status(400).json({ error: "O ID do usuário é obrigatório." });
-        }
+        const userId = req.user.id; // ID do usuário logado (do token JWT)
+        const userRole = req.user.role; // Role do usuário logado
 
         // 🔹 Buscar o arquivo no banco de dados
         const file = await File.findById(fileId);
@@ -311,8 +327,8 @@ router.delete("/files/:fileId", async (req, res) => {
             return res.status(404).json({ error: "Arquivo não encontrado." });
         }
 
-        // 🔹 Permitir exclusão apenas para quem enviou o arquivo
-        if (file.uploadedBy.toString() !== userId) {
+        // 🔹 Permitir exclusão apenas para quem enviou o arquivo OU para admin
+        if (file.uploadedBy.toString() !== userId && userRole !== "admin") {
             return res.status(403).json({ error: "Você não tem permissão para excluir este arquivo." });
         }
 

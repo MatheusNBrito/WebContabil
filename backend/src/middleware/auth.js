@@ -2,6 +2,28 @@ const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 const SECRET_KEY = "seu_segredo_super_secreto"; // 🔹 Defina isso no .env
 
+// 🔹 Função para autenticar o usuário (verifica apenas o token)
+const authenticate = (req, res, next) => {
+    try {
+        const authHeader = req.headers.authorization;
+        if (!authHeader) {
+            return res.status(401).json({ error: "Token não fornecido." });
+        }
+
+        const token = authHeader.split(" ")[1]; // 🔹 Extrai o token do header
+        if (!token) {
+            return res.status(401).json({ error: "Token inválido." });
+        }
+
+        const decoded = jwt.verify(token, SECRET_KEY); // 🔹 Decodifica o token
+        req.user = decoded; // 🔹 Adiciona o payload do token ao request
+        next();
+    } catch (error) {
+        console.error("❌ Erro na autenticação:", error);
+        res.status(401).json({ error: "Token inválido ou expirado." });
+    }
+};
+
 function checkRole(requiredRole) {
     return async (req, res, next) => {
         try {
@@ -35,4 +57,4 @@ function checkRole(requiredRole) {
     };
 }
 
-module.exports = { checkRole };
+module.exports = { checkRole, authenticate };

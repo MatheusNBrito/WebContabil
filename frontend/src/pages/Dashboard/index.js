@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import "./dashboard.css";
 
+
 export default function Dashboard() {
   const [files, setFiles] = useState([]);
   const [selectedFile, setSelectedFile] = useState(null);
@@ -50,16 +51,16 @@ export default function Dashboard() {
 
   const handleDelete = async (fileId) => {
     try {
-      await axios.delete(`http://localhost:3000/files/${fileId}`, {
-        headers: { Authorization: `Bearer ${token}` },
-        data: { userId },
-      });
-      alert("🗑 Arquivo excluído com sucesso!");
-      fetchFiles();
+        await axios.delete(`http://localhost:3000/files/${fileId}`, {
+            headers: { Authorization: `Bearer ${token}` },
+        });
+        alert("🗑 Arquivo excluído com sucesso!");
+        fetchFiles(); // Atualiza a lista de arquivos
     } catch (error) {
-      console.error("❌ Erro ao excluir arquivo:", error);
+        console.error("❌ Erro ao excluir arquivo:", error);
+        alert("Erro ao excluir arquivo. Verifique o console para mais detalhes.");
     }
-  };
+};
 
   return (
     <div className="dashboard-container">

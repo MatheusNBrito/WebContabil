@@ -21,7 +21,6 @@ export default function Login() {
 
     try {
       const response = await api.post("/login", formData);
-      console.log("✅ Login realizado com sucesso!", response.data);
 
        // 🔹 Salvar o token no localStorage
       localStorage.setItem("token", response.data.token);
