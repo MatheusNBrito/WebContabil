@@ -1,4 +1,7 @@
-/* Paleta de cores baseada na sua escolha */
+/* 🔹 Importando uma fonte moderna e sofisticada */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+/* 🔹 Definição das variáveis de cores baseadas na nova paleta */
 :root {
   --dark-gray: #2C302E;
   --medium-gray: #474A48;
@@ -7,155 +10,177 @@
   --deep-green: #537A5A;
 }
 
+/* 🔹 Estilização Geral */
 body {
-  font-family: "Poppins", sans-serif;
-  color: white;
+  background-color: var(--dark-gray);
+  color: var(--light-gray);
+  font-family: 'Poppins', sans-serif;
   margin: 0;
   padding: 0;
-  background-image: url('../../assets/background3.jpg');
-  background-size: cover;
-  background-position: center;
-  background-attachment: fixed;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  box-sizing: border-box;
 }
 
-/* Estrutura Principal */
-.home-container {
-  width: 100%;
-  max-width: 900px;
-  text-align: center;
-  backdrop-filter: blur(8px);
-  border-radius: 15px;
-  padding: 20px;
-  flex-grow: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center; /* 🔹 Mantém tudo centralizado */
-}
-
-/* Cabeçalho */
+/* 🔹 Header mais slim */
 .home-header {
-  width: 90%;
-  max-width: 900px;
+  background-color: var(--dark-gray);
+  color: white;
+  padding: 1px 5px; 
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: rgba(0, 0, 0, 0.6);
-  padding: 15px 30px;
-  border-radius: 12px;
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
-  margin-bottom: 20px; /* 🔹 Espaço maior para separar do conteúdo */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.5);
 }
 
-.home-header-title {
-  font-size: 24px;
-  margin: 0;
-  color: var(--soft-green);
-  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7);
+/* 🔹 Ajuste no conteúdo para não ficar atrás do header */
+.home-container {
+  padding-top: 70px; /* Ajustado para acompanhar o header menor */
 }
 
+/* 🔹 Título do cabeçalho */
+.home-title {
+  font-size: 1.2rem; /* Tamanho menor para o header ficar mais slim */
+  font-weight: 600;
+  letter-spacing: 1px;
+  padding-left: 10px; /* Dá um respiro para a esquerda */
+}
+
+/* 🔹 Navegação */
 .home-nav {
   display: flex;
-  gap: 20px; /* 🔹 Melhor espaçamento entre os links */
+  gap: 10px;
+  align-items: center;
+  
+  
 }
 
+/* 🔹 Reduzi o tamanho da fonte do menu para caber melhor */
 .home-nav a {
   color: white;
   text-decoration: none;
-  font-weight: bold;
-  transition: all 0.3s ease;
+  font-weight: 400;
+  font-size: 0.9rem; /* Reduzi um pouco para melhor encaixe */
+  transition: color 0.3s ease;
 }
 
 .home-nav a:hover {
   color: var(--soft-green);
-  transform: scale(1.1);
 }
 
+/* 🔹 Botões de Área do Cliente */
 .home-client-area {
-  color: var(--soft-green);
-  font-weight: bold;
+  background: none; /* Remove fundo */
+  border: none; /* Remove borda */
+  color: white;
+  padding: 6px 10px; /* Reduzi o padding para um tamanho mais compacto */
+  font-size: 0.85rem; /* Reduzi um pouco a fonte */
+  border-radius: 5px;
+  transition: background 0.3s ease;
 }
 
-/* Corpo Principal */
+.home-client-area:hover {
+  color: black;
+}
+
+/* 🔹 Background principal */
 .home-main {
+  flex-grow: 1;
   text-align: center;
-  padding: 40px;
-  background: rgba(0, 0, 0, 0.4); /* 🔹 Fundo mais escuro para contraste */
-  border-radius: 15px;
-  animation: fadeIn 1s ease-in-out;
-  width: 90%;
-  max-width: 900px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center; /* 🔹 Centraliza todos os elementos */
+  padding: 90px 20px 50px;
+  background: url('../../assets/background3.jpg') no-repeat center center/cover;
+  position: relative;
 }
 
-.home-title {
-  font-size: 38px;
-  font-weight: bold;
+/* 🔹 Efeito de sobreposição para melhorar a legibilidade */
+.home-main::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4); /* Camada escura para contraste (um pouco mais leve) */
+}
+
+/* 🔹 Melhor contraste no texto */
+.home-main h1 {
+  font-size: 2rem; /* Ajustei um pouco para melhor encaixe */
   color: var(--soft-green);
-  text-shadow: 3px 3px 8px rgba(0, 0, 0, 0.8);
-  margin-bottom: 20px;
+  position: relative;
+  z-index: 1;
 }
 
 .home-description {
-  font-size: 18px;
+  font-size: 1.1rem; /* Reduzi um pouco para melhor leitura */
+  margin: 15px 0;
   color: white;
-  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.6);
-  margin-bottom: 20px;
+  position: relative;
+  z-index: 1;
 }
 
+/* 🔹 Botão Principal */
 .home-btn {
-  background-color: var(--soft-green);
-  color: var(--dark-gray);
-  padding: 10px 20px; /* 🔹 Reduzi o padding para diminuir o tamanho */
-  font-size: 16px; /* 🔹 Tamanho da fonte um pouco menor */
-  width: auto; /* 🔹 Define um tamanho adequado ao conteúdo */
-  min-width: 150px; /* 🔹 Largura mínima para evitar distorção */
-  max-width: 200px; /* 🔹 Máximo que o botão pode crescer */
+  background-color: var(--deep-green);
+  color: white;
   border: none;
-  border-radius: 6px; /* 🔹 Cantos arredondados suaves */
+  padding: 10px 16px; /* Reduzi um pouco */
+  font-size: 1rem;
+  border-radius: 5px;
   cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center; /* 🔹 Centraliza o texto dentro do botão */
-  align-items: center;
+  transition: background 0.3s ease, transform 0.2s ease;
+  position: relative;
+  z-index: 1;
 }
 
 .home-btn:hover {
-  background-color: var(--deep-green);
-  color: white;
+  background-color: var(--soft-green);
   transform: scale(1.05);
+  color: black;
 }
 
-/* Rodapé menor e discreto */
+/* 🔹 Rodapé mais fino e translúcido */
 .home-footer {
-  width: 100%;
-  max-width: 900px;
+  background: rgba(44, 48, 46, 0.7); /* Fundo semi-transparente */
+  color: white;
   text-align: center;
-  padding: 10px;
-  font-size: 12px;
-  margin-top: auto;
-  background: rgba(0, 0, 0, 0.3);
-  border-radius: 5px;
-  color: var(--light-gray);
-  margin-top: 15px; /* 🔹 Melhor espaçamento */
+  padding: 6px; /* Reduzi para ficar mais slim */
+  font-size: 0.75rem;
+  width: 100%;
+  position: fixed;
+  bottom: 0;
+  left: 0;
 }
 
-/* Animação de entrada */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(-20px);
+/* 🔹 Responsividade */
+@media (max-width: 768px) {
+  .home-header {
+    flex-direction: column;
+    text-align: center;
+    padding: 8px;
   }
-  to {
-    opacity: 1;
-    transform: translateY(0);
+
+  .home-nav {
+    flex-direction: column;
+    gap: 6px;
+    margin-top: 8px;
+  }
+
+  .home-main h1 {
+    font-size: 1.8rem;
+  }
+
+  .home-btn {
+    width: 80%;
+    max-width: 250px;
+  }
+
+  /* 🔹 Ajuste no rodapé para telas menores */
+  .home-footer {
+    font-size: 0.7rem;
+    padding: 4px;
   }
 }

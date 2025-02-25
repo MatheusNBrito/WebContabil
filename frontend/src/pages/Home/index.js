@@ -7,7 +7,7 @@ export default function Home() {
     <div className="home-container">
       {/* 🔹 Cabeçalho */}
       <header className="home-header">
-      <h2 className="home-title">Calveludo</h2>
+      <h1 className="home-title">Calveludo</h1>
         <nav className="home-nav">
           <Link to="/about">Sobre</Link>
           <Link to="/contact">Contato</Link>
@@ -18,7 +18,7 @@ export default function Home() {
 
       {/* 🔹 Conteúdo Principal */}
       <main className="home-main">
-        <h2 className="home-title">Bem-vindo ao sistema do Ramos, o ex Calvo!</h2>
+        <h1 className="home-title">Bem-vindo ao sistema do Ramos, o ex Calvo!</h1>
         <p className="home-description">Aguardamos ansiosamente pelo seu dinheiro</p>
         <Link to="/about">
           <button className="home-btn">Conheça mais</button>
