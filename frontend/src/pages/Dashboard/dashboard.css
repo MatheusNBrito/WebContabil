@@ -1,174 +1,127 @@
-/* 🎨 Paleta de Cores */
+/* 🔹 Importando a fonte Poppins */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+/* 🔹 Definição das variáveis de cores baseadas na paleta */
 :root {
-  --dark-gray: #2C302E; /* Cor cinza escura usada no fundo */
-  --medium-gray: #474A48; /* Cinza intermediário */
-  --light-gray: #909590; /* Cinza claro para textos suaves */
-  --soft-green: #9AE19D; /* Verde suave usado em botões e realces */
-  --deep-green: #537A5A; /* Verde escuro para cabeçalhos e títulos */
-  --red: #e74c3c; /* Vermelho para botões de exclusão */
-  --dark-red: #c0392b; /* Vermelho mais escuro para hover nos botões de exclusão */
-  --black-transparent: rgba(0, 0, 0, 0.7); /* Fundo semi-transparente para blocos */
+  --dark-gray: #2C302E;
+  --medium-gray: #474A48;
+  --light-gray: #909590;
+  --soft-green: #9AE19D;
+  --deep-green: #537A5A;
 }
 
-/* 🔹 Configuração Geral da Página */
-.dashboard-container {
-  font-family: "Poppins", sans-serif; /* Fonte moderna e legível */
-  color: white; /* Cor do texto padrão */
-  min-height: 80vh; /* Garante que a tela ocupe pelo menos 100% da altura */
-  display: flex; /* Utiliza Flexbox para organizar os elementos */
-  flex-direction: column; /* Os elementos são organizados verticalmente */
-  align-items: center; /* Centraliza os elementos horizontalmente */
-  justify-content: flex-start; /* Alinha os elementos no topo da tela */
-  background-image: url('../../assets/background3.jpg'); /* Define o fundo com imagem */
-  background-size: cover; /* Ajusta a imagem para cobrir toda a tela */
-  background-position: center; /* Mantém a imagem centralizada */
-  background-attachment: fixed; /* Mantém o fundo fixo ao rolar a página */
-  padding: 50px 20px; /* Espaçamento interno da página */
-  width: 100%; /* Garante que o conteúdo ocupe toda a largura disponível */
+/* 🔹 Reset Geral */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-/* 🔹 Cabeçalho (Header) */
-.dashboard-header {
-  width: 100%; /* Largura ocupando 90% da tela */
-  max-width: 800px; /* Máximo de 800px para não ficar muito largo */
-  display: flex; /* Organiza os itens horizontalmente */
-  justify-content: space-between; /* Mantém o título à esquerda e o menu à direita */
-  align-items: center; /* Alinha os elementos no centro verticalmente */
-  padding: 15px 30px; /* Espaçamento interno do cabeçalho */
-  background: var(--black-transparent); /* Fundo escuro semi-transparente */
-  border-radius: 12px; /* Cantos arredondados */
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3); /* Sombra sutil */
-}
-
-.dashboard-header h1 {
-  font-size: 24px; /* Tamanho do título */
-  color: var(--soft-green); /* Cor verde suave */
-  margin: 0; /* Remove margens para alinhamento perfeito */
-}
-
-.dashboard-header nav a {
-  color: white; /* Cor do texto no menu */
-  text-decoration: none; /* Remove sublinhado dos links */
-  margin-left: 20px; /* Espaço entre os itens do menu */
-  font-weight: bold; /* Deixa o texto mais destacado */
-  transition: all 0.3s ease; /* Suaviza efeitos de hover */
-}
-
-.dashboard-header nav a:hover {
-  color: var(--soft-green); /* Muda a cor ao passar o mouse */
-  transform: scale(1.1); /* Aumenta ligeiramente para efeito interativo */
-}
-
-/* 🔹 Área de Upload (Centralizada) */
-.upload-container {
-  background: var(--black-transparent); /* Fundo semi-transparente */
-  padding: 20px; /* Espaçamento interno */
-  border-radius: 12px; /* Cantos arredondados */
-  text-align: center; /* Centraliza o texto */
-  width: 90%; /* Ajusta a largura ao tamanho da tela */
-  max-width: 600px; /* Define um limite de largura */
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5); /* Adiciona uma sombra para destacar */
-  margin-top: 20px; /* Espaçamento do topo */
-  display: flex; /* Usa Flexbox */
-  flex-direction: column; /* Organiza os elementos verticalmente */
-  align-items: center; /* Centraliza horizontalmente */
-  justify-content: center; /* Centraliza verticalmente */
-}
-
-.upload-box {
-  border: 2px dashed var(--soft-green); /* Borda pontilhada verde */
-  padding: 30px; /* Espaçamento interno */
-  border-radius: 10px; /* Cantos arredondados */
-  cursor: pointer; /* Muda o cursor ao passar o mouse */
-  transition: 0.3s; /* Suaviza as transições */
-  font-size: 16px; /* Tamanho do texto */
-  color: var(--soft-green); /* Cor do texto */
-  font-weight: bold; /* Negrito para destacar */
-  width: 100%; /* Ajusta ao container */
-  max-width: 650px; /* Define um tamanho máximo */
-  
-}
-
-.upload-box:hover {
-  background: rgba(255, 255, 255, 0.1); /* Adiciona um efeito ao passar o mouse */
-}
-
-.upload-container input {
-  display: none; /* Oculta o input de arquivo */
-}
-
-/* 🔹 Botão de Envio do Upload */
-.upload-btn {
-  margin-top: 15px; /* Espaçamento do topo */
-  background: var(--soft-green); /* Fundo verde */
-  color: var(--dark-gray); /* Cor do texto */
-  padding: 10px 15px; /* Espaçamento interno */
-  font-size: 16px; /* Tamanho do texto */
-  border: none; /* Remove bordas */
-  border-radius: 6px; /* Cantos arredondados */
-  cursor: pointer; /* Muda o cursor para interativo */
-  font-weight: bold; /* Texto em negrito */
-  transition: 0.3s; /* Suaviza a mudança de cor */
-  width: 100%; /* Ajusta ao tamanho do container */
-  max-width: 200px; /* Define um limite de largura */
-}
-
-.upload-btn:hover {
-  background: var(--deep-green); /* Escurece ao passar o mouse */
-  color: white; /* Muda a cor do texto */
-}
-
-/* 🔹 Tabela de Arquivos */
-.file-table {
-  width: 90%; /* Ajusta à largura da tela */
-  max-width: 800px; /* Limita o tamanho da tabela */
-  margin-top: 20px; /* Espaçamento acima */
-  border-collapse: collapse; /* Remove espaçamento entre bordas */
-  background: var(--black-transparent); /* Fundo escuro */
-  border-radius: 12px; /* Cantos arredondados */
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5); /* Adiciona uma sombra */
-  overflow: hidden; /* Evita transbordamento */
-}
-
-.file-table th,
-.file-table td {
-  padding: 15px; /* Espaçamento interno das células */
-  text-align: center; /* Centraliza o texto */
-  color: white; /* Cor do texto */
-  font-size: 16px; /* Define o tamanho do texto */
-}
-
-.file-table th {
-  background: var(--deep-green); /* Cor do cabeçalho da tabela */
-  font-weight: bold; /* Deixa os títulos em negrito */
-}
-
-/* 🔹 Ajuste dos Botões de Ação (Baixar e Excluir) */
-.action-container {
-  display: flex; /* Usa Flexbox */
-  justify-content: center; /* Centraliza os botões */
-  gap: 10px; /* Adiciona um espaço entre os botões */
-}
-
-.action-btn {
-  padding: 10px 14px; /* Espaçamento interno */
-  font-size: 14px; /* Tamanho do texto */
-  border: none; /* Remove bordas */
-  border-radius: 6px; /* Cantos arredondados */
-  cursor: pointer; /* Muda o cursor para indicar clique */
-  transition: all 0.3s ease; /* Suaviza as transições */
-  font-weight: bold; /* Negrito */
-  display: inline-block; /* Mantém o botão alinhado */
-  text-align: center; /* Centraliza o texto */
-  width: 90px; /* Define um tamanho fixo */
-}
-
-.download-btn {
-  background-color: var(--soft-green);
-  color: var(--dark-gray);
-}
-
-.delete-btn {
-  background-color: var(--red);
+/* 🔹 Header fixo e exclusivo do Dashboard */
+.dashboard-page-header {
+  background-color: var(--dark-gray);
   color: white;
+  padding: 10px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.5);
+}
+
+/* 🔹 Ajuste para evitar que o conteúdo fique coberto pelo header */
+.dashboard-page-container {
+  padding-top: 80px;
+  width: 100%;
+}
+
+/* 🔹 Título do cabeçalho */
+.dashboard-page-header h1 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: white;
+}
+
+/* 🔹 Navegação do Header */
+.dashboard-page-nav {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+
+/* 🔹 Botões do Header */
+.dashboard-page-nav a {
+  background: none;
+  border: none;
+  color: white;
+  padding: 6px 10px;
+  font-size: 0.85rem;
+  border-radius: 5px;
+  text-decoration: none;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+.dashboard-page-nav a:hover {
+  background-color: var(--soft-green);
+  color: black;
+}
+
+/* 🔹 Área principal */
+.dashboard-page-content {
+  width: 100%;
+  padding: 30px;
+  background: rgba(0, 0, 0, 0.6);
+  color: white;
+}
+
+/* 🔹 Upload Box */
+.dashboard-page-upload-box {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 15px;
+  border-radius: 5px;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+/* 🔹 Tabela de arquivos */
+.dashboard-page-file-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.dashboard-page-file-table th,
+.dashboard-page-file-table td {
+  padding: 10px;
+  border-bottom: 1px solid var(--medium-gray);
+  text-align: center;
+}
+
+/* 🔹 Botões */
+.dashboard-page-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+}
+
+.dashboard-page-download-btn {
+  background-color: var(--soft-green);
+}
+
+.dashboard-page-delete-btn {
+  background-color: #ff4c4c;
+}
+
+/* 🔹 Responsividade */
+@media (max-width: 768px) {
+  .dashboard-page-header {
+    flex-direction: column;
+  }
+
+  .dashboard-page-content {
+    padding: 20px;
+  }
 }

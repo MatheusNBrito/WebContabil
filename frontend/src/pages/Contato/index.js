@@ -29,24 +29,24 @@ export default function Contato() {
   };
 
   return (
-    <div className="contato-container">
-      {/* 🔹 Cabeçalho igual ao Login */}
-      <header className="contato-header">
+    <div className="contato-page-container">
+      {/* 🔹 Cabeçalho específico para a página de contato */}
+      <header className="contato-page-header">
         <h1>Entre em Contato</h1>
-        <nav className="contato-nav">
-          <Link to="/" className="nav-btn">Home</Link>
-          <Link to="/register" className="nav-btn">Cadastrar-se</Link>
+        <nav className="contato-page-nav">
+          <Link to="/" className="contato-page-btn">Home</Link>
+          <Link to="/register" className="contato-page-btn">Cadastrar-se</Link>
         </nav>
       </header>
 
       {/* 🔹 Formulário de Contato */}
-      <main className="contato-box">
+      <main className="contato-page-box">
         <h2>Envie sua mensagem</h2>
         <p>Retornaremos o mais breve possível.</p>
 
-        {successMessage && <p className="success-message">{successMessage}</p>}
+        {successMessage && <p className="contato-page-success-message">{successMessage}</p>}
 
-        <form className="contato-form" onSubmit={handleSubmit}>
+        <form className="contato-page-form" onSubmit={handleSubmit}>
           <input
             type="text"
             name="nome"
@@ -54,7 +54,7 @@ export default function Contato() {
             value={formData.nome}
             onChange={handleChange}
             required
-            className="contato-input"
+            className="contato-page-input"
           />
           <input
             type="email"
@@ -63,7 +63,7 @@ export default function Contato() {
             value={formData.email}
             onChange={handleChange}
             required
-            className="contato-input"
+            className="contato-page-input"
           />
           <textarea
             name="mensagem"
@@ -72,12 +72,10 @@ export default function Contato() {
             value={formData.mensagem}
             onChange={handleChange}
             required
-            className="contato-input"
+            className="contato-page-input"
           />
-          <button type="submit" className="contato-btn">Enviar</button>
+          <button type="submit" className="contato-page-submit-btn">Enviar</button>
         </form>
-
-        
       </main>
     </div>
   );

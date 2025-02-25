@@ -62,57 +62,57 @@ export default function Dashboard() {
     }
 };
 
-  return (
-    <div className="dashboard-container">
-      <header className="dashboard-header">
-        <h1>Área do Cliente</h1>
-        <nav>
-          <Link to="/">Home</Link>
-          <Link to="/logout">Sair</Link>
-        </nav>
-      </header>
+return (
+  <div className="dashboard-page-container">
+    <header className="dashboard-page-header">
+      <h1>Área do Cliente</h1>
+      <nav className="dashboard-page-nav">
+        <Link to="/">Home</Link>
+        <Link to="/logout">Sair</Link>
+      </nav>
+    </header>
 
-      <main className="dashboard-content">
-        <h2>Upload de Arquivos</h2>
-        <div className="upload-box">
-          <input type="file" onChange={handleFileChange} />
-          <button onClick={handleUpload}>Enviar</button>
-        </div>
+    <main className="dashboard-page-content">
+      <h2>Upload de Arquivos</h2>
+      <div className="dashboard-page-upload-box">
+        <input type="file" onChange={handleFileChange} />
+        <button onClick={handleUpload}>Enviar</button>
+      </div>
 
-        <h2>Meus Arquivos</h2>
-        {files.length === 0 ? (
-          <p>Nenhum arquivo encontrado.</p>
-        ) : (
-          <table className="file-table">
-            <thead>
-              <tr>
-                <th>Nome</th>
-                <th>Data de Envio</th>
-                <th>Ações</th>
+      <h2>Meus Arquivos</h2>
+      {files.length === 0 ? (
+        <p>Nenhum arquivo encontrado.</p>
+      ) : (
+        <table className="dashboard-page-file-table">
+          <thead>
+            <tr>
+              <th>Nome</th>
+              <th>Data de Envio</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            {files.map((file) => (
+              <tr key={file._id}>
+                <td>{file.filename}</td>
+                <td>{new Date(file.createdAt).toLocaleDateString()}</td>
+                <td className="dashboard-page-actions">
+                  <a
+                    href={`http://localhost:3000/files/download/${file._id}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="dashboard-page-download-btn"
+                  >
+                    Baixar
+                  </a>
+                  <button className="dashboard-page-delete-btn" onClick={() => handleDelete(file._id)}>Excluir</button>
+                </td>
               </tr>
-            </thead>
-            <tbody>
-              {files.map((file) => (
-                <tr key={file._id}>
-                  <td>{file.filename}</td>
-                  <td>{new Date(file.createdAt).toLocaleDateString()}</td>
-                  <td>
-                    <a
-                      href={`http://localhost:3000/files/download/${file._id}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="download-btn"
-                    >
-                      Baixar
-                    </a>
-                    <button className="delete-btn" onClick={() => handleDelete(file._id)}>Excluir</button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
-      </main>
-    </div>
-  );
+            ))}
+          </tbody>
+        </table>
+      )}
+    </main>
+  </div>
+);
 }

@@ -1,4 +1,4 @@
-/* 🔹 Importando a fonte Poppins para manter o padrão */
+/* 🔹 Importando a fonte Poppins */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
 
 /* 🔹 Definição das variáveis de cores baseadas na paleta */
@@ -10,21 +10,25 @@
   --deep-green: #537A5A;
 }
 
-/* 🔹 Estilização Geral */
-body {
-  background-color: var(--dark-gray);
-  color: var(--light-gray);
-  font-family: 'Poppins', sans-serif;
+/* 🔹 Reset Geral */
+* {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-/* 🔹 Header fixo e slim */
-.sobre-header {
+/* 🔹 Body */
+body {
+  background-color: var(--dark-gray);
+  color: var(--light-gray);
+  font-family: 'Poppins', sans-serif;
+}
+
+/* 🔹 Cabeçalho fixo e exclusivo da página Sobre */
+.sobre-page-header {
   background-color: var(--dark-gray);
   color: white;
-  padding: 5px 20px;
+  padding: 10px 20px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -37,88 +41,109 @@ body {
 }
 
 /* 🔹 Ajuste para evitar que o conteúdo fique coberto pelo header */
-.sobre-container {
-  padding-top: 70px;
+.sobre-page-container {
+  padding-top: 80px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
 }
 
 /* 🔹 Título do cabeçalho */
-.sobre-header h1 {
-  font-size: 1.1rem;
+.sobre-page-header h1 {
+  font-size: 1.5rem;
   font-weight: 600;
-  padding-left: 10px;
+  color: white;
 }
 
 /* 🔹 Navegação do Header */
-.sobre-nav {
+.sobre-page-nav {
   display: flex;
   gap: 15px;
   align-items: center;
 }
 
-.nav-btn {
-  background: none; /* Sem fundo */
-  border: none; /* Sem borda */
+/* 🔹 Botões do Header */
+.sobre-page-btn {
+  background: none;
+  border: none;
   color: white;
-  padding: 6px 10px; /* Mesmo padding da Home */
-  font-size: 0.85rem; /* Mesmo tamanho de fonte */
+  padding: 6px 10px;
+  font-size: 0.85rem;
   border-radius: 5px;
+  text-decoration: none;
   transition: background 0.3s ease, color 0.3s ease;
 }
 
-.nav-btn:hover {
-  color: var(--soft-green);
+.sobre-page-btn:hover {
+  background-color: var(--soft-green);
   color: black;
 }
 
-/* 🔹 Conteúdo Principal */
-.sobre-box {
+/* 🔹 Caixa do conteúdo principal */
+.sobre-page-box {
+  width: 100%;
   max-width: 800px;
-  margin: auto;
-  padding: 40px 20px;
-  text-align: center;
-}
-
-/* 🔹 Seções */
-.sobre-box section {
-  margin-bottom: 30px;
-  background: rgba(255, 255, 255, 0.05);
-  padding: 20px;
+  padding: 30px;
+  background: rgba(0, 0, 0, 0.6);
   border-radius: 8px;
+  text-align: center;
+  color: white;
 }
 
-/* 🔹 Títulos */
-.sobre-box h2 {
-  color: var(--soft-green);
-  font-size: 1.5rem;
-  margin-bottom: 10px;
+/* 🔹 Estilização dos blocos de conteúdo */
+.sobre-page-intro,
+.sobre-page-servicos,
+.sobre-page-diferenciais {
+  margin-bottom: 20px;
 }
 
-/* 🔹 Lista de diferenciais */
-.diferenciais ul {
+/* 🔹 Listagem de serviços */
+.sobre-page-servicos-lista {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.sobre-page-servico-item {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 15px;
+  border-radius: 5px;
+  margin: 5px;
+  text-align: left;
+}
+
+/* 🔹 Diferenciais */
+.sobre-page-diferenciais ul {
   list-style: none;
   padding: 0;
 }
 
-.diferenciais li {
-  padding: 8px;
-  background: rgba(255, 255, 255, 0.05);
-  margin: 5px 0;
+.sobre-page-diferenciais li {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 10px;
+  margin-bottom: 5px;
   border-radius: 5px;
+  text-align: left;
 }
 
-/* 🔹 Botão "Fale Conosco" */
-.contato-btn {
-  display: inline-block;
+/* 🔹 Botão de Contato */
+.sobre-page-contato-btn {
   background-color: var(--deep-green);
   color: white;
-  padding: 10px 20px;
+  border: none;
+  padding: 12px 18px;
   font-size: 1rem;
   border-radius: 5px;
-  text-decoration: none;
+  cursor: pointer;
   transition: background 0.3s ease, transform 0.2s ease;
+  text-decoration: none;
+  display: inline-block;
+  margin-top: 15px;
 }
 
-.contato-btn:hover {
+.sobre-page-contato-btn:hover {
   background-color: var(--soft-green);
   transform: scale(1.05);
   color: black;
@@ -126,19 +151,24 @@ body {
 
 /* 🔹 Responsividade */
 @media (max-width: 768px) {
-  .sobre-header {
+  .sobre-page-header {
     flex-direction: column;
     text-align: center;
     padding: 8px;
   }
 
-  .sobre-nav {
+  .sobre-page-nav {
     flex-direction: column;
     gap: 8px;
     margin-top: 5px;
   }
 
-  .sobre-box {
-    padding: 30px 15px;
+  .sobre-page-box {
+    padding: 25px;
+    width: 90%;
+  }
+
+  .sobre-page-servicos-lista {
+    flex-direction: column;
   }
 }

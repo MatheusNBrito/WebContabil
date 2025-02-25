@@ -41,6 +41,17 @@ body {
   padding-top: 70px;
 }
 
+/* 🔹 Remover linha branca abaixo dos botões do header */
+.login-nav a,
+.register-nav a,
+.sobre-nav a,
+.home-nav a {
+  text-decoration: none; /* Remove sublinhado */
+  border-bottom: none; /* Remove borda inferior */
+  box-shadow: none; /* Remove sombra indesejada */
+}
+
+
 /* 🔹 Título do cabeçalho */
 .register-title {
   font-size: 1.1rem;
