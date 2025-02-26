@@ -4,7 +4,7 @@ import "./home.css";
 
 export default function Home() {
   return (
-    <div className="home-container">
+    <div className="home-page">
       {/* 🔹 Cabeçalho */}
       <header className="home-header">
       <h1 className="home-title">Calveludo</h1>

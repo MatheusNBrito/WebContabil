@@ -35,9 +35,9 @@ export default function Login() {
   };
 
   return (
-    <div className="login-container">
+    <div className="login-page">
       <header className="login-header">
-        <h1>Login</h1>
+        <h1 className="login-title">Login</h1>
         <nav className="login-nav">
           <Link to="/">Home</Link>
           <Link to="/register">Cadastre-se</Link>

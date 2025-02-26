@@ -4,7 +4,7 @@ import "./sobre.css";
 
 export default function Sobre() {
   return (
-    <div className="sobre-page-container">
+    <div className="sobre-page">
       {/* 🔹 Cabeçalho específico para a página Sobre */}
       <header className="sobre-page-header">
         <h1>Sobre Nós</h1>
@@ -17,7 +17,7 @@ export default function Sobre() {
       {/* 🔹 Conteúdo Principal */}
       <main className="sobre-page-box">
         <section className="sobre-page-intro">
-          <h2>Sobre Nossa Empresa</h2>
+          <h2 className="sobre-title">Sobre Nossa Empresa</h2>
           <p>
             Somos uma empresa comprometida em fornecer soluções inovadoras e eficientes para nossos clientes.
             Nossa missão é entregar serviços de alta qualidade, sempre focados na satisfação e no sucesso de quem confia em nós.
@@ -25,7 +25,7 @@ export default function Sobre() {
         </section>
 
         <section className="sobre-page-servicos">
-          <h2>Nossos Serviços</h2>
+          <h2 className="sobre-title">Nossos Serviços</h2>
           <div className="sobre-page-servicos-lista">
             <div className="sobre-page-servico-item">
               <h3>Serviço 1</h3>
@@ -43,7 +43,7 @@ export default function Sobre() {
         </section>
 
         <section className="sobre-page-diferenciais">
-          <h2>Por que escolher nossa empresa?</h2>
+          <h2 className="sobre-title">Por que escolher nossa empresa?</h2>
           <ul>
             <li>Compromisso com a qualidade e inovação</li>
             <li>Atendimento personalizado para cada cliente</li>

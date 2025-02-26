@@ -1,32 +1,22 @@
 /* 🔹 Importando a fonte Poppins */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
 
-/* 🔹 Definição das variáveis de cores baseadas na paleta */
-:root {
-  --dark-gray: #2C302E;
-  --medium-gray: #474A48;
-  --light-gray: #909590;
-  --soft-green: #9AE19D;
-  --deep-green: #537A5A;
-}
+/* 🔹 Exclusividade das cores da página Contato */
+.contato-page {
+  --contato-dark-gray: #2C302E;
+  --contato-medium-gray: #474A48;
+  --contato-light-gray: #909590;
+  --contato-soft-green: #9AE19D;
+  --contato-deep-green: #537A5A;
 
-/* 🔹 Reset Geral */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-/* 🔹 Body */
-body {
-  background-color: var(--dark-gray);
-  color: var(--light-gray);
+  background-color: var(--contato-dark-gray);
+  color: var(--contato-light-gray);
   font-family: 'Poppins', sans-serif;
 }
 
-/* 🔹 Cabeçalho fixo e exclusivo da página */
+/* 🔹 Header fixo e exclusivo */
 .contato-page-header {
-  background-color: var(--dark-gray);
+  background-color: var(--contato-dark-gray);
   color: white;
   padding: 10px 20px;
   display: flex;
@@ -40,13 +30,21 @@ body {
   box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.5);
 }
 
-/* 🔹 Ajuste para evitar que o conteúdo fique coberto pelo header */
+/* 🔹 Título do cabeçalho */
+.contato-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: white;
+}
+
+/* 🔹 Ajuste para evitar sobreposição do header */
 .contato-page-container {
-  padding-top: 80px;
+  padding-top: 100px;
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
+  flex-direction: column;
 }
 
 /* 🔹 Título do cabeçalho */
@@ -64,7 +62,7 @@ body {
 }
 
 /* 🔹 Botões do Header */
-.contato-page-btn {
+.contato-page-nav a {
   background: none;
   border: none;
   color: white;
@@ -75,8 +73,8 @@ body {
   transition: background 0.3s ease, color 0.3s ease;
 }
 
-.contato-page-btn:hover {
-  background-color: var(--soft-green);
+.contato-page-nav a:hover {
+  background-color: var(--contato-soft-green);
   color: black;
 }
 
@@ -85,26 +83,27 @@ body {
   width: 100%;
   max-width: 500px;
   padding: 30px;
-  background: rgba(0, 0, 0, 0.6);
+  background: rgba(0, 0, 0, 0.7);
   border-radius: 8px;
   text-align: center;
   color: white;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
 }
 
 /* 🔹 Título */
 .contato-page-box h2 {
-  color: var(--soft-green);
+  color: var(--contato-soft-green);
   font-size: 1.5rem;
-  margin-bottom: 10px;
+  margin-bottom: 15px;
 }
 
 /* 🔹 Estilização dos inputs e textarea */
 .contato-page-input {
   width: 100%;
   padding: 12px;
-  margin: 8px 0;
+  margin: 10px 0;
   background: rgba(255, 255, 255, 0.1);
-  border: 1px solid var(--medium-gray);
+  border: 1px solid var(--contato-medium-gray);
   border-radius: 5px;
   color: white;
   font-size: 1rem;
@@ -113,16 +112,16 @@ body {
 }
 
 .contato-page-input::placeholder {
-  color: var(--light-gray);
+  color: var(--contato-light-gray);
 }
 
 .contato-page-input:focus {
-  border-color: var(--soft-green);
+  border-color: var(--contato-soft-green);
 }
 
 /* 🔹 Botão de Enviar */
 .contato-page-submit-btn {
-  background-color: var(--deep-green);
+  background-color: var(--contato-deep-green);
   color: white;
   border: none;
   padding: 12px 18px;
@@ -131,11 +130,11 @@ body {
   cursor: pointer;
   transition: background 0.3s ease, transform 0.2s ease;
   width: 100%;
-  margin-top: 10px;
+  margin-top: 15px;
 }
 
 .contato-page-submit-btn:hover {
-  background-color: var(--soft-green);
+  background-color: var(--contato-soft-green);
   transform: scale(1.05);
   color: black;
 }
@@ -154,7 +153,7 @@ body {
   .contato-page-header {
     flex-direction: column;
     text-align: center;
-    padding: 8px;
+    padding: 10px;
   }
 
   .contato-page-nav {

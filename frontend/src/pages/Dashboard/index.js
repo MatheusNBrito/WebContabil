@@ -65,7 +65,7 @@ export default function Dashboard() {
 return (
   <div className="dashboard-page-container">
     <header className="dashboard-page-header">
-      <h1>Área do Cliente</h1>
+      <h1 className="dashboard-title">Área do Cliente</h1>
       <nav className="dashboard-page-nav">
         <Link to="/">Home</Link>
         <Link to="/logout">Sair</Link>
@@ -73,13 +73,13 @@ return (
     </header>
 
     <main className="dashboard-page-content">
-      <h2>Upload de Arquivos</h2>
+      <h2 className="dash-title">Upload de Arquivos</h2>
       <div className="dashboard-page-upload-box">
         <input type="file" onChange={handleFileChange} />
         <button onClick={handleUpload}>Enviar</button>
       </div>
 
-      <h2>Meus Arquivos</h2>
+      <h2 className="dash-title">Meus Arquivos</h2>
       {files.length === 0 ? (
         <p>Nenhum arquivo encontrado.</p>
       ) : (

@@ -7,6 +7,7 @@ import Dashboard from "./pages/Dashboard";
 import Sobre from "./pages/Sobre";
 import Contato from "./pages/Contato";
 import Admin from "./pages/Admin";
+import './global.css';  // 🔹 Importando o CSS global
 
 export default function App() {
   return (

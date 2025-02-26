@@ -103,7 +103,7 @@ export default function Admin() {
     <div className="admin-page">
       {/* 🔹 Cabeçalho do Admin */}
       <header className="admin-header">
-        <h1>Painel do Administrador</h1>
+        <h1 className="admin-title">Painel do Administrador</h1>
         <nav className="admin-nav">
           <Link to="/" className="nav-btn">
             Home
@@ -113,21 +113,21 @@ export default function Admin() {
       </header>
 
       {/* 🔹 Mensagens de Carregamento e Erro */}
-      {loading && <p className="loading">🔄 Carregando...</p>}
-      {error && <p className="error">{error}</p>}
+      {loading && <p className="admin-loading">🔄 Carregando...</p>}
+      {error && <p className="admin-error">{error}</p>}
 
       {/* 🔹 Lista de Clientes */}
-      <section className="clientes-container">
-        <h2>Clientes Cadastrados</h2>
-        <div className="clientes-lista">
+      <section className="admin-clientes-section">
+        <h2 className="admin-section-title">Clientes Cadastrados</h2>
+        <div className="admin-clientes-lista">
           {clientes.length > 0 ? (
             clientes.map((cliente) => (
-              <div key={cliente._id} className="cliente-item">
+              <div key={cliente._id} className="admin-cliente-item">
                 <h3>{cliente.name}</h3>
                 <p>Email: {cliente.email}</p>
 
                 {/* 🔹 Seção de Upload de Arquivos */}
-                <div className="upload-section">
+                <div className="admin-upload-section">
                   <input
                     type="file"
                     onChange={(e) => {
@@ -135,14 +135,16 @@ export default function Admin() {
                       setCurrentClient(cliente._id);
                     }}
                   />
-                  <button onClick={() => handleFileUpload(cliente._id)}>
+                  <button 
+                  className="admin-upload-btn"
+                  onClick={() => handleFileUpload(cliente._id)}>
                     Enviar Arquivo
                   </button>
                 </div>
 
                 {/* 🔹 Seção de Arquivos do Cliente */}
-                <div className="arquivos-do-cliente">
-                  <h4>Arquivos Enviados</h4>
+                <div className="admin-arquivos-container">
+                  <h4 className="admin-arquivos-title">Arquivos Enviados</h4>
 
                   {arquivos.some(
                     (arquivo) => arquivo.assignedTo === cliente._id
@@ -159,20 +161,20 @@ export default function Admin() {
                           {Object.entries(arquivosOrganizados).map(
                             ([tipo, lista]) =>
                               lista.length > 0 && (
-                                <div key={tipo} className="categoria-arquivos">
+                                <div key={tipo} className="admin-arquivos-lista">
                                   <h5>{tipo.toUpperCase()}</h5>
                                   {lista.map((arquivo) => (
                                     <div
                                       key={arquivo._id}
-                                      className="arquivo-item"
+                                      className="admin-arquivo-item"
                                     >
-                                      <p>
+                                      <p className="admin-arquivo-nome">
                                         <strong>Arquivo:</strong>{" "}
                                         {arquivo.filename}
                                       </p>
                                       <a
                                         href={`http://localhost:3000/files/download/${arquivo._id}`}
-                                        className="download-btn"
+                                        className="admin-download-btn"
                                       >
                                         📥 Baixar Arquivo
                                       </a>
@@ -185,13 +187,13 @@ export default function Admin() {
                       );
                     })()
                   ) : (
-                    <p className="nenhum-arquivo">Nenhum arquivo enviado.</p>
+                    <p className="admin-nenhum-arquivo">Nenhum arquivo enviado.</p>
                   )}
                 </div>
               </div>
             ))
           ) : (
-            <p>Nenhum cliente cadastrado.</p>
+            <p className="admin-nenhum-cliente">Nenhum cliente cadastrado.</p>
           )}
         </div>
       </section>

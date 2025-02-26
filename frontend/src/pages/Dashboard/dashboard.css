@@ -1,25 +1,22 @@
 /* 🔹 Importando a fonte Poppins */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
 
-/* 🔹 Definição das variáveis de cores baseadas na paleta */
-:root {
-  --dark-gray: #2C302E;
-  --medium-gray: #474A48;
-  --light-gray: #909590;
-  --soft-green: #9AE19D;
-  --deep-green: #537A5A;
-}
+/* 🔹 Definição exclusiva para a página Dashboard */
+.dashboard-page-container {
+  --dashboard-dark-gray: #2C302E;
+  --dashboard-medium-gray: #474A48;
+  --dashboard-light-gray: #909590;
+  --dashboard-soft-green: #9AE19D;
+  --dashboard-deep-green: #537A5A;
 
-/* 🔹 Reset Geral */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+  color: var(--dashboard-light-gray);
+  font-family: 'Poppins', sans-serif;
+  width: 100%;
 }
 
 /* 🔹 Header fixo e exclusivo do Dashboard */
 .dashboard-page-header {
-  background-color: var(--dark-gray);
+  background-color: var(--dashboard-dark-gray);
   color: white;
   padding: 10px 20px;
   display: flex;
@@ -33,14 +30,17 @@
   box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.5);
 }
 
-/* 🔹 Ajuste para evitar que o conteúdo fique coberto pelo header */
+/* 🔹 Ajuste para evitar sobreposição do header */
 .dashboard-page-container {
   padding-top: 80px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   width: 100%;
 }
 
 /* 🔹 Título do cabeçalho */
-.dashboard-page-header h1 {
+.dashboard-title {
   font-size: 1.5rem;
   font-weight: 600;
   color: white;
@@ -66,16 +66,26 @@
 }
 
 .dashboard-page-nav a:hover {
-  background-color: var(--soft-green);
+  background-color: var(--dashboard-soft-green);
   color: black;
 }
 
 /* 🔹 Área principal */
 .dashboard-page-content {
   width: 100%;
+  max-width: 900px;
   padding: 30px;
   background: rgba(0, 0, 0, 0.6);
+  border-radius: 8px;
+  text-align: center;
   color: white;
+}
+
+/* 🔹 Títulos */
+.dash-title {
+  color: var(--dashboard-soft-green);
+  font-size: 1.5rem;
+  margin-bottom: 15px;
 }
 
 /* 🔹 Upload Box */
@@ -87,41 +97,107 @@
   margin-bottom: 20px;
 }
 
+/* 🔹 Botão de Upload */
+.dashboard-page-upload-box button {
+  background-color: var(--dashboard-deep-green);
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  font-size: 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.dashboard-page-upload-box button:hover {
+  background-color: var(--dashboard-soft-green);
+  transform: scale(1.05);
+  color: black;
+}
+
 /* 🔹 Tabela de arquivos */
 .dashboard-page-file-table {
   width: 100%;
   border-collapse: collapse;
+  margin-top: 15px;
 }
 
 .dashboard-page-file-table th,
 .dashboard-page-file-table td {
-  padding: 10px;
-  border-bottom: 1px solid var(--medium-gray);
+  padding: 12px;
+  border-bottom: 1px solid var(--dashboard-medium-gray);
   text-align: center;
 }
 
-/* 🔹 Botões */
+.dashboard-page-file-table th {
+  background-color: var(--dashboard-medium-gray);
+  color: white;
+}
+
+/* 🔹 Botões de Ações */
 .dashboard-page-actions {
   display: flex;
-  gap: 8px;
+  gap: 10px;
   justify-content: center;
 }
 
+.dashboard-page-download-btn,
+.dashboard-page-delete-btn {
+  padding: 8px 12px;
+  border-radius: 5px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
 .dashboard-page-download-btn {
-  background-color: var(--soft-green);
+  background-color: var(--dashboard-soft-green);
+  color: black;
+}
+
+.dashboard-page-download-btn:hover {
+  background-color: var(--dashboard-deep-green);
+  color: white;
+  transform: scale(1.05);
 }
 
 .dashboard-page-delete-btn {
   background-color: #ff4c4c;
+  color: white;
+  border: none;
+}
+
+.dashboard-page-delete-btn:hover {
+  background-color: #d63031;
+  transform: scale(1.05);
 }
 
 /* 🔹 Responsividade */
 @media (max-width: 768px) {
   .dashboard-page-header {
     flex-direction: column;
+    text-align: center;
+    padding: 10px;
+  }
+
+  .dashboard-page-nav {
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 5px;
   }
 
   .dashboard-page-content {
-    padding: 20px;
+    padding: 25px;
+    width: 90%;
+  }
+
+  .dashboard-page-file-table th,
+  .dashboard-page-file-table td {
+    padding: 8px;
+  }
+
+  .dashboard-page-actions {
+    flex-direction: column;
+    gap: 5px;
   }
 }

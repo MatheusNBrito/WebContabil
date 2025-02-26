@@ -29,10 +29,10 @@ export default function Contato() {
   };
 
   return (
-    <div className="contato-page-container">
+    <div className="contato-page">
       {/* 🔹 Cabeçalho específico para a página de contato */}
       <header className="contato-page-header">
-        <h1>Entre em Contato</h1>
+        <h1 className="contato-title">Entre em Contato</h1>
         <nav className="contato-page-nav">
           <Link to="/" className="contato-page-btn">Home</Link>
           <Link to="/register" className="contato-page-btn">Cadastrar-se</Link>

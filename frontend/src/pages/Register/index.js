@@ -49,7 +49,7 @@ export default function Register() {
   };
 
   return (
-    <div className="register-container">
+    <div className="register-page">
       <header className="register-header">
         <h1 className="register-title">Cadastro</h1>
         <nav className="register-nav">

@@ -1,30 +1,17 @@
-/* 🔹 Importando a fonte Poppins para manter o padrão */
+/* 🔹 Importando a fonte Poppins */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
 
-/* 🔹 Definição das variáveis de cores baseadas na paleta */
-:root {
-  --dark-gray: #2C302E;
-  --medium-gray: #474A48;
-  --light-gray: #909590;
-  --soft-green: #9AE19D;
-  --deep-green: #537A5A;
-}
-
-/* 🔹 Estilização Geral */
-body {
-  background-color: var(--dark-gray);
-  color: var(--light-gray);
+/* 🔹 Definição de cores específicas da página Register */
+.register-page {
+  color: #909590; /* Light Gray */
   font-family: 'Poppins', sans-serif;
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
 }
 
-/* 🔹 Header fixo e slim */
+/* 🔹 HEADER FIXO NO TOPO */
 .register-header {
-  background-color: var(--dark-gray);
+  background-color: #2C302E; /* Dark Gray */
   color: white;
-  padding: 5px 20px;
+  padding: 10px 20px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -36,37 +23,31 @@ body {
   box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.5);
 }
 
-/* 🔹 Ajuste para evitar que o conteúdo fique coberto pelo header */
-.register-container {
-  padding-top: 70px;
+/* 🔹 Ajuste para evitar sobreposição do header */
+.register-page {
+  padding-top: 80px; /* Garante que o conteúdo não fique escondido */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  flex-direction: column;
 }
-
-/* 🔹 Remover linha branca abaixo dos botões do header */
-.login-nav a,
-.register-nav a,
-.sobre-nav a,
-.home-nav a {
-  text-decoration: none; /* Remove sublinhado */
-  border-bottom: none; /* Remove borda inferior */
-  box-shadow: none; /* Remove sombra indesejada */
-}
-
 
 /* 🔹 Título do cabeçalho */
 .register-title {
-  font-size: 1.1rem;
+  font-size: 1.5rem;
   font-weight: 600;
-  padding-left: 10px;
+  color: white;
 }
 
-/* 🔹 Navegação do Header */
+/* 🔹 NAV DO HEADER */
 .register-nav {
   display: flex;
   gap: 15px;
   align-items: center;
 }
 
-/* 🔹 Botões do Header (iguais ao da Home) */
+/* 🔹 BOTÕES DO HEADER */
 .register-nav a {
   background: none;
   border: none;
@@ -74,28 +55,30 @@ body {
   padding: 6px 10px;
   font-size: 0.85rem;
   border-radius: 5px;
+  text-decoration: none;
   transition: background 0.3s ease, color 0.3s ease;
 }
 
 .register-nav a:hover {
-  background-color: var(--soft-green);
+  background-color: #9AE19D; /* Soft Green */
   color: black;
 }
 
 /* 🔹 Caixa de cadastro */
 .register-box {
+  width: 100%;
   max-width: 400px;
-  margin: 50px auto;
   padding: 30px;
-  background: rgba(0, 0, 0, 0.6); /* Agora com mais opacidade */
+  background: rgba(0, 0, 0, 0.7);
   border-radius: 8px;
   text-align: center;
-  color: white; /* Garante que o texto fique visível */
+  color: white;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
 }
 
 /* 🔹 Título */
 .register-heading {
-  color: var(--soft-green);
+  color: #9AE19D; /* Soft Green */
   font-size: 1.5rem;
   margin-bottom: 15px;
 }
@@ -103,10 +86,10 @@ body {
 /* 🔹 Estilização dos inputs */
 .register-input {
   width: 100%;
-  padding: 10px;
-  margin: 8px 0;
+  padding: 12px;
+  margin: 10px 0;
   background: rgba(255, 255, 255, 0.1);
-  border: 1px solid var(--medium-gray);
+  border: 1px solid #474A48; /* Medium Gray */
   border-radius: 5px;
   color: white;
   font-size: 1rem;
@@ -114,16 +97,16 @@ body {
 }
 
 .register-input::placeholder {
-  color: var(--light-gray);
+  color: #909590; /* Light Gray */
 }
 
 .register-input:focus {
-  border-color: var(--soft-green);
+  border-color: #9AE19D; /* Soft Green */
 }
 
-/* 🔹 Botão de Cadastro (igual ao da Home) */
+/* 🔹 Botão de Cadastro */
 .register-btn {
-  background-color: var(--deep-green);
+  background-color: #537A5A; /* Deep Green */
   color: white;
   border: none;
   padding: 12px 18px;
@@ -132,11 +115,11 @@ body {
   cursor: pointer;
   transition: background 0.3s ease, transform 0.2s ease;
   width: 100%;
-  margin-top: 10px;
+  margin-top: 15px;
 }
 
 .register-btn:hover {
-  background-color: var(--soft-green);
+  background-color: #9AE19D; /* Soft Green */
   transform: scale(1.05);
   color: black;
 }
@@ -165,7 +148,7 @@ body {
 }
 
 .register-login-link a {
-  color: var(--soft-green);
+  color: #9AE19D; /* Soft Green */
   text-decoration: none;
 }
 
@@ -178,7 +161,7 @@ body {
   .register-header {
     flex-direction: column;
     text-align: center;
-    padding: 8px;
+    padding: 10px;
   }
 
   .register-nav {
