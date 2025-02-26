@@ -17,9 +17,19 @@
   box-sizing: border-box;
 }
 
-/* 🔹 Body - APENAS AQUI */
+
+/* 🔹 Configuração Geral */
 body {
-  background-color: var(--dark-gray);
-  color: var(--light-gray);
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
+  color: white;
+  margin: 0;
+  padding: 10;
+  background-image: url('./assets/background3.jpg');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
 }

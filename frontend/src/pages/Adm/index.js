@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { getClients, uploadFileToClient, getClientFiles } from "../../api";
 import "./admin.css";
+import "../../global.css";
 
 export default function Admin() {
   const [clientes, setClientes] = useState([]);

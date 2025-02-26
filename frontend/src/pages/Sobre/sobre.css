@@ -12,8 +12,9 @@
   background-color: var(--dark-gray);
   color: var(--light-gray);
   margin: 0;
-  padding: 0;
+  padding: 0px;
   box-sizing: border-box;
+  margin-top: 10vh;
 }
 
 /* 🔹 Cabeçalho fixo e exclusivo da página Sobre */
