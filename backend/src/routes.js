@@ -349,4 +349,21 @@ router.delete("/files/:fileId", authenticate, async (req, res) => {
     }
 });
 
+// rota de logout
+router.post("/logout", async (req, res) => {
+    console.log("📢 Rota /logout foi chamada!");
+
+    try {
+        // 🚀 Como usamos JWT sem gerenciamento de sessão no backend,
+        // basta informar ao frontend que o logout foi realizado com sucesso.
+        
+        return res.json({ message: "✅ Logout realizado com sucesso!" });
+
+    } catch (error) {
+        console.error("❌ Erro ao realizar logout:", error);
+        return res.status(500).json({ error: "Erro ao realizar logout." });
+    }
+});
+
+
 module.exports = router;

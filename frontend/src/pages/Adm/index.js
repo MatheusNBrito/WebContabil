@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { getClients, uploadFileToClient, getClientFiles } from "../../api";
 import "./admin.css";
 import "../../global.css";
+import axios from "axios";
 
 export default function Admin() {
   const [clientes, setClientes] = useState([]);
@@ -11,6 +12,7 @@ export default function Admin() {
   const [error, setError] = useState("");
   const [selectedFile, setSelectedFile] = useState(null);
   const [currentClient, setCurrentClient] = useState(null);
+  const navigate = useNavigate(); // 🔹 Definindo useNavigate corretamente
 
   // Buscar clientes ao carregar o componente
   useEffect(() => {
@@ -36,6 +38,22 @@ export default function Admin() {
 
     fetchData();
   }, []);
+
+  // 🔹 Função para lidar com o logout
+  const handleLogout = async () => {
+    try {
+      await axios.post("http://localhost:3000/logout"); // 🔹 Chama a API de logout (opcional)
+
+      // 🔹 Remove os dados do usuário do localStorage
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
+
+      // 🔹 Redireciona para a página inicial
+      navigate("/");
+    } catch (error) {
+      console.error("❌ Erro ao fazer logout:", error);
+    }
+  };
 
   // 🔹 Função para agrupar arquivos por extensão
   const organizarArquivosPorTipo = (arquivos) => {
@@ -109,7 +127,7 @@ export default function Admin() {
           <Link to="/" className="nav-btn">
             Home
           </Link>
-          <button className="logout-btn">Logout</button>
+          <button onClick={handleLogout}className="logout-btn">Sair</button>
         </nav>
       </header>
 
