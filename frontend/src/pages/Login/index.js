@@ -22,17 +22,22 @@ export default function Login() {
     try {
       const response = await api.post("/login", formData);
 
-       // 🔹 Salvar o token no localStorage
+      // 🔹 Salvar o token no localStorage
       localStorage.setItem("token", response.data.token);
-      localStorage.setItem("user", JSON.stringify(response.data.user)); // Se precisar armazenar info do user
+      localStorage.setItem("user", JSON.stringify(response.data.user)); 
 
-      alert("✅ Login realizado com sucesso!");
-      navigate("/dashboard"); 
+      // 🔹 Verificar se o usuário é admin ou cliente
+      if (response.data.user.role === "admin") {
+        navigate("/admin"); // Redireciona para o painel Admin
+      } else {
+        navigate("/dashboard"); // Redireciona para o painel Cliente
+      }
     } catch (error) {
       console.error("❌ Erro no login:", error);
       setError(error.response?.data?.error || "Erro ao fazer login.");
     }
   };
+
 
   return (
     <div className="login-page">
