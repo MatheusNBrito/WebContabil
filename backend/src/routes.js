@@ -139,16 +139,24 @@ router.get("/files", checkRole("client"), async (req, res) => {
     console.log(`📢 Rota /files foi chamada pelo usuário ${req.user._id}`);
 
     try {
-        // Buscar arquivos DESTINADOS ao cliente logado (assignedTo)
+        // Buscar TODOS os arquivos destinados ao cliente logado
         const files = await File.find({ assignedTo: req.user._id })
-            .populate("uploadedBy", "name email"); // Popula dados do admin que enviou
+            .populate("uploadedBy", "name email"); // Popula os dados do remetente
 
-        return res.json({ files });
+        // 🔹 Separar os arquivos corretamente
+        const userUploadedFiles = files.filter(file => file.uploadedBy._id.toString() === req.user._id.toString());
+        const adminUploadedFiles = files.filter(file => file.uploadedBy._id.toString() !== req.user._id.toString());
+
+        console.log("🔹 Arquivos enviados pelo cliente:", userUploadedFiles);
+        console.log("🔹 Arquivos enviados pelo admin:", adminUploadedFiles);
+
+        return res.json({ userFiles: userUploadedFiles, systemFiles: adminUploadedFiles });
     } catch (error) {
         console.error("❌ Erro ao buscar arquivos:", error);
         return res.status(500).json({ error: "Erro ao buscar arquivos." });
     }
 });
+
 
 router.get("/admin/files", checkRole("admin"), async (req, res) => {
     console.log("📢 Rota /admin/files foi chamada!");

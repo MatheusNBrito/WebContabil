@@ -4,11 +4,13 @@ import axios from "axios";
 import "./dashboard.css";
 
 export default function Dashboard() {
-  const [files, setFiles] = useState([]);
+  const [userFiles, setUserFiles] = useState([]); // 🔹 Arquivos enviados pelo próprio cliente
+  const [systemFiles, setSystemFiles] = useState([]); // 🔹 Arquivos enviados pelo admin
   const [selectedFile, setSelectedFile] = useState(null);
-  const navigate = useNavigate(); // Para redirecionamento
+  const navigate = useNavigate();
   const token = localStorage.getItem("token");
-  const userId = JSON.parse(localStorage.getItem("user"))?.id;
+  const user = JSON.parse(localStorage.getItem("user"));
+  const userId = user?.id;
 
   useEffect(() => {
     fetchFiles();
@@ -19,11 +21,13 @@ export default function Dashboard() {
       const response = await axios.get("http://localhost:3000/files", {
         headers: { Authorization: `Bearer ${token}` },
       });
-      setFiles(response.data.files);
+
+      setUserFiles(response.data.userFiles); // 🔹 Arquivos enviados pelo cliente
+      setSystemFiles(response.data.systemFiles); // 🔹 Arquivos enviados pelo admin
     } catch (error) {
       console.error("❌ Erro ao buscar arquivos:", error);
     }
-  };
+};
 
   const handleFileChange = (e) => {
     setSelectedFile(e.target.files[0]);
@@ -43,7 +47,7 @@ export default function Dashboard() {
         headers: { Authorization: `Bearer ${token}`, "Content-Type": "multipart/form-data" },
       });
       alert("✅ Arquivo enviado com sucesso!");
-      fetchFiles(); // Atualiza a lista de arquivos
+      fetchFiles();
     } catch (error) {
       console.error("❌ Erro ao enviar arquivo:", error);
     }
@@ -55,7 +59,7 @@ export default function Dashboard() {
         headers: { Authorization: `Bearer ${token}` },
       });
       alert("🗑 Arquivo excluído com sucesso!");
-      fetchFiles(); // Atualiza a lista de arquivos
+      fetchFiles();
     } catch (error) {
       console.error("❌ Erro ao excluir arquivo:", error);
       alert("Erro ao excluir arquivo. Verifique o console para mais detalhes.");
@@ -64,13 +68,11 @@ export default function Dashboard() {
 
   const handleLogout = async () => {
     try {
-      await axios.post("http://localhost:3000/logout"); // Chama a API de logout (opcional)
-      
-      // Remove os dados do usuário
+      await axios.post("http://localhost:3000/logout");
+
       localStorage.removeItem("token");
       localStorage.removeItem("user");
 
-      // Redireciona para a página inicial
       navigate("/");
     } catch (error) {
       console.error("❌ Erro ao fazer logout:", error);
@@ -94,39 +96,78 @@ export default function Dashboard() {
           <button onClick={handleUpload}>Enviar</button>
         </div>
 
-        <h2 className="dash-title">Meus Arquivos</h2>
-        {files.length === 0 ? (
-          <p>Nenhum arquivo encontrado.</p>
-        ) : (
-          <table className="dashboard-page-file-table">
-            <thead>
-              <tr>
-                <th>Nome</th>
-                <th>Data de Envio</th>
-                <th>Ações</th>
-              </tr>
-            </thead>
-            <tbody>
-              {files.map((file) => (
-                <tr key={file._id}>
-                  <td>{file.filename}</td>
-                  <td>{new Date(file.createdAt).toLocaleDateString()}</td>
-                  <td className="dashboard-page-actions">
-                    <a
-                      href={`http://localhost:3000/files/download/${file._id}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="dashboard-page-download-btn"
-                    >
-                      Baixar
-                    </a>
-                    <button className="dashboard-page-delete-btn" onClick={() => handleDelete(file._id)}>Excluir</button>
-                  </td>
+        {/* 🔹 Seção: Meus Arquivos */}
+        <section className="dashboard-section user-files">
+          <h2 className="dash-title">Meus Arquivos</h2>
+          {userFiles.length === 0 ? (
+            <p className="no-files-message">Nenhum arquivo enviado por você.</p>
+          ) : (
+            <table className="dashboard-page-file-table">
+              <thead>
+                <tr>
+                  <th>Nome</th>
+                  <th>Data de Envio</th>
+                  <th>Ações</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
+              </thead>
+              <tbody>
+                {userFiles.map((file) => (
+                  <tr key={file._id}>
+                    <td>{file.filename}</td>
+                    <td>{new Date(file.createdAt).toLocaleDateString()}</td>
+                    <td className="dashboard-page-actions">
+                      <a
+                        href={`http://localhost:3000/files/download/${file._id}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="dashboard-page-download-btn"
+                      >
+                        Baixar
+                      </a>
+                      <button className="dashboard-page-delete-btn" onClick={() => handleDelete(file._id)}>Excluir</button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+        </section>
+
+        {/* 🔹 Seção: Arquivos Enviados pelo Sistema */}
+        <section className="dashboard-section system-files">
+          <h2 className="dash-title">Arquivos Enviados pelo Sistema</h2>
+          {systemFiles.length === 0 ? (
+            <p className="no-files-message">Nenhum arquivo foi enviado para você pelo sistema.</p>
+          ) : (
+            <table className="dashboard-page-file-table">
+              <thead>
+                <tr>
+                  <th>Nome</th>
+                  <th>Data de Envio</th>
+                  <th>Ações</th>
+                </tr>
+              </thead>
+              <tbody>
+                {systemFiles.map((file) => (
+                  <tr key={file._id}>
+                    <td>{file.filename}</td>
+                    <td>{new Date(file.createdAt).toLocaleDateString()}</td>
+                    <td className="dashboard-page-actions">
+                      <a
+                        href={`http://localhost:3000/files/download/${file._id}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="dashboard-page-download-btn"
+                      >
+                        Baixar
+                      </a>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+        </section>
       </main>
     </div>
   );

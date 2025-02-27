@@ -8,6 +8,10 @@
   --dashboard-light-gray: #909590;
   --dashboard-soft-green: #9AE19D;
   --dashboard-deep-green: #537A5A;
+  --dashboard-red: #ff4c4c;
+  --dashboard-dark-red: #d63031;
+  --dashboard-blue: #4c9aff;
+  --dashboard-dark-blue: #1e5aad;
 
   color: var(--dashboard-light-gray);
   font-family: 'Poppins', sans-serif;
@@ -115,6 +119,29 @@
   color: black;
 }
 
+/* 🔹 Seção de Arquivos */
+.dashboard-section {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 15px;
+  border-radius: 5px;
+  text-align: center;
+  margin-top: 20px;
+  width: 100%;
+  max-width: 900px;
+}
+
+/* 🔹 Arquivos enviados pelo Cliente */
+.user-files {
+  border-left: 5px solid var(--dashboard-soft-green);
+  padding-left: 10px;
+}
+
+/* 🔹 Arquivos enviados pelo Sistema */
+.system-files {
+  border-left: 5px solid var(--dashboard-blue);
+  padding-left: 10px;
+}
+
 /* 🔹 Tabela de arquivos */
 .dashboard-page-file-table {
   width: 100%;
@@ -162,14 +189,21 @@
 }
 
 .dashboard-page-delete-btn {
-  background-color: #ff4c4c;
+  background-color: var(--dashboard-red);
   color: white;
   border: none;
 }
 
 .dashboard-page-delete-btn:hover {
-  background-color: #d63031;
+  background-color: var(--dashboard-dark-red);
   transform: scale(1.05);
+}
+
+/* 🔹 Mensagem de "Nenhum Arquivo" */
+.no-files-message {
+  font-size: 1rem;
+  color: var(--dashboard-light-gray);
+  margin-top: 10px;
 }
 
 /* 🔹 Responsividade */
