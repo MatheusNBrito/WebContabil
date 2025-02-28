@@ -108,20 +108,78 @@
 
 /* 🔹 Upload de Arquivos */
 .admin-upload-section {
-  margin-top: 10px;
+  margin-top: 15px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  border: 1px dashed #537A5A;
+  border-radius: 6px;
+  background-color: rgba(44, 48, 46, 0.05);
+  transition: background 0.3s ease-in-out;
+  width: 100%;
+  max-width: 300px; /* Mantém compacto */
 }
 
-.admin-upload-btn {
-  background-color: var(--soft-green);
-  color: var(--dark-gray);
-  padding: 8px 15px;
-  border: none;
-  border-radius: 6px;
-  font-size: 14px;
-  cursor: pointer;
-  font-weight: bold;
-  transition: 0.3s;
+.admin-upload-section:hover {
+  background-color: rgba(44, 48, 46, 0.1);
 }
+
+/* Botão de Seleção Slim */
+.admin-upload-label {
+  display: inline-block;
+  background-color: #537A5A;
+  color: white;
+  font-size: 14px; /* Menor */
+  padding: 6px 12px; /* Mais slim */
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  text-align: center;
+  width: 100%;
+  max-width: 180px; /* Reduz o tamanho máximo */
+}
+
+.admin-upload-label:hover {
+  background-color: #9AE19D;
+  color: #2C302E;
+}
+
+/* Nome do Arquivo Selecionado */
+.admin-file-name {
+  margin-top: 5px;
+  font-size: 12px; /* Fonte menor */
+  color: #474A48;
+  text-align: center;
+}
+
+/* Botão de Envio Slim */
+.admin-upload-btn {
+  margin-top: 6px;
+  background-color: #9AE19D;
+  color: #2C302E;
+  font-size: 13px; /* Fonte menor */
+  padding: 5px 10px; /* Mais compacto */
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  text-align: center;
+  width: 100%;
+  max-width: 140px; /* Menor que o botão de seleção */
+}
+
+.admin-upload-btn:hover {
+  background-color: #537A5A;
+  color: white;
+}
+
+.admin-upload-btn:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
 
 .admin-upload-btn:hover {
   background: var(--deep-green);
@@ -155,8 +213,8 @@
   display: inline-block;
   background: var(--soft-green);
   color: var(--dark-gray);
-  padding: 6px 12px;
-  font-size: 14px;
+  padding: 2px 4px;
+  font-size: 12px;
   border: none;
   border-radius: 6px;
   cursor: pointer;

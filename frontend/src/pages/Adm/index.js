@@ -127,7 +127,9 @@ export default function Admin() {
           <Link to="/" className="nav-btn">
             Home
           </Link>
-          <button onClick={handleLogout}className="logout-btn">Sair</button>
+          <button onClick={handleLogout} className="logout-btn">
+            Sair
+          </button>
         </nav>
       </header>
 
@@ -146,17 +148,35 @@ export default function Admin() {
                 <p>Email: {cliente.email}</p>
 
                 {/* 🔹 Seção de Upload de Arquivos */}
+                {/* 🔹 Seção de Upload de Arquivos */}
                 <div className="admin-upload-section">
+                  <label
+                    className="admin-upload-label"
+                    htmlFor={`file-upload-${cliente._id}`}
+                  >
+                    Selecionar Arquivo
+                  </label>
+
                   <input
+                    id={`file-upload-${cliente._id}`}
                     type="file"
                     onChange={(e) => {
                       setSelectedFile(e.target.files[0]);
                       setCurrentClient(cliente._id);
                     }}
+                    style={{ display: "none" }} // Esconde o input padrão
                   />
-                  <button 
-                  className="admin-upload-btn"
-                  onClick={() => handleFileUpload(cliente._id)}>
+
+                  {/* Exibir nome do arquivo selecionado */}
+                  {selectedFile && currentClient === cliente._id && (
+                    <p className="admin-file-name">{selectedFile.name}</p>
+                  )}
+
+                  <button
+                    className="admin-upload-btn"
+                    onClick={() => handleFileUpload(cliente._id, selectedFile)}
+                    disabled={!selectedFile || currentClient !== cliente._id} // Evita envio sem arquivo
+                  >
                     Enviar Arquivo
                   </button>
                 </div>
@@ -180,7 +200,10 @@ export default function Admin() {
                           {Object.entries(arquivosOrganizados).map(
                             ([tipo, lista]) =>
                               lista.length > 0 && (
-                                <div key={tipo} className="admin-arquivos-lista">
+                                <div
+                                  key={tipo}
+                                  className="admin-arquivos-lista"
+                                >
                                   <h5>{tipo.toUpperCase()}</h5>
                                   {lista.map((arquivo) => (
                                     <div
@@ -195,7 +218,7 @@ export default function Admin() {
                                         href={`http://localhost:3000/files/download/${arquivo._id}`}
                                         className="admin-download-btn"
                                       >
-                                        📥 Baixar Arquivo
+                                        Baixar Arquivo
                                       </a>
                                     </div>
                                   ))}
@@ -206,7 +229,9 @@ export default function Admin() {
                       );
                     })()
                   ) : (
-                    <p className="admin-nenhum-arquivo">Nenhum arquivo enviado.</p>
+                    <p className="admin-nenhum-arquivo">
+                      Nenhum arquivo enviado.
+                    </p>
                   )}
                 </div>
               </div>
