@@ -6,6 +6,7 @@ const File = require("./models/File");
 const router = express.Router();
 const fs = require("fs");
 const Notification = require("./models/Notification");
+const Company = require("./models/Company");
 const { checkRole, authenticate } = require("./middleware/auth");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken"); // Importa o JWT
@@ -180,36 +181,49 @@ router.get("/admin/files", checkRole("admin"), async (req, res) => {
 // 🔹 Rota para upload de arquivos (clientes podem enviar arquivos)
 router.post("/upload", upload.single("file"), async (req, res) => {
     try {
-        // 🔹 Temporariamente: userId é enviado pelo frontend (NÃO SEGURO!)
-        const { userId } = req.body;
+        // 🔹 Agora o front-end deve enviar o `userId` e `companyId`
+        const { userId, companyId } = req.body;
 
-        if (!userId) {
-            return res.status(400).json({ error: "userId é obrigatório." });
+        if (!userId || !companyId) {
+            return res.status(400).json({ error: "userId e companyId são obrigatórios." });
         }
 
-        // Verificar se o usuário existe
+        // 🔹 Verificar se o usuário existe
         const user = await User.findById(userId);
         if (!user) {
             return res.status(404).json({ error: "Usuário não encontrado." });
         }
 
-        // Criar arquivo (vinculado ao userId fornecido)
+        // 🔹 Verificar se a empresa existe
+        const company = await Company.findById(companyId);
+        if (!company) {
+            return res.status(404).json({ error: "Empresa não encontrada." });
+        }
+
+        // 🔹 Garantir que o usuário pertence à empresa (owner ou funcionário)
+        if (!company.owner.equals(userId) && !company.employees.includes(userId)) {
+            return res.status(403).json({ error: "Usuário não tem permissão para enviar arquivos para esta empresa." });
+        }
+
+        // 🔹 Criar o arquivo vinculado à empresa
         const file = await File.create({
             filename: req.file.originalname,
             path: req.file.path,
             mimetype: req.file.mimetype,
             size: req.file.size,
             uploadedBy: userId,
-            assignedTo: userId, // Assume que o arquivo é para o próprio usuário
+            assignedTo: userId, // Assumimos que o próprio usuário tem acesso ao arquivo
+            company: companyId // Associando à empresa
         });
 
-        return res.json({ message: "✅ Arquivo enviado!", file });
+        return res.json({ message: "✅ Arquivo enviado com sucesso!", file });
 
     } catch (error) {
-        console.error("Erro:", error);
+        console.error("❌ Erro ao enviar arquivo:", error);
         return res.status(500).json({ error: "Erro no servidor." });
     }
 });
+
 
 // 🔹 Rota para administradores enviarem arquivos para clientes
 router.post("/admin/upload", upload.single("file"), async (req, res) => {
@@ -263,15 +277,23 @@ router.post("/admin/upload", upload.single("file"), async (req, res) => {
   });
 
 // 🔹 Rota para download de arquivos pelo cliente
-router.get("/files/download/:fileId", async (req, res) => {
-    console.log(`📢 Rota /files/download/${req.params.fileId} foi chamada!`);
+router.get("/files/download/:fileId", authenticate, async (req, res) => {
+    console.log(`📢 Rota /files/download/${req.params.fileId} foi chamada pelo usuário ${req.user.id}`);
 
     try {
         const { fileId } = req.params;
-        const file = await File.findById(fileId);
+        const userId = req.user.id;
 
+        // Buscar o arquivo
+        const file = await File.findById(fileId).populate("company");
         if (!file) {
             return res.status(404).json({ error: "Arquivo não encontrado." });
+        }
+
+        // Garantir que o usuário pertence à empresa do arquivo
+        const company = file.company;
+        if (!company.owner.equals(userId) && !company.employees.includes(userId)) {
+            return res.status(403).json({ error: "Você não tem permissão para baixar este arquivo." });
         }
 
         const filePath = file.path;
@@ -287,6 +309,7 @@ router.get("/files/download/:fileId", async (req, res) => {
         return res.status(500).json({ error: "Erro ao baixar arquivo." });
     }
 });
+
 
 router.get("/notifications", checkRole("client"), async (req, res) => {
     console.log(`📢 Rota /notifications chamada pelo usuário ${req.user._id}`);
@@ -322,32 +345,36 @@ router.get("/notifications/:userId", async (req, res) => {
 });
 
 router.delete("/files/:fileId", authenticate, async (req, res) => {
-    console.log(`📢 Rota /files/${req.params.fileId} foi chamada!`);
+    console.log(`📢 Rota /files/${req.params.fileId} foi chamada pelo usuário ${req.user.id}`);
 
     try {
         const { fileId } = req.params;
-        const userId = req.user.id; // ID do usuário logado (do token JWT)
-        const userRole = req.user.role; // Role do usuário logado
+        const userId = req.user.id;
+        const userRole = req.user.role;
 
-        // 🔹 Buscar o arquivo no banco de dados
-        const file = await File.findById(fileId);
+        // Buscar o arquivo no banco de dados
+        const file = await File.findById(fileId).populate("company");
         if (!file) {
             return res.status(404).json({ error: "Arquivo não encontrado." });
         }
 
-        // 🔹 Permitir exclusão apenas para quem enviou o arquivo OU para admin
-        if (file.uploadedBy.toString() !== userId && userRole !== "admin") {
+        // Garantir que o usuário tem permissão para excluir o arquivo
+        const company = file.company;
+        const isOwner = company.owner.equals(userId);
+        const isAdmin = userRole === "admin";
+
+        if (!isOwner && !isAdmin) {
             return res.status(403).json({ error: "Você não tem permissão para excluir este arquivo." });
         }
 
-        // 🔹 Remover o arquivo do servidor
+        // Remover o arquivo do servidor
         const filePath = file.path;
         if (fs.existsSync(filePath)) {
             fs.unlinkSync(filePath);
             console.log("📂 Arquivo deletado do servidor:", filePath);
         }
 
-        // 🔹 Remover o arquivo do banco de dados
+        // Remover o arquivo do banco de dados
         await File.findByIdAndDelete(fileId);
 
         return res.json({ message: "✅ Arquivo excluído com sucesso!" });
@@ -356,6 +383,7 @@ router.delete("/files/:fileId", authenticate, async (req, res) => {
         return res.status(500).json({ error: "Erro ao excluir arquivo." });
     }
 });
+
 
 // rota de logout
 router.post("/logout", async (req, res) => {
@@ -373,5 +401,83 @@ router.post("/logout", async (req, res) => {
     }
 });
 
+
+// 📌 Criar uma nova empresa
+router.post("/companies", authenticate, async (req, res) => {
+    console.log(`📢 Rota /companies foi chamada pelo usuário ${req.user.id}`);
+
+    try {
+        const { name } = req.body;
+        const userId = req.user.id; // ID do usuário autenticado
+
+        // Verifica se o nome da empresa já existe
+        const existingCompany = await Company.findOne({ name });
+        if (existingCompany) {
+            return res.status(400).json({ error: "Empresa já cadastrada!" });
+        }
+
+        // Criar nova empresa vinculada ao usuário
+        const company = await Company.create({
+            name,
+            owner: userId,
+            employees: [userId], // O dono entra automaticamente como funcionário
+        });
+
+        console.log(`✅ Empresa criada com sucesso: ${company.name}`);
+
+        return res.status(201).json({ message: "Empresa criada com sucesso!", company });
+    } catch (error) {
+        console.error("❌ Erro ao criar empresa:", error);
+        return res.status(500).json({ error: "Erro ao criar empresa." });
+    }
+});
+
+router.get("/companies", authenticate, async (req, res) => {
+    console.log(`📢 Rota /companies foi chamada pelo usuário ${req.user.id}`);
+
+    try {
+        const userId = req.user.id;
+
+        // Buscar empresas onde o usuário é o dono ou está listado como funcionário
+        const companies = await Company.find({
+            $or: [{ owner: userId }, { employees: userId }]
+        });
+
+        return res.json({ companies });
+    } catch (error) {
+        console.error("❌ Erro ao listar empresas:", error);
+        return res.status(500).json({ error: "Erro ao listar empresas." });
+    }
+});
+
+router.get("/files/:companyId", authenticate, async (req, res) => {
+    console.log(`📢 Rota /files/${req.params.companyId} chamada pelo usuário ${req.user.id}`);
+
+    try {
+        const { companyId } = req.params;
+        const userId = req.user.id;
+
+        // 🔹 Verificar se a empresa existe
+        const company = await Company.findById(companyId);
+        if (!company) {
+            return res.status(404).json({ error: "Empresa não encontrada." });
+        }
+
+        // 🔹 Garantir que o usuário pertence à empresa (owner ou funcionário)
+        if (!company.owner.equals(userId) && !company.employees.includes(userId)) {
+            return res.status(403).json({ error: "Usuário não tem permissão para visualizar arquivos desta empresa." });
+        }
+
+        // 🔹 Buscar arquivos associados à empresa
+        const files = await File.find({ company: companyId })
+            .populate("uploadedBy", "name email") // Popula detalhes do usuário que enviou o arquivo
+            .sort({ createdAt: -1 }); // Ordena do mais recente para o mais antigo
+
+        return res.json({ files });
+    } catch (error) {
+        console.error("❌ Erro ao buscar arquivos:", error);
+        return res.status(500).json({ error: "Erro no servidor." });
+    }
+});
 
 module.exports = router;

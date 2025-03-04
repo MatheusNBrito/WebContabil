@@ -18,7 +18,7 @@
   width: 100%;
 }
 
-/* 🔹 Header fixo e exclusivo do Dashboard */
+/* 🔹 Header fixo do Dashboard */
 .dashboard-page-header {
   background-color: var(--dashboard-dark-gray);
   color: white;
@@ -34,31 +34,21 @@
   box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.5);
 }
 
-/* 🔹 Ajuste para evitar sobreposição do header */
-.dashboard-page-container {
-  padding-top: 80px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
-}
-
-/* 🔹 Título do cabeçalho */
-.dashboard-title {
-  font-size: 1.5rem;
+.Dashboard-title {
+  font-size: 1.3rem;
   font-weight: 600;
   color: white;
 }
 
-/* 🔹 Navegação do Header */
+/* 🔹 Mantendo botões do header inalterados */
 .dashboard-page-nav {
   display: flex;
   gap: 15px;
   align-items: center;
 }
 
-/* 🔹 Botões do Header */
-.dashboard-page-nav a {
+.dashboard-page-nav a,
+.dashboard-page-nav button {
   background: none;
   border: none;
   color: white;
@@ -69,9 +59,19 @@
   transition: background 0.3s ease, color 0.3s ease;
 }
 
-.dashboard-page-nav a:hover {
+.dashboard-page-nav a:hover,
+.dashboard-page-nav button:hover {
   background-color: var(--dashboard-soft-green);
   color: black;
+}
+
+/* 🔹 Ajuste para evitar sobreposição do header */
+.dashboard-page-container {
+  padding-top: 100px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
 }
 
 /* 🔹 Área principal */
@@ -92,13 +92,127 @@
   margin-bottom: 15px;
 }
 
+/* 🔹 Separação entre seções */
+.section-divider {
+  border-top: 2px solid var(--dashboard-medium-gray);
+  margin: 30px 0;
+  padding-top: 20px;
+}
+
+/* 🔹 Cadastro de Empresas */
+.dashboard-page-new-company {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 20px;
+  border-radius: 5px;
+  margin-bottom: 30px;
+  border: 2px solid var(--dashboard-medium-gray);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+/* 🔹 Botão de Download */
+/* 🔹 Botão de Download - Exclusivo do Dashboard */
+.dashboard-download-btn {
+  display: inline-block;
+  background-color: var(--dashboard-soft-green); /* 🔹 Agora está verde */
+  color: black;
+  padding: 8px 12px; /* 🔹 Botão menor para visual slim */
+  font-size: 0.85rem;
+  border-radius: 4px;
+  text-decoration: none;
+  font-weight: 500;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.dashboard-download-btn:hover {
+  background-color: var(--dashboard-deep-green);
+  color: white;
+  transform: scale(1.05);
+}
+
+/* 🔹 Botão de Exclusão - Mantido pequeno e estilizado */
+.dashboard-delete-btn {
+  background-color: var(--dashboard-red);
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  font-size: 0.85rem; /* 🔹 Botão menor para visual slim */
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.dashboard-page-delete-btn:hover {
+  background-color: var(--dashboard-dark-red);
+  transform: scale(1.05);
+}
+
+.dashboard-page-new-company input {
+  padding: 12px;
+  font-size: 1rem;
+  border-radius: 5px;
+  border: 1px solid var(--dashboard-medium-gray);
+  background-color: var(--dashboard-dark-gray);
+  color: white;
+  width: 60%;
+}
+
+.dashboard-page-new-company input::placeholder {
+  color: var(--dashboard-light-gray);
+}
+
+.dashboard-page-new-company button {
+  background-color: var(--dashboard-deep-green);
+  color: white;
+  border: none;
+  padding: 12px 16px;
+  font-size: 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.dashboard-page-new-company button:hover {
+  background-color: var(--dashboard-soft-green);
+  transform: scale(1.05);
+  color: black;
+}
+
+/* 🔹 Seleção de Empresa */
+.dashboard-page-select {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 20px;
+  border-radius: 5px;
+  margin-bottom: 30px;
+  border: 2px solid var(--dashboard-medium-gray);
+}
+
+.dashboard-page-select label {
+  font-size: 1rem;
+  color: var(--dashboard-light-gray);
+  font-weight: 500;
+  margin-right: 10px;
+}
+
+.dashboard-page-select select {
+  padding: 10px;
+  font-size: 1rem;
+  border-radius: 5px;
+  border: 1px solid var(--dashboard-medium-gray);
+  background-color: var(--dashboard-dark-gray);
+  color: white;
+  cursor: pointer;
+}
+
 /* 🔹 Upload Box */
 .dashboard-page-upload-box {
   background: rgba(255, 255, 255, 0.1);
-  padding: 15px;
+  padding: 20px;
   border-radius: 5px;
-  text-align: center;
-  margin-bottom: 20px;
+  margin-bottom: 30px;
+  border: 2px solid var(--dashboard-medium-gray);
 }
 
 /* 🔹 Botão de Upload */
@@ -106,7 +220,7 @@
   background-color: var(--dashboard-deep-green);
   color: white;
   border: none;
-  padding: 10px 16px;
+  padding: 12px 16px;
   font-size: 1rem;
   border-radius: 5px;
   cursor: pointer;
@@ -128,18 +242,7 @@
   margin-top: 20px;
   width: 100%;
   max-width: 900px;
-}
-
-/* 🔹 Arquivos enviados pelo Cliente */
-.user-files {
-  border-left: 5px solid var(--dashboard-soft-green);
-  padding-left: 10px;
-}
-
-/* 🔹 Arquivos enviados pelo Sistema */
-.system-files {
-  border-left: 5px solid var(--dashboard-blue);
-  padding-left: 10px;
+  border: 2px solid var(--dashboard-medium-gray);
 }
 
 /* 🔹 Tabela de arquivos */
@@ -161,7 +264,7 @@
   color: white;
 }
 
-/* 🔹 Botões de Ações */
+/* 🔹 Botões de Ações (Download e Exclusão) - Mantidos inalterados */
 .dashboard-page-actions {
   display: flex;
   gap: 10px;
@@ -199,13 +302,6 @@
   transform: scale(1.05);
 }
 
-/* 🔹 Mensagem de "Nenhum Arquivo" */
-.no-files-message {
-  font-size: 1rem;
-  color: var(--dashboard-light-gray);
-  margin-top: 10px;
-}
-
 /* 🔹 Responsividade */
 @media (max-width: 768px) {
   .dashboard-page-header {
@@ -233,5 +329,10 @@
   .dashboard-page-actions {
     flex-direction: column;
     gap: 5px;
+  }
+
+  .dashboard-page-select select,
+  .dashboard-page-new-company input {
+    width: 100%;
   }
 }

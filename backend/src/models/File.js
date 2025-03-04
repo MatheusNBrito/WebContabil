@@ -7,6 +7,7 @@ const FileSchema = new mongoose.Schema({
     size: { type: Number, required: true },
     uploadedBy: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true }, // Quem enviou
     assignedTo: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true}, // Cliente que pode baixar
+    company: { type: mongoose.Schema.Types.ObjectId, ref: "Company", required: true }, // Empresa relacionada ao arquivo
     createdAt: { type: Date, default: Date.now }
 });
 

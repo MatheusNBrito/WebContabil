@@ -4,8 +4,10 @@ import axios from "axios";
 import "./dashboard.css";
 
 export default function Dashboard() {
-  const [userFiles, setUserFiles] = useState([]); // 🔹 Arquivos enviados pelo próprio cliente
-  const [systemFiles, setSystemFiles] = useState([]); // 🔹 Arquivos enviados pelo admin
+  const [companies, setCompanies] = useState([]); // 🔹 Lista de empresas do usuário
+  const [selectedCompany, setSelectedCompany] = useState(""); // 🔹 Empresa selecionada
+  const [newCompanyName, setNewCompanyName] = useState(""); // 🔹 Nome da empresa a ser cadastrada
+  const [userFiles, setUserFiles] = useState([]); // 🔹 Arquivos enviados pelo cliente dentro da empresa
   const [selectedFile, setSelectedFile] = useState(null);
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
@@ -13,41 +15,105 @@ export default function Dashboard() {
   const userId = user?.id;
 
   useEffect(() => {
-    fetchFiles();
+    fetchCompanies();
   }, []);
 
-  const fetchFiles = async () => {
+  // 🔹 Buscar empresas do usuário
+  const fetchCompanies = async () => {
     try {
-      const response = await axios.get("http://localhost:3000/files", {
+      const response = await axios.get("http://localhost:3000/companies", {
         headers: { Authorization: `Bearer ${token}` },
       });
+      setCompanies(response.data.companies);
 
-      setUserFiles(response.data.userFiles); // 🔹 Arquivos enviados pelo cliente
-      setSystemFiles(response.data.systemFiles); // 🔹 Arquivos enviados pelo admin
+      // Se houver empresas, definir a primeira como selecionada
+      if (response.data.companies.length > 0) {
+        setSelectedCompany(response.data.companies[0]._id);
+        fetchFiles(response.data.companies[0]._id);
+      }
+    } catch (error) {
+      console.error("❌ Erro ao buscar empresas:", error);
+    }
+  };
+
+  // 🔹 Criar uma nova empresa
+  const handleCreateCompany = async () => {
+    if (!newCompanyName.trim()) {
+      alert("Digite um nome para a empresa.");
+      return;
+    }
+
+    try {
+      const response = await axios.post(
+        "http://localhost:3000/companies",
+        { name: newCompanyName },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+
+      // alert("✅ Empresa cadastrada com sucesso!");
+
+      // Atualizar a lista de empresas
+      fetchCompanies();
+
+      // Definir a nova empresa como selecionada
+      setSelectedCompany(response.data.company._id);
+      fetchFiles(response.data.company._id);
+
+      // Limpar o campo de entrada
+      setNewCompanyName("");
+    } catch (error) {
+      console.error("❌ Erro ao criar empresa:", error);
+      alert(error.response?.data?.error || "Erro ao criar empresa.");
+    }
+  };
+
+  // 🔹 Buscar arquivos filtrados pela empresa selecionada
+  const fetchFiles = async (companyId) => {
+    try {
+      const response = await axios.get(
+        `http://localhost:3000/files/${companyId}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      setUserFiles(response.data.files);
     } catch (error) {
       console.error("❌ Erro ao buscar arquivos:", error);
     }
-};
+  };
 
+  // 🔹 Atualizar empresa selecionada e buscar arquivos
+  const handleCompanyChange = (e) => {
+    setSelectedCompany(e.target.value);
+    fetchFiles(e.target.value);
+  };
+
+  // 🔹 Upload de arquivo para a empresa selecionada
   const handleFileChange = (e) => {
     setSelectedFile(e.target.files[0]);
   };
 
   const handleUpload = async () => {
-    if (!selectedFile) {
-      alert("Selecione um arquivo para enviar.");
+    if (!selectedFile || !selectedCompany) {
+      alert("Selecione uma empresa e um arquivo para enviar.");
       return;
     }
+
     const formData = new FormData();
     formData.append("file", selectedFile);
     formData.append("userId", userId);
+    formData.append("companyId", selectedCompany);
 
     try {
       await axios.post("http://localhost:3000/upload", formData, {
-        headers: { Authorization: `Bearer ${token}`, "Content-Type": "multipart/form-data" },
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
+        },
       });
-      alert("✅ Arquivo enviado com sucesso!");
-      fetchFiles();
+      // alert("✅ Arquivo enviado com sucesso!");
+      fetchFiles(selectedCompany);
     } catch (error) {
       console.error("❌ Erro ao enviar arquivo:", error);
     }
@@ -58,8 +124,8 @@ export default function Dashboard() {
       await axios.delete(`http://localhost:3000/files/${fileId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      alert("🗑 Arquivo excluído com sucesso!");
-      fetchFiles();
+      // alert("🗑 Arquivo excluído com sucesso!");
+      fetchFiles(selectedCompany);
     } catch (error) {
       console.error("❌ Erro ao excluir arquivo:", error);
       alert("Erro ao excluir arquivo. Verifique o console para mais detalhes.");
@@ -85,11 +151,38 @@ export default function Dashboard() {
         <h1 className="dashboard-title">Área do Cliente</h1>
         <nav className="dashboard-page-nav">
           <Link to="/">Home</Link>
-          <button onClick={handleLogout} className="logout-btn">Sair</button>
+          <button onClick={handleLogout} className="logout-btn">
+            Sair
+          </button>
         </nav>
       </header>
 
       <main className="dashboard-page-content">
+        <h2 className="dash-title">Gerenciar Empresas</h2>
+
+        {/* 🔹 Formulário para cadastrar nova empresa */}
+        <div className="dashboard-page-new-company">
+          <input
+            type="text"
+            placeholder="Nome da nova empresa"
+            value={newCompanyName}
+            onChange={(e) => setNewCompanyName(e.target.value)}
+          />
+          <button onClick={handleCreateCompany}>Cadastrar Empresa</button>
+        </div>
+
+        {/* 🔹 Seleção de Empresa */}
+        <div className="dashboard-page-select">
+          <label>Escolha a Empresa:</label>
+          <select value={selectedCompany} onChange={handleCompanyChange}>
+            {companies.map((company) => (
+              <option key={company._id} value={company._id}>
+                {company.name}
+              </option>
+            ))}
+          </select>
+        </div>
+
         <h2 className="dash-title">Upload de Arquivos</h2>
         <div className="dashboard-page-upload-box">
           <input type="file" onChange={handleFileChange} />
@@ -120,47 +213,16 @@ export default function Dashboard() {
                         href={`http://localhost:3000/files/download/${file._id}`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="dashboard-page-download-btn"
+                        className="dashboard-download-btn"
                       >
                         Baixar
                       </a>
-                      <button className="dashboard-page-delete-btn" onClick={() => handleDelete(file._id)}>Excluir</button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          )}
-        </section>
-
-        {/* 🔹 Seção: Arquivos Enviados pelo Sistema */}
-        <section className="dashboard-section system-files">
-          <h2 className="dash-title">Arquivos Enviados pelo Sistema</h2>
-          {systemFiles.length === 0 ? (
-            <p className="no-files-message">Nenhum arquivo foi enviado para você pelo sistema.</p>
-          ) : (
-            <table className="dashboard-page-file-table">
-              <thead>
-                <tr>
-                  <th>Nome</th>
-                  <th>Data de Envio</th>
-                  <th>Ações</th>
-                </tr>
-              </thead>
-              <tbody>
-                {systemFiles.map((file) => (
-                  <tr key={file._id}>
-                    <td>{file.filename}</td>
-                    <td>{new Date(file.createdAt).toLocaleDateString()}</td>
-                    <td className="dashboard-page-actions">
-                      <a
-                        href={`http://localhost:3000/files/download/${file._id}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="dashboard-page-download-btn"
+                      <button
+                        className="dashboard-page-delete-btn"
+                        onClick={() => handleDelete(file._id)}
                       >
-                        Baixar
-                      </a>
+                        Excluir
+                      </button>
                     </td>
                   </tr>
                 ))}
