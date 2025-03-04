@@ -1,33 +1,34 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { getClients, uploadFileToClient, getClientFiles } from "../../api";
+import {
+  getClients,
+  getClientCompanies,
+  uploadFileToCompany,
+  getCompanyFiles,
+  downloadFile,
+} from "../../api";
 import "./admin.css";
 import "../../global.css";
 import axios from "axios";
 
 export default function Admin() {
   const [clientes, setClientes] = useState([]);
+  const [empresas, setEmpresas] = useState([]);
   const [arquivos, setArquivos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [selectedFile, setSelectedFile] = useState(null);
-  const [currentClient, setCurrentClient] = useState(null);
-  const navigate = useNavigate(); // 🔹 Definindo useNavigate corretamente
+  const [selectedCompany, setSelectedCompany] = useState(null);
+  const navigate = useNavigate();
 
-  // Buscar clientes ao carregar o componente
   useEffect(() => {
     async function fetchData() {
       try {
         setLoading(true);
         setError("");
 
-        // 🔹 Buscar clientes cadastrados
         const clientesData = await getClients();
         setClientes(clientesData);
-
-        // 🔹 Buscar arquivos enviados pelos clientes
-        const arquivosData = await getClientFiles();
-        setArquivos(arquivosData);
       } catch (err) {
         setError("Erro ao carregar os dados. Tente novamente.");
         console.error("❌ Erro ao buscar dados:", err);
@@ -39,208 +40,158 @@ export default function Admin() {
     fetchData();
   }, []);
 
-  // 🔹 Função para lidar com o logout
-  const handleLogout = async () => {
+  const handleClientChange = async (clientId) => {
+    setSelectedCompany(null);
+    setEmpresas([]);
+    setArquivos([]);
+
     try {
-      await axios.post("http://localhost:3000/logout"); // 🔹 Chama a API de logout (opcional)
-
-      // 🔹 Remove os dados do usuário do localStorage
-      localStorage.removeItem("token");
-      localStorage.removeItem("user");
-
-      // 🔹 Redireciona para a página inicial
-      navigate("/");
+      const response = await getClientCompanies(clientId);
+      setEmpresas(response);
     } catch (error) {
-      console.error("❌ Erro ao fazer logout:", error);
+      console.error("❌ Erro ao buscar empresas do cliente:", error);
     }
   };
 
-  // 🔹 Função para agrupar arquivos por extensão
-  const organizarArquivosPorTipo = (arquivos) => {
-    const tipos = {
-      pdf: [],
-      xls: [],
-      docx: [],
-      outros: [],
-    };
+  const handleCompanyChange = async (companyId) => {
+    setSelectedCompany(companyId);
+    setArquivos([]);
 
-    arquivos.forEach((arquivo) => {
-      if (arquivo.filename.endsWith(".pdf")) {
-        tipos.pdf.push(arquivo);
-      } else if (
-        arquivo.filename.endsWith(".xls") ||
-        arquivo.filename.endsWith(".xlsx")
-      ) {
-        tipos.xls.push(arquivo);
-      } else if (
-        arquivo.filename.endsWith(".docx") ||
-        arquivo.filename.endsWith(".doc")
-      ) {
-        tipos.docx.push(arquivo);
-      } else {
-        tipos.outros.push(arquivo);
-      }
-    });
-
-    return tipos;
+    try {
+      const novosArquivos = await getCompanyFiles(companyId);
+      setArquivos(novosArquivos);
+    } catch (error) {
+      console.error("❌ Erro ao buscar arquivos da empresa:", error);
+    }
   };
 
-  // 🔹 Função para lidar com o upload de arquivos
-  const handleFileUpload = async (clientId) => {
+  const handleFileUpload = async () => {
     if (!selectedFile) {
       alert("Selecione um arquivo primeiro!");
       return;
     }
 
+    if (!selectedCompany) {
+      alert("Selecione uma empresa antes de enviar o arquivo!");
+      return;
+    }
+
     try {
-      // 🔹 Extrair userId e role do localStorage
-      const user = JSON.parse(localStorage.getItem("user"));
-      const adminId = user.id;
-      const userRole = user.role;
+      await uploadFileToCompany(selectedCompany, selectedFile);
+      alert("✅ Arquivo enviado com sucesso!");
 
-      // Verificar se o usuário é um admin
-      if (userRole !== "admin") {
-        throw new Error("Apenas administradores podem enviar arquivos.");
-      }
-
-      // Enviar arquivo para o cliente
-      await uploadFileToClient(clientId, adminId, selectedFile);
-      alert("Arquivo enviado com sucesso!");
-
-      // Atualizar a lista de arquivos
-      const novosArquivos = await getClientFiles(clientId);
+      const novosArquivos = await getCompanyFiles(selectedCompany);
       setArquivos(novosArquivos);
     } catch (error) {
-      alert(`Erro ao enviar arquivo: ${error.message}`);
+      alert(`❌ Erro ao enviar arquivo: ${error.message}`);
     } finally {
       setSelectedFile(null);
-      setCurrentClient(null);
     }
   };
 
   return (
     <div className="admin-page">
-      {/* 🔹 Cabeçalho do Admin */}
       <header className="admin-header">
         <h1 className="admin-title">Painel do Administrador</h1>
         <nav className="admin-nav">
-          <Link to="/" className="nav-btn">
+          <Link to="/" className="admin-nav-btn">
             Home
           </Link>
-          <button onClick={handleLogout} className="logout-btn">
+          <button
+            onClick={() => {
+              localStorage.clear();
+              navigate("/");
+            }}
+            className="admin-logout-btn"
+          >
             Sair
           </button>
         </nav>
       </header>
 
-      {/* 🔹 Mensagens de Carregamento e Erro */}
       {loading && <p className="admin-loading">🔄 Carregando...</p>}
       {error && <p className="admin-error">{error}</p>}
 
-      {/* 🔹 Lista de Clientes */}
       <section className="admin-clientes-section">
-        <h2 className="admin-section-title">Clientes Cadastrados</h2>
-        <div className="admin-clientes-lista">
-          {clientes.length > 0 ? (
-            clientes.map((cliente) => (
-              <div key={cliente._id} className="admin-cliente-item">
-                <h3>{cliente.name}</h3>
-                <p>Email: {cliente.email}</p>
-
-                {/* 🔹 Seção de Upload de Arquivos */}
-                {/* 🔹 Seção de Upload de Arquivos */}
-                <div className="admin-upload-section">
-                  <label
-                    className="admin-upload-label"
-                    htmlFor={`file-upload-${cliente._id}`}
-                  >
-                    Selecionar Arquivo
-                  </label>
-
-                  <input
-                    id={`file-upload-${cliente._id}`}
-                    type="file"
-                    onChange={(e) => {
-                      setSelectedFile(e.target.files[0]);
-                      setCurrentClient(cliente._id);
-                    }}
-                    style={{ display: "none" }} // Esconde o input padrão
-                  />
-
-                  {/* Exibir nome do arquivo selecionado */}
-                  {selectedFile && currentClient === cliente._id && (
-                    <p className="admin-file-name">{selectedFile.name}</p>
-                  )}
-
-                  <button
-                    className="admin-upload-btn"
-                    onClick={() => handleFileUpload(cliente._id, selectedFile)}
-                    disabled={!selectedFile || currentClient !== cliente._id} // Evita envio sem arquivo
-                  >
-                    Enviar Arquivo
-                  </button>
-                </div>
-
-                {/* 🔹 Seção de Arquivos do Cliente */}
-                <div className="admin-arquivos-container">
-                  <h4 className="admin-arquivos-title">Arquivos Enviados</h4>
-
-                  {arquivos.some(
-                    (arquivo) => arquivo.assignedTo === cliente._id
-                  ) ? (
-                    (() => {
-                      const arquivosCliente = arquivos.filter(
-                        (arquivo) => arquivo.assignedTo === cliente._id
-                      );
-                      const arquivosOrganizados =
-                        organizarArquivosPorTipo(arquivosCliente);
-
-                      return (
-                        <div className="arquivos-categorias">
-                          {Object.entries(arquivosOrganizados).map(
-                            ([tipo, lista]) =>
-                              lista.length > 0 && (
-                                <div
-                                  key={tipo}
-                                  className="admin-arquivos-lista"
-                                >
-                                  <h5>{tipo.toUpperCase()}</h5>
-                                  {lista.map((arquivo) => (
-                                    <div
-                                      key={arquivo._id}
-                                      className="admin-arquivo-item"
-                                    >
-                                      <p className="admin-arquivo-nome">
-                                        <strong>Arquivo:</strong>{" "}
-                                        {arquivo.filename}
-                                      </p>
-                                      <a
-                                        href={`http://localhost:3000/files/download/${arquivo._id}`}
-                                        className="admin-download-btn"
-                                      >
-                                        Baixar Arquivo
-                                      </a>
-                                    </div>
-                                  ))}
-                                </div>
-                              )
-                          )}
-                        </div>
-                      );
-                    })()
-                  ) : (
-                    <p className="admin-nenhum-arquivo">
-                      Nenhum arquivo enviado.
-                    </p>
-                  )}
-                </div>
-              </div>
-            ))
-          ) : (
-            <p className="admin-nenhum-cliente">Nenhum cliente cadastrado.</p>
-          )}
-        </div>
+        <h2 className="admin-section-title">Selecionar Cliente</h2>
+        <select
+          className="admin-select"
+          onChange={(e) => handleClientChange(e.target.value)}
+        >
+          <option value="">Escolha um cliente...</option>
+          {clientes.map((cliente) => (
+            <option key={cliente._id} value={cliente._id}>
+              {cliente.name}
+            </option>
+          ))}
+        </select>
       </section>
+
+      {empresas.length > 0 && (
+        <section className="admin-empresas-section">
+          <h2 className="admin-section-title">Selecionar Empresa</h2>
+          <select
+            className="admin-select"
+            onChange={(e) => handleCompanyChange(e.target.value)}
+          >
+            <option value="">Escolha uma empresa...</option>
+            {empresas.map((empresa) => (
+              <option key={empresa._id} value={empresa._id}>
+                {empresa.name}
+              </option>
+            ))}
+          </select>
+        </section>
+      )}
+
+      {arquivos.length > 0 && (
+        <section className="admin-arquivos-section">
+          <h2 className="admin-section-title">Arquivos da Empresa</h2>
+          <table className="admin-arquivos-table">
+            <thead>
+              <tr>
+                <th>Nome</th>
+                <th>Data de Envio</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              {arquivos.map((file) => (
+                <tr key={file._id}>
+                  <td>{file.filename}</td>
+                  <td>{new Date(file.createdAt).toLocaleDateString()}</td>
+                  <td className="admin-arquivos-actions">
+                    <button
+                      className="admin-download-btn"
+                      onClick={(e) => {
+                        e.preventDefault(); // 🔹 Evita comportamento padrão do botão
+                        downloadFile(file._id, file.filename);
+                      }}
+                    >
+                      Baixar
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </section>
+      )}
+
+      {/* 🔹 Upload de Arquivo só aparece se uma empresa for selecionada */}
+      {selectedCompany && (
+        <section className="admin-upload-section">
+          <h2 className="admin-section-title">Upload de Arquivo</h2>
+          <input
+            type="file"
+            className="admin-file-input"
+            onChange={(e) => setSelectedFile(e.target.files[0])}
+          />
+          <button className="admin-upload-btn" onClick={handleFileUpload}>
+            Enviar
+          </button>
+        </section>
+      )}
     </div>
   );
 }

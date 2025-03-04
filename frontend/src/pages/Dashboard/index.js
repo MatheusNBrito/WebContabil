@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./dashboard.css";
+import { downloadFile } from "../../api";
 
 export default function Dashboard() {
   const [companies, setCompanies] = useState([]); // 🔹 Lista de empresas do usuário
@@ -209,14 +210,16 @@ export default function Dashboard() {
                     <td>{file.filename}</td>
                     <td>{new Date(file.createdAt).toLocaleDateString()}</td>
                     <td className="dashboard-page-actions">
-                      <a
-                        href={`http://localhost:3000/files/download/${file._id}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
+                      <button
                         className="dashboard-download-btn"
+                        onClick={(e) => {
+                          e.preventDefault(); // 🔹 Evita comportamento padrão do botão
+                          downloadFile(file._id, file.filename);
+                        }}
                       >
                         Baixar
-                      </a>
+                      </button>
+
                       <button
                         className="dashboard-page-delete-btn"
                         onClick={() => handleDelete(file._id)}

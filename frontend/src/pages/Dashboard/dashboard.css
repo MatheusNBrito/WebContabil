@@ -116,13 +116,14 @@
 /* 🔹 Botão de Download - Exclusivo do Dashboard */
 .dashboard-download-btn {
   display: inline-block;
-  background-color: var(--dashboard-soft-green); /* 🔹 Agora está verde */
+  background-color: var(--dashboard-soft-green); /* 🔹 Mantém a cor verde */
   color: black;
-  padding: 8px 12px; /* 🔹 Botão menor para visual slim */
+  padding: 8px 12px;
   font-size: 0.85rem;
   border-radius: 4px;
   text-decoration: none;
   font-weight: 500;
+  cursor: pointer;
   transition: background 0.3s ease, transform 0.2s ease;
 }
 

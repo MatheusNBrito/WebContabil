@@ -1,32 +1,28 @@
 /* 🔹 Importando a fonte Poppins */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
 
-/* 🔹 Definição de cores específicas da página Admin */
-:root {
-  --dark-gray: #2C302E;
-  --medium-gray: #474A48;
-  --light-gray: #909590;
-  --soft-green: #9AE19D;
-  --deep-green: #537A5A;
-  --black-transparent: rgba(0, 0, 0, 0.7);
-}
-
-/* 🔹 Estrutura principal da página */
+/* 🔹 Definição exclusiva para a página Admin */
 .admin-page {
-  color: var(--light-gray);
+  --admin-dark-gray: #2C302E;
+  --admin-medium-gray: #474A48;
+  --admin-light-gray: #909590;
+  --admin-green: #9AE19D;
+  --admin-dark-green: #537A5A;
+  --admin-red: #ff4c4c;
+  --admin-dark-red: #d63031;
+  --admin-blue: #4c9aff;
+  --admin-dark-blue: #1e5aad;
+
+  color: var(--admin-light-gray);
   font-family: 'Poppins', sans-serif;
-  padding-top: 80px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
   width: 100%;
 }
 
-/* 🔹 Cabeçalho do Admin */
+/* 🔹 Header fixo do Admin */
 .admin-header {
-  background-color: var(--dark-gray);
+  background-color: var(--admin-dark-gray);
   color: white;
-  padding: 10px 20px;
+  padding: 12px 20px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -44,200 +40,162 @@
   color: white;
 }
 
+/* 🔹 Navegação */
 .admin-nav {
   display: flex;
   gap: 15px;
   align-items: center;
 }
 
-.nav-btn, .logout-btn {
+.admin-nav-btn,
+.admin-logout-btn {
   background: none;
   border: none;
   color: white;
-  padding: 6px 10px;
+  padding: 8px 14px;
   font-size: 0.85rem;
   border-radius: 5px;
   text-decoration: none;
   transition: background 0.3s ease, color 0.3s ease;
 }
 
-.nav-btn:hover, .logout-btn:hover {
-  background-color: var(--soft-green);
+.admin-nav-btn:hover,
+.admin-logout-btn:hover {
+  background-color: var(--admin-green);
   color: black;
 }
 
-/* 🔹 Seção de Clientes */
-.admin-clientes-section {
-  width: 95%;
-  max-width: 1200px;
-  background: var(--black-transparent);
-  backdrop-filter: blur(10px);
-  padding: 30px;
-  border-radius: 12px;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
-  margin-top: 20px;
-}
-
-.admin-section-title {
-  text-align: center;
-  font-size: 22px;
-  color: var(--soft-green);
-  margin-bottom: 15px;
-}
-
-.admin-clientes-lista {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 20px;
-}
-
-.admin-cliente-item {
-  background: rgba(255, 255, 255, 0.1);
-  padding: 15px;
-  border-radius: 8px;
-  width: 300px;
-  text-align: center;
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
-  transition: transform 0.3s ease;
-}
-
-.admin-cliente-item:hover {
-  transform: scale(1.03);
-}
-
-/* 🔹 Upload de Arquivos */
-.admin-upload-section {
-  margin-top: 15px;
+/* 🔹 Ajuste para evitar sobreposição do header */
+.admin-page {
+  padding-top: 100px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  width: 100%;
+}
+
+/* 🔹 Seções */
+.admin-clientes-section,
+.admin-empresas-section,
+.admin-arquivos-section,
+.admin-upload-section {
+  background: rgba(0, 0, 0, 0.6);
+  padding: 20px;
+  border-radius: 8px;
+  text-align: center;
+  margin-top: 20px;
+  width: 100%;
+  max-width: 900px;
+  border: 2px solid var(--admin-medium-gray);
+}
+
+/* 🔹 Títulos das seções */
+.admin-section-title {
+  color: var(--admin-green);
+  font-size: 1.4rem;
+  margin-bottom: 15px;
+}
+
+/* 🔹 Estilização dos selects */
+.admin-select {
+  width: 100%;
+  padding: 12px;
+  font-size: 1rem;
+  border-radius: 5px;
+  border: 1px solid var(--admin-medium-gray);
+  background-color: var(--admin-dark-gray);
+  color: white;
+  cursor: pointer;
+  transition: border 0.3s ease, background 0.3s ease;
+}
+
+.admin-select:hover,
+.admin-select:focus {
+  border: 1px solid var(--admin-dark-green);
+  background-color: var(--admin-medium-gray);
+  outline: none;
+}
+
+/* 🔹 Input de arquivo */
+.admin-file-input {
+  width: 100%;
   padding: 10px;
-  border: 1px dashed #537A5A;
-  border-radius: 6px;
-  background-color: rgba(44, 48, 46, 0.05);
-  transition: background 0.3s ease-in-out;
-  width: 100%;
-  max-width: 300px; /* Mantém compacto */
-}
-
-.admin-upload-section:hover {
-  background-color: rgba(44, 48, 46, 0.1);
-}
-
-/* Botão de Seleção Slim */
-.admin-upload-label {
-  display: inline-block;
-  background-color: #537A5A;
+  border: 1px solid var(--admin-medium-gray);
+  border-radius: 5px;
+  font-size: 0.95rem;
+  background-color: var(--admin-dark-gray);
   color: white;
-  font-size: 14px; /* Menor */
-  padding: 6px 12px; /* Mais slim */
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background 0.2s ease;
-  text-align: center;
-  width: 100%;
-  max-width: 180px; /* Reduz o tamanho máximo */
 }
 
-.admin-upload-label:hover {
-  background-color: #9AE19D;
-  color: #2C302E;
-}
-
-/* Nome do Arquivo Selecionado */
-.admin-file-name {
-  margin-top: 5px;
-  font-size: 12px; /* Fonte menor */
-  color: #474A48;
-  text-align: center;
-}
-
-/* Botão de Envio Slim */
+/* 🔹 Botões */
 .admin-upload-btn {
-  margin-top: 6px;
-  background-color: #9AE19D;
-  color: #2C302E;
-  font-size: 13px; /* Fonte menor */
-  padding: 5px 10px; /* Mais compacto */
+  background-color: var(--admin-dark-green);
+  color: white;
   border: none;
-  border-radius: 4px;
+  padding: 12px 16px;
+  font-size: 1rem;
+  border-radius: 5px;
   cursor: pointer;
-  transition: background 0.2s ease;
-  text-align: center;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.admin-upload-btn:hover {
+  background-color: var(--admin-green);
+  transform: scale(1.05);
+  color: black;
+}
+
+/* 🔹 Tabela de arquivos */
+.admin-arquivos-table {
   width: 100%;
-  max-width: 140px; /* Menor que o botão de seleção */
-}
-
-.admin-upload-btn:hover {
-  background-color: #537A5A;
-  color: white;
-}
-
-.admin-upload-btn:disabled {
-  background-color: #ccc;
-  cursor: not-allowed;
-}
-
-
-.admin-upload-btn:hover {
-  background: var(--deep-green);
-  color: white;
-}
-
-/* 🔹 Seção de Arquivos */
-.admin-arquivos-container {
+  border-collapse: collapse;
   margin-top: 15px;
 }
 
-.admin-arquivos-title {
-  font-size: 18px;
-  color: var(--soft-green);
-}
-
-.admin-arquivo-item {
-  background: rgba(0, 0, 0, 0.3);
-  padding: 8px;
-  border-radius: 6px;
-  margin-top: 8px;
+.admin-arquivos-table th,
+.admin-arquivos-table td {
+  padding: 12px;
+  border-bottom: 1px solid var(--admin-medium-gray);
   text-align: center;
 }
 
-.admin-arquivo-nome {
-  font-size: 14px;
+.admin-arquivos-table th {
+  background-color: var(--admin-medium-gray);
   color: white;
 }
 
+/* 🔹 Ações da tabela */
+.admin-arquivos-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+/* 🔹 Botão de Download */
 .admin-download-btn {
   display: inline-block;
-  background: var(--soft-green);
-  color: var(--dark-gray);
-  padding: 2px 4px;
-  font-size: 12px;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  font-weight: bold;
-  transition: 0.3s;
+  background-color: var(--admin-green);
+  color: black;
+  padding: 10px 14px;
+  font-size: 0.9rem;
+  border-radius: 5px;
   text-decoration: none;
+  font-weight: 500;
+  transition: background 0.3s ease, transform 0.2s ease;
 }
 
 .admin-download-btn:hover {
-  background: var(--deep-green);
+  background-color: var(--admin-dark-green);
   color: white;
+  transform: scale(1.05);
 }
 
-/* 🔹 Mensagens de Erro & Loading */
-.admin-loading, .admin-error {
-  text-align: center;
-  font-size: 16px;
-  font-weight: bold;
-  margin-top: 15px;
-}
-
+/* 🔹 Mensagens de erro e carregamento */
+.admin-loading,
 .admin-error {
-  color: red;
+  font-size: 1rem;
+  color: var(--admin-red);
+  margin-top: 10px;
 }
 
 /* 🔹 Responsividade */
@@ -254,12 +212,22 @@
     margin-top: 5px;
   }
 
-  .admin-clientes-lista {
-    flex-direction: column;
-    align-items: center;
+  .admin-page {
+    padding-top: 80px;
   }
 
-  .admin-cliente-item {
-    width: 90%;
+  .admin-arquivos-table th,
+  .admin-arquivos-table td {
+    padding: 8px;
+  }
+
+  .admin-arquivos-actions {
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .admin-select,
+  .admin-file-input {
+    width: 100%;
   }
 }

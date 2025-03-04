@@ -225,46 +225,47 @@ router.post("/upload", upload.single("file"), async (req, res) => {
 });
 
 
-// 🔹 Rota para administradores enviarem arquivos para clientes
-router.post("/admin/upload", upload.single("file"), async (req, res) => {
+/**
+ * 🔹 Rota para o admin enviar arquivos para uma empresa específica
+ * Método: POST
+ * Endpoint: /admin/upload
+ * Requer token de admin
+ */
+router.post("/admin/upload", upload.single("file"), checkRole("admin"), async (req, res) => {
     try {
-      const { clientId, adminId } = req.body;
-  
-      // Validação básica
-      if (!clientId || !adminId) {
-        return res.status(400).json({ error: "IDs do cliente e admin são obrigatórios." });
-      }
-  
-      // Criar arquivo vinculado ao cliente
-      const file = new File({
-        filename: req.file.originalname,
-        path: req.file.path,
-        mimetype: req.file.mimetype,
-        size: req.file.size,
-        uploadedBy: adminId, // ID do admin
-        assignedTo: clientId, // ID do cliente
-      });
-  
-      await file.save();
-  
-      // Criar notificação para o cliente
-      const notification = new Notification({
-        message: `Você recebeu um novo arquivo: ${req.file.originalname}`,
-        user: clientId, // Notificar o cliente
-      });
-  
-      await notification.save();
-  
-      return res.json({ 
-        message: "✅ Arquivo enviado com sucesso!", 
-        file 
-      });
-  
+        const { companyId } = req.body;
+
+        console.log("📢 ID da Empresa recebida:", companyId); // 🔹 Log para depuração
+
+        // 🔹 Validar se companyId é um ObjectId válido
+        if (!mongoose.Types.ObjectId.isValid(companyId)) {
+            console.error("❌ ID da empresa inválido:", companyId);
+            return res.status(400).json({ error: "ID da empresa inválido." });
+        }
+
+        // 🔹 Verificar se a empresa realmente existe
+        const companyExists = await Company.findById(companyId);
+        if (!companyExists) {
+            console.error("❌ Empresa não encontrada no banco de dados.");
+            return res.status(404).json({ error: "Empresa não encontrada." });
+        }
+
+        // 🔹 Criar o arquivo associado à empresa
+        const file = await File.create({
+            filename: req.file.originalname,
+            path: req.file.path,
+            mimetype: req.file.mimetype,
+            size: req.file.size,
+            uploadedBy: req.user.id, // 🔹 ID do admin que enviou
+            company: companyId, // 🔹 Associado à empresa específica
+        });
+
+        return res.status(201).json({ message: "✅ Arquivo enviado com sucesso!", file });
     } catch (error) {
-      console.error("Erro:", error);
-      return res.status(500).json({ error: "Erro interno no servidor." });
+        console.error("❌ Erro ao enviar arquivo:", error);
+        return res.status(500).json({ error: "Erro ao enviar arquivo." });
     }
-  });
+});
 
   router.get("/files/client/:clientId", async (req, res) => {
     try {
@@ -278,37 +279,54 @@ router.post("/admin/upload", upload.single("file"), async (req, res) => {
 
 // 🔹 Rota para download de arquivos pelo cliente
 router.get("/files/download/:fileId", authenticate, async (req, res) => {
-    console.log(`📢 Rota /files/download/${req.params.fileId} foi chamada pelo usuário ${req.user.id}`);
+    console.log(`📢 Rota /files/download/${req.params.fileId} foi chamada pelo usuário ${req.user?.id}`);
 
     try {
         const { fileId } = req.params;
-        const userId = req.user.id;
+        const userId = req.user?.id;
 
-        // Buscar o arquivo
+        if (!userId) {
+            return res.status(401).json({ error: "Usuário não autenticado." });
+        }
+
+        // Buscar o usuário para verificar se ele é admin
+        const user = await User.findById(userId);
+        const isAdmin = user?.role === "admin";
+
+        // Buscar o arquivo no banco de dados
         const file = await File.findById(fileId).populate("company");
         if (!file) {
             return res.status(404).json({ error: "Arquivo não encontrado." });
         }
 
-        // Garantir que o usuário pertence à empresa do arquivo
-        const company = file.company;
-        if (!company.owner.equals(userId) && !company.employees.includes(userId)) {
-            return res.status(403).json({ error: "Você não tem permissão para baixar este arquivo." });
+        // Se for admin, permitir o download sem verificar empresa
+        if (isAdmin) {
+            console.log(`✅ Usuário ${userId} é admin e tem permissão para baixar qualquer arquivo.`);
+        } else {
+            // Caso não seja admin, verificar se pertence à empresa do arquivo
+            const company = await Company.findById(file.company._id);
+            if (!company) {
+                return res.status(404).json({ error: "Empresa não encontrada." });
+            }
+
+            if (!company.owner.equals(userId) && !company.employees.includes(userId)) {
+                return res.status(403).json({ error: "Você não tem permissão para baixar este arquivo." });
+            }
         }
 
         const filePath = file.path;
-
         if (!fs.existsSync(filePath)) {
             return res.status(404).json({ error: "O arquivo não foi encontrado no servidor." });
         }
 
-        console.log("📂 Iniciando download:", filePath);
+        console.log(`📂 Download autorizado para o arquivo: ${file.filename}`);
         return res.download(filePath, file.filename);
     } catch (error) {
         console.error("❌ Erro ao tentar baixar arquivo:", error);
         return res.status(500).json({ error: "Erro ao baixar arquivo." });
     }
 });
+
 
 
 router.get("/notifications", checkRole("client"), async (req, res) => {
@@ -479,5 +497,74 @@ router.get("/files/:companyId", authenticate, async (req, res) => {
         return res.status(500).json({ error: "Erro no servidor." });
     }
 });
+
+/**
+ * 🔹 Rota para listar todas as empresas associadas a um cliente específico
+ * Método: GET
+ * Endpoint: /admin/client/:clientId/companies
+ * Requer token de admin
+ */
+router.get("/admin/client/:clientId/companies", checkRole("admin"), async (req, res) => {
+    try {
+        const { clientId } = req.params;
+
+        // 🔹 Validar se clientId é um ObjectId válido
+        if (!mongoose.Types.ObjectId.isValid(clientId)) {
+            return res.status(400).json({ error: "ID do cliente inválido." });
+        }
+
+        // 🔹 Buscar empresas vinculadas ao cliente
+        const companies = await Company.find({ owner: new mongoose.Types.ObjectId(clientId) });
+
+        if (!companies.length) {
+            return res.status(404).json({ error: "Nenhuma empresa encontrada para este cliente." });
+        }
+
+        return res.json({ companies });
+    } catch (error) {
+        console.error("❌ Erro ao buscar empresas do cliente:", error);
+        return res.status(500).json({ error: "Erro ao buscar empresas do cliente." });
+    }
+});
+
+/**
+ * 🔹 Rota para listar todos os arquivos de uma empresa específica
+ * Método: GET
+ * Endpoint: /admin/company/:companyId/files
+ * Requer token de admin
+ */
+router.get("/admin/company/:companyId/files", checkRole("admin"), async (req, res) => {
+    try {
+        const { companyId } = req.params;
+
+        console.log("📢 ID da Empresa recebida:", companyId); // 🔹 Log para depuração
+
+        // 🔹 Validar se companyId é um ObjectId válido
+        if (!mongoose.Types.ObjectId.isValid(companyId)) {
+            console.error("❌ ID inválido recebido:", companyId);
+            return res.status(400).json({ error: "ID da empresa inválido." });
+        }
+
+        // 🔹 Verificar se a empresa realmente existe
+        const companyExists = await Company.findById(companyId);
+        if (!companyExists) {
+            console.error("❌ Empresa não encontrada no banco de dados.");
+            return res.status(404).json({ error: "Empresa não encontrada." });
+        }
+
+        // 🔹 Buscar arquivos vinculados à empresa
+        const files = await File.find({ company: companyId });
+
+        if (!files.length) {
+            return res.status(404).json({ error: "Nenhum arquivo encontrado para esta empresa." });
+        }
+
+        return res.json({ files });
+    } catch (error) {
+        console.error("❌ Erro ao buscar arquivos da empresa:", error);
+        return res.status(500).json({ error: "Erro ao buscar arquivos da empresa." });
+    }
+});
+
 
 module.exports = router;
