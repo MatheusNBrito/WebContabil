@@ -57,9 +57,15 @@ export const getClientCompanies = async (clientId) => {
 };
 
 // 🔹 Enviar arquivo para uma empresa específica
-export const uploadFileToCompany = async (companyId, file) => {
+export const uploadFilesToCompany = async (companyId, files) => {
   const formData = new FormData();
-  formData.append("file", file);
+
+  // 🔹 Adiciona todos os arquivos ao FormData corretamente
+  files.forEach((file) => {
+    formData.append("files", file); // 🟢 Deve ser "files" pois o backend usa upload.array("files", 10)
+  });
+
+  // 🔹 Adiciona os outros dados necessários
   formData.append("companyId", companyId);
 
   try {
@@ -68,12 +74,14 @@ export const uploadFileToCompany = async (companyId, file) => {
         "Content-Type": "multipart/form-data",
       },
     });
+
     return response.data;
   } catch (error) {
-    console.error("❌ Erro ao enviar arquivo para empresa:", error);
+    console.error("❌ Erro ao enviar arquivos para empresa:", error);
     throw error;
   }
 };
+
 
 // 🔹 Buscar arquivos de uma empresa específica
 export const getCompanyFiles = async (companyId) => {

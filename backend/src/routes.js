@@ -179,7 +179,8 @@ router.get("/admin/files", checkRole("admin"), async (req, res) => {
 });
 
 // 🔹 Rota para upload de arquivos (clientes podem enviar arquivos)
-router.post("/upload", upload.single("file"), async (req, res) => {
+router.post("/upload", upload.array("files", 10), async (req, res) => {
+
     try {
         // 🔹 Agora o front-end deve enviar o `userId` e `companyId`
         const { userId, companyId } = req.body;
@@ -206,17 +207,19 @@ router.post("/upload", upload.single("file"), async (req, res) => {
         }
 
         // 🔹 Criar o arquivo vinculado à empresa
-        const file = await File.create({
-            filename: req.file.originalname,
-            path: req.file.path,
-            mimetype: req.file.mimetype,
-            size: req.file.size,
+        const uploadedFiles = req.files.map((file) => ({
+            filename: file.originalname,
+            path: file.path,
+            mimetype: file.mimetype,
+            size: file.size,
             uploadedBy: userId,
-            assignedTo: userId, // Assumimos que o próprio usuário tem acesso ao arquivo
-            company: companyId // Associando à empresa
-        });
-
-        return res.json({ message: "✅ Arquivo enviado com sucesso!", file });
+            assignedTo: userId,
+            company: companyId
+        }));
+        
+        const savedFiles = await File.insertMany(uploadedFiles);
+        
+        return res.json({ message: "✅ Arquivos enviados com sucesso!", files: savedFiles });
 
     } catch (error) {
         console.error("❌ Erro ao enviar arquivo:", error);
@@ -227,15 +230,13 @@ router.post("/upload", upload.single("file"), async (req, res) => {
 
 /**
  * 🔹 Rota para o admin enviar arquivos para uma empresa específica
- * Método: POST
- * Endpoint: /admin/upload
- * Requer token de admin
  */
-router.post("/admin/upload", upload.single("file"), checkRole("admin"), async (req, res) => {
+router.post("/admin/upload", upload.array("files", 10), checkRole("admin"), async (req, res) => {
     try {
         const { companyId } = req.body;
 
-        console.log("📢 ID da Empresa recebida:", companyId); // 🔹 Log para depuração
+        console.log("📢 ID da Empresa recebida:", companyId);
+        console.log("📂 Arquivos recebidos:", req.files); // 🔹 Log para depuração
 
         // 🔹 Validar se companyId é um ObjectId válido
         if (!mongoose.Types.ObjectId.isValid(companyId)) {
@@ -250,22 +251,31 @@ router.post("/admin/upload", upload.single("file"), checkRole("admin"), async (r
             return res.status(404).json({ error: "Empresa não encontrada." });
         }
 
-        // 🔹 Criar o arquivo associado à empresa
-        const file = await File.create({
-            filename: req.file.originalname,
-            path: req.file.path,
-            mimetype: req.file.mimetype,
-            size: req.file.size,
+        // 🔹 Verifica se foram enviados arquivos
+        if (!req.files || req.files.length === 0) {
+            console.error("❌ Nenhum arquivo foi enviado.");
+            return res.status(400).json({ error: "Nenhum arquivo enviado." });
+        }
+
+        // 🔹 Criar os arquivos associados à empresa
+        const uploadedFiles = req.files.map((file) => ({
+            filename: file.originalname,
+            path: file.path,
+            mimetype: file.mimetype,
+            size: file.size,
             uploadedBy: req.user.id, // 🔹 ID do admin que enviou
             company: companyId, // 🔹 Associado à empresa específica
-        });
+        }));
 
-        return res.status(201).json({ message: "✅ Arquivo enviado com sucesso!", file });
+        const savedFiles = await File.insertMany(uploadedFiles);
+
+        return res.status(201).json({ message: "✅ Arquivos enviados com sucesso!", files: savedFiles });
     } catch (error) {
-        console.error("❌ Erro ao enviar arquivo:", error);
-        return res.status(500).json({ error: "Erro ao enviar arquivo." });
+        console.error("❌ Erro ao enviar arquivos:", error);
+        return res.status(500).json({ error: "Erro ao enviar arquivos." });
     }
 });
+
 
   router.get("/files/client/:clientId", async (req, res) => {
     try {

@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import {
   getClients,
   getClientCompanies,
-  uploadFileToCompany,
+  uploadFilesToCompany, // 🔹 Modificado para múltiplos arquivos
   getCompanyFiles,
   downloadFile,
 } from "../../api";
@@ -17,7 +17,7 @@ export default function Admin() {
   const [arquivos, setArquivos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [selectedFile, setSelectedFile] = useState(null);
+  const [selectedFiles, setSelectedFiles] = useState([]); // 🔹 Alterado para múltiplos arquivos
   const [selectedCompany, setSelectedCompany] = useState(null);
   const navigate = useNavigate();
 
@@ -66,8 +66,8 @@ export default function Admin() {
   };
 
   const handleFileUpload = async () => {
-    if (!selectedFile) {
-      alert("Selecione um arquivo primeiro!");
+    if (!selectedFiles || selectedFiles.length === 0) {
+      alert("Selecione pelo menos um arquivo para enviar.");
       return;
     }
 
@@ -77,15 +77,17 @@ export default function Admin() {
     }
 
     try {
-      await uploadFileToCompany(selectedCompany, selectedFile);
-      alert("✅ Arquivo enviado com sucesso!");
+      await uploadFilesToCompany(selectedCompany, selectedFiles);
+      alert("✅ Arquivos enviados com sucesso!");
 
-      const novosArquivos = await getCompanyFiles(selectedCompany);
-      setArquivos(novosArquivos);
+      // 🔹 Atualiza a lista de arquivos automaticamente após o envio
+      setTimeout(() => {
+        handleCompanyChange(selectedCompany);
+      }, 1000);
+
+      setSelectedFiles([]); // 🔹 Limpa os arquivos selecionados após o envio
     } catch (error) {
-      alert(`❌ Erro ao enviar arquivo: ${error.message}`);
-    } finally {
-      setSelectedFile(null);
+      alert(`❌ Erro ao enviar arquivos: ${error.message}`);
     }
   };
 
@@ -164,7 +166,7 @@ export default function Admin() {
                     <button
                       className="admin-download-btn"
                       onClick={(e) => {
-                        e.preventDefault(); // 🔹 Evita comportamento padrão do botão
+                        e.preventDefault();
                         downloadFile(file._id, file.filename);
                       }}
                     >
@@ -178,15 +180,25 @@ export default function Admin() {
         </section>
       )}
 
-      {/* 🔹 Upload de Arquivo só aparece se uma empresa for selecionada */}
       {selectedCompany && (
         <section className="admin-upload-section">
-          <h2 className="admin-section-title">Upload de Arquivo</h2>
+          <h2 className="admin-section-title">Upload de Arquivos</h2>
           <input
             type="file"
             className="admin-file-input"
-            onChange={(e) => setSelectedFile(e.target.files[0])}
+            multiple // 🔹 Permitir múltiplos arquivos
+            onChange={(e) => setSelectedFiles([...e.target.files])}
           />
+          {selectedFiles.length > 0 && (
+            <div className="admin-selected-files">
+              <h4>Arquivos Selecionados:</h4>
+              <ul>
+                {selectedFiles.map((file, index) => (
+                  <li key={index}>{file.name}</li>
+                ))}
+              </ul>
+            </div>
+          )}
           <button className="admin-upload-btn" onClick={handleFileUpload}>
             Enviar
           </button>

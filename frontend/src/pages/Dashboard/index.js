@@ -9,7 +9,7 @@ export default function Dashboard() {
   const [selectedCompany, setSelectedCompany] = useState(""); // 🔹 Empresa selecionada
   const [newCompanyName, setNewCompanyName] = useState(""); // 🔹 Nome da empresa a ser cadastrada
   const [userFiles, setUserFiles] = useState([]); // 🔹 Arquivos enviados pelo cliente dentro da empresa
-  const [selectedFile, setSelectedFile] = useState(null);
+  const [selectedFiles, setSelectedFiles] = useState([]); // Agora começa como um array vazio
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
   const user = JSON.parse(localStorage.getItem("user"));
@@ -90,19 +90,20 @@ export default function Dashboard() {
     fetchFiles(e.target.value);
   };
 
-  // 🔹 Upload de arquivo para a empresa selecionada
   const handleFileChange = (e) => {
-    setSelectedFile(e.target.files[0]);
+    setSelectedFiles([...e.target.files]);
   };
 
   const handleUpload = async () => {
-    if (!selectedFile || !selectedCompany) {
-      alert("Selecione uma empresa e um arquivo para enviar.");
+    if (!selectedFiles || selectedFiles.length === 0) {
+      alert("Selecione pelo menos um arquivo para enviar.");
       return;
     }
 
     const formData = new FormData();
-    formData.append("file", selectedFile);
+    selectedFiles.forEach((file) => {
+      formData.append("files", file);
+    });
     formData.append("userId", userId);
     formData.append("companyId", selectedCompany);
 
@@ -113,10 +114,15 @@ export default function Dashboard() {
           "Content-Type": "multipart/form-data",
         },
       });
-      // alert("✅ Arquivo enviado com sucesso!");
+      alert("✅ Arquivos enviados com sucesso!");
+      // 🔹 Atualiza a lista de arquivos automaticamente
       fetchFiles(selectedCompany);
+
+      // 🔹 Limpa os arquivos selecionados após o envio
+      setSelectedFiles([]);
+      
     } catch (error) {
-      console.error("❌ Erro ao enviar arquivo:", error);
+      console.error("❌ Erro ao enviar arquivos:", error);
     }
   };
 
@@ -186,7 +192,22 @@ export default function Dashboard() {
 
         <h2 className="dash-title">Upload de Arquivos</h2>
         <div className="dashboard-page-upload-box">
-          <input type="file" onChange={handleFileChange} />
+          {/* Input para selecionar múltiplos arquivos */}
+          <input type="file" multiple onChange={handleFileChange} />
+
+          {/* Lista de arquivos selecionados */}
+          {selectedFiles.length > 0 && (
+            <div className="dashboard-selected-files">
+              <h4>Arquivos Selecionados:</h4>
+              <ul>
+                {selectedFiles.map((file, index) => (
+                  <li key={index}>{file.name}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          {/* Botão de Envio */}
           <button onClick={handleUpload}>Enviar</button>
         </div>
 
