@@ -120,7 +120,6 @@ export default function Dashboard() {
 
       // 🔹 Limpa os arquivos selecionados após o envio
       setSelectedFiles([]);
-      
     } catch (error) {
       console.error("❌ Erro ao enviar arquivos:", error);
     }
@@ -193,7 +192,14 @@ export default function Dashboard() {
         <h2 className="dash-title">Upload de Arquivos</h2>
         <div className="dashboard-page-upload-box">
           {/* Input para selecionar múltiplos arquivos */}
-          <input type="file" multiple onChange={handleFileChange} />
+          <input
+            type="file"
+            class="form-control"
+            aria-describedby="inputGroupFileAddon04"
+            aria-label="Upload"
+            multiple
+            onChange={handleFileChange}
+          />
 
           {/* Lista de arquivos selecionados */}
           {selectedFiles.length > 0 && (

@@ -185,6 +185,8 @@ export default function Admin() {
           <h2 className="admin-section-title">Upload de Arquivos</h2>
           <input
             type="file"
+            class="form-control"
+            aria-describedby="inputGroupFileAddon04" aria-label="Upload"
             className="admin-file-input"
             multiple // 🔹 Permitir múltiplos arquivos
             onChange={(e) => setSelectedFiles([...e.target.files])}
