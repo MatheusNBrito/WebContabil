@@ -444,7 +444,7 @@ router.get("/files/:companyId", authenticate, async (req, res) => {
 
         // 🔹 Buscar arquivos associados à empresa
         const files = await File.find({ company: companyId })
-            .populate("uploadedBy", "name email") // Popula detalhes do usuário que enviou o arquivo
+            .populate("uploadedBy", "name email role") // Popula detalhes do usuário que enviou o arquivo
             .sort({ createdAt: -1 }); // Ordena do mais recente para o mais antigo
 
         return res.json({ files });

@@ -72,24 +72,37 @@ export default function Dashboard() {
   // 🔹 Buscar arquivos filtrados pela empresa selecionada
   const fetchFiles = async (companyId) => {
     try {
-      const response = await axios.get(
-        `http://localhost:3000/files/${companyId}`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
+        const response = await axios.get(
+            `http://localhost:3000/files/${companyId}`, 
+            {
+                headers: { Authorization: `Bearer ${token}` },
+            }
+        );
 
-      // Separando os arquivos do usuário e do admin
-      const allFiles = response.data.files;
-      const userFiles = allFiles.filter((file) => file.uploadedBy === userId); // Apenas os enviados pelo usuário
-      const adminFiles = allFiles.filter((file) => file.uploadedBy !== userId); // Enviados pelo Admin
+        // Obtendo todos os arquivos da resposta
+        const allFiles = response.data.files;
 
-      setUserFiles(response.data.files);
-      setAdminFiles(adminFiles);
+        // 🔹 Garantir que uploadedBy esteja definido antes de acessar `_id` e `role`
+        const userFiles = allFiles.filter((file) => 
+            file.uploadedBy && 
+            file.uploadedBy._id.toString() === userId && 
+            file.company.toString() === companyId
+        );
+
+        const adminFiles = allFiles.filter((file) => 
+            file.uploadedBy && 
+            file.uploadedBy.role === "admin" && 
+            file.company.toString() === companyId
+        );
+
+        // Atualiza os estados corretamente
+        setUserFiles(userFiles);
+        setAdminFiles(adminFiles);
     } catch (error) {
-      console.error("❌ Erro ao buscar arquivos:", error);
+        console.error("❌ Erro ao buscar arquivos:", error);
     }
-  };
+};
+
 
   // 🔹 Atualizar empresa selecionada e buscar arquivos
   const handleCompanyChange = (e) => {
