@@ -14,6 +14,7 @@ export default function Dashboard() {
   const token = localStorage.getItem("token");
   const user = JSON.parse(localStorage.getItem("user"));
   const userId = user?.id;
+  const [adminFiles, setAdminFiles] = useState([]); // 🔹 Arquivos enviados pelo Admin
 
   useEffect(() => {
     fetchCompanies();
@@ -78,7 +79,13 @@ export default function Dashboard() {
         }
       );
 
+      // Separando os arquivos do usuário e do admin
+      const allFiles = response.data.files;
+      const userFiles = allFiles.filter((file) => file.uploadedBy === userId); // Apenas os enviados pelo usuário
+      const adminFiles = allFiles.filter((file) => file.uploadedBy !== userId); // Enviados pelo Admin
+
       setUserFiles(response.data.files);
+      setAdminFiles(adminFiles);
     } catch (error) {
       console.error("❌ Erro ao buscar arquivos:", error);
     }
@@ -240,7 +247,7 @@ export default function Dashboard() {
                       <button
                         className="dashboard-download-btn"
                         onClick={(e) => {
-                          e.preventDefault(); // 🔹 Evita comportamento padrão do botão
+                          e.preventDefault();
                           downloadFile(file._id, file.filename);
                         }}
                       >
@@ -252,6 +259,44 @@ export default function Dashboard() {
                         onClick={() => handleDelete(file._id)}
                       >
                         Excluir
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+        </section>
+        {/* 🔹 Seção: Arquivos enviados pelo sistema (Admin) */}
+        <section className="dashboard-section admin-files">
+          <h2 className="dash-title">Arquivos enviados pelo sistema</h2>
+          {adminFiles.length === 0 ? (
+            <p className="no-files-message">
+              Nenhum arquivo enviado pelo sistema.
+            </p>
+          ) : (
+            <table className="dashboard-page-file-table">
+              <thead>
+                <tr>
+                  <th>Nome</th>
+                  <th>Data de Envio</th>
+                  <th>Ações</th>
+                </tr>
+              </thead>
+              <tbody>
+                {adminFiles.map((file) => (
+                  <tr key={file._id}>
+                    <td>{file.filename}</td>
+                    <td>{new Date(file.createdAt).toLocaleDateString()}</td>
+                    <td className="dashboard-page-actions">
+                      <button
+                        className="dashboard-download-btn"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          downloadFile(file._id, file.filename);
+                        }}
+                      >
+                        Baixar
                       </button>
                     </td>
                   </tr>

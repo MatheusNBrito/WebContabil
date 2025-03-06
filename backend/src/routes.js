@@ -135,48 +135,6 @@ router.get("/admin/users", checkRole("admin"), async (req, res) => {
     }
 });
 
-// 🔹 Clientes só podem ver os próprios arquivos
-router.get("/files", checkRole("client"), async (req, res) => {
-    console.log(`📢 Rota /files foi chamada pelo usuário ${req.user._id}`);
-
-    try {
-        // Buscar TODOS os arquivos destinados ao cliente logado
-        const files = await File.find({ assignedTo: req.user._id })
-            .populate("uploadedBy", "name email"); // Popula os dados do remetente
-
-        // 🔹 Separar os arquivos corretamente
-        const userUploadedFiles = files.filter(file => file.uploadedBy._id.toString() === req.user._id.toString());
-        const adminUploadedFiles = files.filter(file => file.uploadedBy._id.toString() !== req.user._id.toString());
-
-        console.log("🔹 Arquivos enviados pelo cliente:", userUploadedFiles);
-        console.log("🔹 Arquivos enviados pelo admin:", adminUploadedFiles);
-
-        return res.json({ userFiles: userUploadedFiles, systemFiles: adminUploadedFiles });
-    } catch (error) {
-        console.error("❌ Erro ao buscar arquivos:", error);
-        return res.status(500).json({ error: "Erro ao buscar arquivos." });
-    }
-});
-
-
-router.get("/admin/files", checkRole("admin"), async (req, res) => {
-    console.log("📢 Rota /admin/files foi chamada!");
-
-    try {
-        const files = await File.find().populate({
-            path: "uploadedBy",
-            select: "name email",
-        }).lean(); // 🔹 Converte para JSON puro
-
-        // 🔹 Filtra arquivos sem um usuário associado
-        const validFiles = files.filter(file => file.uploadedBy !== null);
-
-        return res.json({ files: validFiles });
-    } catch (error) {
-        console.error("❌ Erro ao buscar arquivos:", error);
-        return res.status(500).json({ error: "Erro ao buscar arquivos." });
-    }
-});
 
 // 🔹 Rota para upload de arquivos (clientes podem enviar arquivos)
 router.post("/upload", upload.array("files", 10), async (req, res) => {
@@ -277,16 +235,6 @@ router.post("/admin/upload", upload.array("files", 10), checkRole("admin"), asyn
 });
 
 
-  router.get("/files/client/:clientId", async (req, res) => {
-    try {
-      const files = await File.find({ assignedTo: req.params.clientId })
-        .populate("uploadedBy", "name email"); // Informações do admin
-      res.json({ files });
-    } catch (error) {
-      res.status(500).json({ error: "Erro ao buscar arquivos." });
-    }
-  });
-
 // 🔹 Rota para download de arquivos pelo cliente
 router.get("/files/download/:fileId", authenticate, async (req, res) => {
     console.log(`📢 Rota /files/download/${req.params.fileId} foi chamada pelo usuário ${req.user?.id}`);
@@ -336,8 +284,6 @@ router.get("/files/download/:fileId", authenticate, async (req, res) => {
         return res.status(500).json({ error: "Erro ao baixar arquivo." });
     }
 });
-
-
 
 router.get("/notifications", checkRole("client"), async (req, res) => {
     console.log(`📢 Rota /notifications chamada pelo usuário ${req.user._id}`);
@@ -510,9 +456,6 @@ router.get("/files/:companyId", authenticate, async (req, res) => {
 
 /**
  * 🔹 Rota para listar todas as empresas associadas a um cliente específico
- * Método: GET
- * Endpoint: /admin/client/:clientId/companies
- * Requer token de admin
  */
 router.get("/admin/client/:clientId/companies", checkRole("admin"), async (req, res) => {
     try {
@@ -539,9 +482,6 @@ router.get("/admin/client/:clientId/companies", checkRole("admin"), async (req, 
 
 /**
  * 🔹 Rota para listar todos os arquivos de uma empresa específica
- * Método: GET
- * Endpoint: /admin/company/:companyId/files
- * Requer token de admin
  */
 router.get("/admin/company/:companyId/files", checkRole("admin"), async (req, res) => {
     try {
