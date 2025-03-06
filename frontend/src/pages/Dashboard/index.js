@@ -175,7 +175,7 @@ export default function Dashboard() {
             value={newCompanyName}
             onChange={(e) => setNewCompanyName(e.target.value)}
           />
-          <button onClick={handleCreateCompany}>Cadastrar Empresa</button>
+          <button onClick={handleCreateCompany}>Cadastrar</button>
         </div>
 
         {/* 🔹 Seleção de Empresa */}
