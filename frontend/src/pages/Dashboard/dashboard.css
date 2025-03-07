@@ -218,6 +218,24 @@
   transition: background 0.3s ease, transform 0.2s ease;
 }
 
+.notification {
+  background-color: var(--dashboard-deep-green);
+  color: white;
+  padding: 8px;
+  margin-top: 10px;
+  border-radius: 5px;
+  text-align: center;
+  font-weight: bold;
+  animation: fadeOut 3s ease-in-out;
+}
+
+@keyframes fadeOut {
+  0% { opacity: 1; }
+  70% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+
 /* 🔹 Upload Box */
 .dashboard-page-upload-box {
   background: rgba(255, 255, 255, 0.08);

@@ -15,6 +15,7 @@ export default function Dashboard() {
   const user = JSON.parse(localStorage.getItem("user"));
   const userId = user?.id;
   const [adminFiles, setAdminFiles] = useState([]); // 🔹 Arquivos enviados pelo Admin
+  const [notification, setNotification] = useState(""); // 🔔 Estado para notificações
 
   useEffect(() => {
     fetchCompanies();
@@ -42,6 +43,7 @@ export default function Dashboard() {
   const handleCreateCompany = async () => {
     if (!newCompanyName.trim()) {
       alert("Digite um nome para a empresa.");
+      setTimeout(() => setNotification(""), 3000);
       return;
     }
 
@@ -51,58 +53,58 @@ export default function Dashboard() {
         { name: newCompanyName },
         { headers: { Authorization: `Bearer ${token}` } }
       );
-
-      // alert("✅ Empresa cadastrada com sucesso!");
-
       // Atualizar a lista de empresas
       fetchCompanies();
-
       // Definir a nova empresa como selecionada
       setSelectedCompany(response.data.company._id);
       fetchFiles(response.data.company._id);
-
-      // Limpar o campo de entrada
       setNewCompanyName("");
+
+      // 🔔 Exibir notificação de sucesso
+      setNotification("Empresa cadastrada com sucesso!");
+      setTimeout(() => setNotification(""), 3000);
     } catch (error) {
       console.error("❌ Erro ao criar empresa:", error);
-      alert(error.response?.data?.error || "Erro ao criar empresa.");
+      setNotification("❌ Erro ao criar empresa.");
+      setTimeout(() => setNotification(""), 3000);
     }
   };
 
   // 🔹 Buscar arquivos filtrados pela empresa selecionada
   const fetchFiles = async (companyId) => {
     try {
-        const response = await axios.get(
-            `http://localhost:3000/files/${companyId}`, 
-            {
-                headers: { Authorization: `Bearer ${token}` },
-            }
-        );
+      const response = await axios.get(
+        `http://localhost:3000/files/${companyId}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
 
-        // Obtendo todos os arquivos da resposta
-        const allFiles = response.data.files;
+      // Obtendo todos os arquivos da resposta
+      const allFiles = response.data.files;
 
-        // 🔹 Garantir que uploadedBy esteja definido antes de acessar `_id` e `role`
-        const userFiles = allFiles.filter((file) => 
-            file.uploadedBy && 
-            file.uploadedBy._id.toString() === userId && 
-            file.company.toString() === companyId
-        );
+      // 🔹 Garantir que uploadedBy esteja definido antes de acessar `_id` e `role`
+      const userFiles = allFiles.filter(
+        (file) =>
+          file.uploadedBy &&
+          file.uploadedBy._id.toString() === userId &&
+          file.company.toString() === companyId
+      );
 
-        const adminFiles = allFiles.filter((file) => 
-            file.uploadedBy && 
-            file.uploadedBy.role === "admin" && 
-            file.company.toString() === companyId
-        );
+      const adminFiles = allFiles.filter(
+        (file) =>
+          file.uploadedBy &&
+          file.uploadedBy.role === "admin" &&
+          file.company.toString() === companyId
+      );
 
-        // Atualiza os estados corretamente
-        setUserFiles(userFiles);
-        setAdminFiles(adminFiles);
+      // Atualiza os estados corretamente
+      setUserFiles(userFiles);
+      setAdminFiles(adminFiles);
     } catch (error) {
-        console.error("❌ Erro ao buscar arquivos:", error);
+      console.error("❌ Erro ao buscar arquivos:", error);
     }
-};
-
+  };
 
   // 🔹 Atualizar empresa selecionada e buscar arquivos
   const handleCompanyChange = (e) => {
@@ -196,6 +198,9 @@ export default function Dashboard() {
           />
           <button onClick={handleCreateCompany}>Cadastrar</button>
         </div>
+
+        {/* 🔔 Exibir notificação */}
+        {notification && <div className="notification">{notification}</div>}
 
         {/* 🔹 Seleção de Empresa */}
         <div className="dashboard-page-select">
