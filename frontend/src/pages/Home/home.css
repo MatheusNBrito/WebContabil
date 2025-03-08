@@ -85,19 +85,19 @@
   flex-grow: 1;
   text-align: center;
   padding: 90px 20px 50px;
-  background: url('../../assets/background3.jpg') no-repeat center center/cover;
   position: relative;
 }
 
 /* 🔹 Efeito de sobreposição para melhorar a legibilidade */
-.home-page .home-main::before {
+.home-page .home-main {
   content: "";
   position: absolute;
+  padding-top: 15%;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.4);
+  background: rgba(0, 0, 0, 0.5);
 }
 
 /* 🔹 Melhor contraste no texto */
