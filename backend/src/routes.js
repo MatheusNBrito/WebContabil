@@ -429,6 +429,7 @@ router.get("/files/:companyId", authenticate, async (req, res) => {
 
     try {
         const { companyId } = req.params;
+        const { year, month } = req.query; // 🔹 Pegamos os filtros de ano e mês
         const userId = req.user.id;
 
         // 🔹 Verificar se a empresa existe
@@ -442,8 +443,18 @@ router.get("/files/:companyId", authenticate, async (req, res) => {
             return res.status(403).json({ error: "Usuário não tem permissão para visualizar arquivos desta empresa." });
         }
 
-        // 🔹 Buscar arquivos associados à empresa
-        const files = await File.find({ company: companyId })
+        // 🔹 Criar filtro de busca
+        let filter = { company: companyId };
+
+        if (year && month) {
+            // 🔹 Converter para formato de data do MongoDB (ISO)
+            const startDate = new Date(`${year}-${month}-01T00:00:00.000Z`);
+            const endDate = new Date(`${year}-${month}-31T23:59:59.999Z`);
+            filter.createdAt = { $gte: startDate, $lte: endDate };
+        }
+
+        // 🔹 Buscar arquivos associados à empresa com o filtro de data
+        const files = await File.find(filter)
             .populate("uploadedBy", "name email role") // Popula detalhes do usuário que enviou o arquivo
             .sort({ createdAt: -1 }); // Ordena do mais recente para o mais antigo
 
@@ -453,6 +464,7 @@ router.get("/files/:companyId", authenticate, async (req, res) => {
         return res.status(500).json({ error: "Erro no servidor." });
     }
 });
+
 
 /**
  * 🔹 Rota para listar todas as empresas associadas a um cliente específico

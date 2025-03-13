@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import {
   getClients,
   getClientCompanies,
-  uploadFilesToCompany, // 🔹 Modificado para múltiplos arquivos
+  uploadFilesToCompany,
   getCompanyFiles,
   downloadFile,
 } from "../../api";
@@ -14,11 +14,12 @@ import axios from "axios";
 export default function Admin() {
   const [clientes, setClientes] = useState([]);
   const [empresas, setEmpresas] = useState([]);
-  const [arquivos, setArquivos] = useState([]);
+  const [arquivosPorMes, setArquivosPorMes] = useState({}); // 🔹 Agora organizamos por mês
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [selectedFiles, setSelectedFiles] = useState([]); // 🔹 Alterado para múltiplos arquivos
+  const [selectedFiles, setSelectedFiles] = useState([]);
   const [selectedCompany, setSelectedCompany] = useState(null);
+  const [selectedMonth, setSelectedMonth] = useState(""); // 🔹 Mês selecionado pelo usuário
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -43,7 +44,7 @@ export default function Admin() {
   const handleClientChange = async (clientId) => {
     setSelectedCompany(null);
     setEmpresas([]);
-    setArquivos([]);
+    setArquivosPorMes({});
 
     try {
       const response = await getClientCompanies(clientId);
@@ -55,14 +56,39 @@ export default function Admin() {
 
   const handleCompanyChange = async (companyId) => {
     setSelectedCompany(companyId);
-    setArquivos([]);
+    setArquivosPorMes({});
 
     try {
       const novosArquivos = await getCompanyFiles(companyId);
-      setArquivos(novosArquivos);
+
+      if (novosArquivos.length === 0) {
+        setArquivosPorMes({ vazio: [] }); // 🔹 Cria um indicador para empresa sem arquivos
+      } else {
+        organizarArquivosPorMes(novosArquivos);
+      }
     } catch (error) {
       console.error("❌ Erro ao buscar arquivos da empresa:", error);
+      setArquivosPorMes({ vazio: [] }); // 🔹 Define estado de empresa sem arquivos
     }
+  };
+
+  // 🔹 Organiza os arquivos por mês e ano
+  const organizarArquivosPorMes = (arquivos) => {
+    const arquivosAgrupados = {};
+
+    arquivos.forEach((file) => {
+      const data = new Date(file.createdAt);
+      const mesAno = `${data.getFullYear()}-${String(
+        data.getMonth() + 1
+      ).padStart(2, "0")}`; // Formato: "2024-03"
+
+      if (!arquivosAgrupados[mesAno]) {
+        arquivosAgrupados[mesAno] = [];
+      }
+      arquivosAgrupados[mesAno].push(file);
+    });
+
+    setArquivosPorMes(arquivosAgrupados);
   };
 
   const handleFileUpload = async () => {
@@ -85,7 +111,7 @@ export default function Admin() {
         handleCompanyChange(selectedCompany);
       }, 1000);
 
-      setSelectedFiles([]); // 🔹 Limpa os arquivos selecionados após o envio
+      setSelectedFiles([]);
     } catch (error) {
       alert(`❌ Erro ao enviar arquivos: ${error.message}`);
     }
@@ -99,7 +125,9 @@ export default function Admin() {
           <Link to="/" className="admin-nav-btn">
             Home
           </Link>
-          <Link to="/register" className="admin-nav-btn"> Cadastrar</Link>
+          <Link to="/register" className="admin-nav-btn">
+            Cadastrar
+          </Link>
           <button
             onClick={() => {
               localStorage.clear();
@@ -147,64 +175,83 @@ export default function Admin() {
         </section>
       )}
 
-      {arquivos.length > 0 && (
-        <section className="admin-arquivos-section">
-          <h2 className="admin-section-title">Arquivos da Empresa</h2>
-          <table className="admin-arquivos-table">
-            <thead>
-              <tr>
-                <th>Nome</th>
-                <th>Data de Envio</th>
-                <th>Ações</th>
-              </tr>
-            </thead>
-            <tbody>
-              {arquivos.map((file) => (
-                <tr key={file._id}>
-                  <td>{file.filename}</td>
-                  <td>{new Date(file.createdAt).toLocaleDateString()}</td>
-                  <td className="admin-arquivos-actions">
-                    <button
-                      className="admin-download-btn"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        downloadFile(file._id, file.filename);
-                      }}
-                    >
-                      Baixar
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </section>
-      )}
+      {selectedCompany && // 🔹 Agora só mostra arquivos ou mensagem se houver uma empresa selecionada
+        (Object.keys(arquivosPorMes).length > 0 ? (
+          <section className="admin-arquivos-section">
+            <h2 className="admin-section-title">Arquivos da Empresa</h2>
 
-      {selectedCompany && (
-        <section className="admin-upload-section">
-          <h2 className="admin-section-title">Upload de Arquivos</h2>
-          <input
-            type="file"
-            className="admin-file-input"
-            multiple // 🔹 Permitir múltiplos arquivos
-            onChange={(e) => setSelectedFiles([...e.target.files])}
-          />
-          {selectedFiles.length > 0 && (
-            <div className="admin-selected-files">
-              <h4>Arquivos Selecionados:</h4>
-              <ul>
-                {selectedFiles.map((file, index) => (
-                  <li key={index}>{file.name}</li>
-                ))}
-              </ul>
-            </div>
-          )}
-          <button className="admin-upload-btn" onClick={handleFileUpload}>
-            Enviar
-          </button>
-        </section>
-      )}
+            {/* 🔹 Filtro para selecionar mês */}
+            <select
+              className="admin-select"
+              onChange={(e) => setSelectedMonth(e.target.value)}
+            >
+              <option value="">Todos os meses</option>
+              {Object.keys(arquivosPorMes).map((mesAno) => (
+                <option key={mesAno} value={mesAno}>
+                  {new Date(mesAno + "-01").toLocaleDateString("pt-BR", {
+                    month: "long",
+                    year: "numeric",
+                  })}
+                </option>
+              ))}
+            </select>
+
+            {/* 🔹 Exibe os arquivos separados por mês */}
+            {Object.entries(arquivosPorMes)
+              .filter(([mesAno]) => !selectedMonth || selectedMonth === mesAno)
+              .map(([mesAno, arquivos]) =>
+                arquivos.length > 0 ? (
+                  <div key={mesAno} className="admin-arquivos-mes">
+                    <h3 className="admin-arquivos-mes-title">
+                      {new Date(mesAno + "-01").toLocaleDateString("pt-BR", {
+                        month: "long",
+                        year: "numeric",
+                      })}
+                    </h3>
+                    <table className="admin-arquivos-table">
+                      <thead>
+                        <tr>
+                          <th>Nome</th>
+                          <th>Data de Envio</th>
+                          <th>Ações</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {arquivos.map((file) => (
+                          <tr key={file._id}>
+                            <td>{file.filename}</td>
+                            <td>
+                              {new Date(file.createdAt).toLocaleDateString()}
+                            </td>
+                            <td className="admin-arquivos-actions">
+                              <button
+                                className="admin-download-btn"
+                                onClick={() =>
+                                  downloadFile(file._id, file.filename)
+                                }
+                              >
+                                Baixar
+                              </button>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                ) : (
+                  <p key={mesAno} className="admin-no-files">
+                    📂 Esta empresa ainda não possui arquivos.
+                  </p>
+                )
+              )}
+          </section>
+        ) : (
+          selectedCompany && (
+            <p className="admin-no-files">
+              Esta empresa ainda não possui arquivos.
+            </p>
+          )
+        ))}
     </div>
   );
 }

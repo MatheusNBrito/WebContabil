@@ -190,6 +190,44 @@
   transform: scale(1.05);
 }
 
+/* 🔹 Separação dos arquivos por mês */
+.admin-arquivos-mes {
+  margin-top: 20px;
+  padding: 15px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  border-left: 4px solid var(--admin-green);
+}
+
+/* 🔹 Título do mês */
+.admin-arquivos-mes-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--admin-green);
+  margin-bottom: 10px;
+  text-align: left;
+}
+
+/* 🔹 Estilização para o dropdown de meses */
+.admin-mes-filter {
+  width: 100%;
+  padding: 10px;
+  font-size: 1rem;
+  border-radius: 5px;
+  border: 1px solid var(--admin-medium-gray);
+  background-color: var(--admin-dark-gray);
+  color: white;
+  cursor: pointer;
+  transition: border 0.3s ease, background 0.3s ease;
+}
+
+.admin-mes-filter:hover,
+.admin-mes-filter:focus {
+  border: 1px solid var(--admin-dark-green);
+  background-color: var(--admin-medium-gray);
+  outline: none;
+}
+
 /* 🔹 Mensagens de erro e carregamento */
 .admin-loading,
 .admin-error {
@@ -227,7 +265,22 @@
   }
 
   .admin-select,
-  .admin-file-input {
+  .admin-file-input,
+  .admin-mes-filter {
     width: 100%;
   }
+
+  /* 🔹 Mensagem para empresas sem arquivos */
+.admin-no-files {
+  text-align: center;
+  font-size: 1rem;
+  color: var(--admin-light-gray);
+  background: rgba(255, 255, 255, 0.1);
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid var(--admin-medium-gray);
+  margin-top: 10px;
+}
+
+
 }
