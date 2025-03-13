@@ -516,5 +516,91 @@ router.get("/admin/company/:companyId/files", checkRole("admin"), async (req, re
     }
 });
 
+// 🔹 Rota para atualizar o e-mail do usuário
+router.patch("/update-email", authenticate, async (req, res) => {
+    console.log(`📢 Rota /update-email chamada pelo usuário ${req.user.id}`);
+
+    try {
+        const { newEmail, password } = req.body;
+        const userId = req.user.id;
+
+        // Validar entrada
+        if (!newEmail || !password) {
+            return res.status(400).json({ error: "Novo e-mail e senha são obrigatórios." });
+        }
+
+        // Verificar se o novo e-mail já está em uso
+        const emailExists = await User.findOne({ email: newEmail });
+        if (emailExists) {
+            return res.status(400).json({ error: "E-mail já está em uso." });
+        }
+
+        // Buscar o usuário
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({ error: "Usuário não encontrado." });
+        }
+
+        // Verificar a senha atual
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (!isMatch) {
+            return res.status(401).json({ error: "Senha incorreta." });
+        }
+
+        // Atualizar e-mail no banco de dados
+        user.email = newEmail;
+        await user.save();
+
+        console.log(`✅ E-mail do usuário ${userId} atualizado para ${newEmail}`);
+        return res.json({ message: "✅ E-mail atualizado com sucesso!" });
+
+    } catch (error) {
+        console.error("❌ Erro ao atualizar e-mail:", error);
+        return res.status(500).json({ error: "Erro ao atualizar e-mail." });
+    }
+});
+
+// 🔹 Rota para atualizar a senha do usuário
+router.patch("/update-password", authenticate, async (req, res) => {
+    console.log(`📢 Rota /update-password chamada pelo usuário ${req.user.id}`);
+
+    try {
+        const { currentPassword, newPassword } = req.body;
+        const userId = req.user.id;
+
+        // Validar entrada
+        if (!currentPassword || !newPassword) {
+            return res.status(400).json({ error: "Senha atual e nova senha são obrigatórias." });
+        }
+
+        // Buscar o usuário
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({ error: "Usuário não encontrado." });
+        }
+
+        // Verificar a senha atual
+        const isMatch = await bcrypt.compare(currentPassword, user.password);
+        if (!isMatch) {
+            return res.status(401).json({ error: "Senha atual incorreta." });
+        }
+
+        // Criptografar a nova senha
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(newPassword, salt);
+
+        // Atualizar senha no banco de dados
+        user.password = hashedPassword;
+        await user.save();
+
+        console.log(`✅ Senha do usuário ${userId} atualizada com sucesso.`);
+        return res.json({ message: "✅ Senha atualizada com sucesso!" });
+
+    } catch (error) {
+        console.error("❌ Erro ao atualizar senha:", error);
+        return res.status(500).json({ error: "Erro ao atualizar senha." });
+    }
+});
+
 
 module.exports = router;

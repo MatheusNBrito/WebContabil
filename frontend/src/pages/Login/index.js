@@ -45,7 +45,7 @@ export default function Login() {
         <h1 className="login-title">Login</h1>
         <nav className="login-nav">
           <Link to="/">Home</Link>
-          <Link to="/register">Cadastre-se</Link>
+          {/* <Link to="/register">Cadastre-se</Link> */}
         </nav>
       </header>
 
@@ -73,9 +73,6 @@ export default function Login() {
           />
           <button type="submit" className="login-btn">Entrar</button>
         </form>
-        <p className="login-footer">
-          Não tem uma conta? <Link to="/register">Cadastre-se</Link>
-        </p>
       </main>
     </div>
   );

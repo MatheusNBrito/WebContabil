@@ -99,6 +99,7 @@ export default function Admin() {
           <Link to="/" className="admin-nav-btn">
             Home
           </Link>
+          <Link to="/register" className="admin-nav-btn"> Cadastrar</Link>
           <button
             onClick={() => {
               localStorage.clear();

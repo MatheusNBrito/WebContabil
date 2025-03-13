@@ -12,7 +12,7 @@ export default function Home() {
           <Link to="/about">Sobre</Link>
           <Link to="/contact">Contato</Link>
           <Link to="/login" className="home-client-area">Área do Cliente</Link>
-          <Link to="/register" className="home-client-area">Cadastrar</Link>
+          {/* <Link to="/register" className="home-client-area">Cadastrar</Link> */}
         </nav>
       </header>
 

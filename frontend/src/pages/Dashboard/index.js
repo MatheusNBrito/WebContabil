@@ -12,6 +12,7 @@ export default function Dashboard() {
   const [selectedFiles, setSelectedFiles] = useState([]); // Agora começa como um array vazio
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
+  const [isUploading, setIsUploading] = useState(false); // 🔄 Estado para tela de carregamento
   const user = JSON.parse(localStorage.getItem("user"));
   const userId = user?.id;
   const [adminFiles, setAdminFiles] = useState([]); // 🔹 Arquivos enviados pelo Admin
@@ -122,6 +123,8 @@ export default function Dashboard() {
       return;
     }
 
+    setIsUploading(true); // Ativar carregamento
+
     const formData = new FormData();
     selectedFiles.forEach((file) => {
       formData.append("files", file);
@@ -136,7 +139,6 @@ export default function Dashboard() {
           "Content-Type": "multipart/form-data",
         },
       });
-      alert("✅ Arquivos enviados com sucesso!");
       // 🔹 Atualiza a lista de arquivos automaticamente
       fetchFiles(selectedCompany);
 
@@ -144,6 +146,8 @@ export default function Dashboard() {
       setSelectedFiles([]);
     } catch (error) {
       console.error("❌ Erro ao enviar arquivos:", error);
+    } finally {
+      setIsUploading(false); // Desativar carregamento
     }
   };
 
@@ -179,7 +183,7 @@ export default function Dashboard() {
         <h1 className="dashboard-title">Área do Cliente</h1>
         <nav className="dashboard-page-nav">
           <Link to="/">Home</Link>
-          <button onClick={handleLogout} className="logout-btn">
+          <button type="submit" onClick={handleLogout} className="logout-btn">
             Sair
           </button>
         </nav>
@@ -238,9 +242,18 @@ export default function Dashboard() {
             </div>
           )}
 
-          {/* Botão de Envio */}
-          <button onClick={handleUpload}>Enviar</button>
-        </div>
+          <button onClick={handleUpload} disabled={isUploading}>
+            {isUploading ? "Enviando..." : "Enviar"}
+          </button>
+        </div>  
+
+        {/* 🔄 Tela de carregamento */}
+        {isUploading && (
+          <div className="upload-overlay">
+            <div className="spinner"></div>
+            <p>Enviando arquivos...</p>
+          </div>
+        )}
 
         {/* 🔹 Seção: Meus Arquivos */}
         <section className="dashboard-section user-files">

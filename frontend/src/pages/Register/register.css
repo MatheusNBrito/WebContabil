@@ -64,6 +64,24 @@
   color: black;
 }
 
+.register-nav,
+.register-logout-btn {
+  background: none;
+  border: none;
+  color: white;
+  padding: 8px 14px;
+  font-size: 0.85rem;
+  border-radius: 5px;
+  text-decoration: none;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+.register-nav-btn:hover,
+.register-logout-btn:hover {
+  background-color: var(--admin-green);
+  color: black;
+}
+
 /* 🔹 Caixa de cadastro */
 .register-box {
   width: 100%;

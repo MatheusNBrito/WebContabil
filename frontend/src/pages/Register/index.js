@@ -48,18 +48,34 @@ export default function Register() {
     }
   };
 
+  const handleLogout = async () => {
+    try {
+      await axios.post("http://localhost:3000/logout");
+
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
+
+      navigate("/");
+    } catch (error) {
+      console.error("❌ Erro ao fazer logout:", error);
+    }
+  };
+
   return (
     <div className="register-page">
       <header className="register-header">
         <h1 className="register-title">Cadastro</h1>
         <nav className="register-nav">
           <Link to="/">Home</Link>
-          <Link to="/login">Login</Link>
+          {/* <Link to="/login">Login</Link> */}
+          <button onClick={handleLogout} className="register-logout-btn">
+            Sair
+          </button>
         </nav>
       </header>
 
       <main className="register-box">
-        <h2 className="register-heading">Crie sua conta</h2>
+        <h2 className="register-heading">Crie a conta do cliente</h2>
 
         {errorMessage && <p className="register-error">{errorMessage}</p>}
         {successMessage && <p className="register-success">{successMessage}</p>}
@@ -103,9 +119,9 @@ export default function Register() {
           />
           <button type="submit" className="register-btn">Cadastrar</button>
         </form>
-        <p className="register-login-link">
+        {/* <p className="register-login-link">
           Já tem uma conta? <Link to="/login">Faça login</Link>
-        </p>
+        </p> */}
       </main>
     </div>
   );

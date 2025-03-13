@@ -78,6 +78,23 @@
   color: black;
 }
 
+/* 🔹 Botões do Header */
+.contato-page .contato-page-btn {
+  background: none;
+  border: none;
+  color: white;
+  padding: 6px 10px;
+  font-size: 0.85rem;
+  border-radius: 5px;
+  text-decoration: none;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+.contato-page .contato-page-btn:hover {
+  background-color: var(--soft-green);
+  color: black;
+}
+
 /* 🔹 Caixa do formulário */
 .contato-page-box {
   width: 100%;

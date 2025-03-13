@@ -1,26 +1,44 @@
 import React from "react";
-import { Link } from "react-router-dom"; 
+import { Link } from "react-router-dom";
 import "./sobre.css";
 
 export default function Sobre() {
   return (
     <div className="sobre-page">
       {/* 🔹 Cabeçalho específico para a página Sobre */}
+
       <header className="sobre-page-header">
+        <h1 className="home-title">Sobre nós</h1>
+        <nav className="sobre-page-nav">
+          <Link to="/" className="sobre-page-btn">
+            Home
+          </Link>
+          <Link to="/contact" className="sobre-page-btn">
+            Contato
+          </Link>
+          <Link to="/login" className="sobre-page-btn">
+            Área do Cliente
+          </Link>
+        </nav>
+      </header>
+
+      {/* <header className="sobre-page-header">
         <h1>Sobre Nós</h1>
         <nav className="sobre-page-nav">
           <Link to="/" className="sobre-page-btn">Home</Link>
           <Link to="/register" className="sobre-page-btn">Cadastrar-se</Link>
         </nav>
-      </header>
+      </header> */}
 
       {/* 🔹 Conteúdo Principal */}
       <main className="sobre-page-box">
         <section className="sobre-page-intro">
           <h2 className="sobre-title">Sobre Nossa Empresa</h2>
           <p>
-            Somos uma empresa comprometida em fornecer soluções inovadoras e eficientes para nossos clientes.
-            Nossa missão é entregar serviços de alta qualidade, sempre focados na satisfação e no sucesso de quem confia em nós.
+            Somos uma empresa comprometida em fornecer soluções inovadoras e
+            eficientes para nossos clientes. Nossa missão é entregar serviços de
+            alta qualidade, sempre focados na satisfação e no sucesso de quem
+            confia em nós.
           </p>
         </section>
 
