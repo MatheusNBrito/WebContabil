@@ -7,6 +7,7 @@ import Dashboard from "./pages/Dashboard";
 import Sobre from "./pages/Sobre";
 import Contato from "./pages/Contato";
 import Admin from "./pages/Adm";
+import AccountManagement from "./pages/UserConfig"; // 
 import './global.css';  // 🔹 Importando o CSS global
 
 export default function App() {
@@ -19,6 +20,7 @@ export default function App() {
       <Route path="/about" element={<Sobre />} />
       <Route path="/contact" element={<Contato />} />
       <Route path="/admin" element={<Admin />} />
+      <Route path="/account" element={<AccountManagement />} />
     </Routes>
   );
 }

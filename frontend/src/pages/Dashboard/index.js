@@ -183,9 +183,11 @@ export default function Dashboard() {
         <h1 className="dashboard-title">Área do Cliente</h1>
         <nav className="dashboard-page-nav">
           <Link to="/">Home</Link>
+          <Link to="/account">Gerenciar Conta</Link>
           <button type="submit" onClick={handleLogout} className="logout-btn">
             Sair
           </button>
+          
         </nav>
       </header>
 

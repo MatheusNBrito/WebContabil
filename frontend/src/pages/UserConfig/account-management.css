@@ -1,0 +1,159 @@
+/* 🔹 Mantendo a fonte e estrutura do site */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+/* 🔹 Estilização geral exclusiva para Account Management */
+.account-management-page {
+  --dark-gray: #2C302E;
+  --medium-gray: #474A48;
+  --light-gray: #909590;
+  --soft-green: #9AE19D;
+  --deep-green: #537A5A;
+  font-family: 'Poppins', sans-serif;
+  background-color: var(--dark-gray);
+  color: var(--light-gray);
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* 🔹 Header fixo */
+.account-management-header {
+  background-color: var(--dark-gray);
+  color: white;
+  padding: 10px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.5);
+}
+
+/* 🔹 Ajuste do espaço para evitar que o conteúdo fique atrás do header */
+.account-management-container {
+  padding-top: 80px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+}
+
+/* 🔹 Título principal */
+.account-management-title {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: var(--soft-green);
+  padding-left: 10px;
+}
+
+/* 🔹 Navegação */
+.account-management-nav {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.account-management-nav a {
+  color: white;
+  text-decoration: none;
+  font-weight: 400;
+  font-size: 0.9rem;
+  transition: color 0.3s ease;
+}
+
+.account-management-nav a:hover {
+  color: var(--soft-green);
+}
+
+/* 🔹 Seções de Alteração */
+.account-management-section {
+  background: var(--medium-gray);
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  width: 90%;
+  max-width: 400px;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+/* 🔹 Títulos das seções */
+.account-management-subtitle {
+  color: white;
+  font-size: 1.2rem;
+  margin-bottom: 15px;
+}
+
+/* 🔹 Campos de entrada */
+.account-management-input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 12px;
+  border: 1px solid var(--light-gray);
+  border-radius: 5px;
+  font-size: 1rem;
+  background: #fff;
+  color: black;
+  transition: border 0.3s ease;
+}
+
+.account-management-input:focus {
+  border-color: var(--soft-green);
+  outline: none;
+}
+
+/* 🔹 Botões */
+.account-management-btn {
+  width: 100%;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  background: var(--deep-green);
+  color: white;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.account-management-btn:hover {
+  background: var(--soft-green);
+  color: black;
+  transform: scale(1.05);
+}
+
+/* 🔹 Mensagens de erro e sucesso */
+.account-success-message {
+  color: var(--soft-green);
+  font-size: 1rem;
+  margin-bottom: 10px;
+}
+
+.account-error-message {
+  color: #ff6b6b;
+  font-size: 1rem;
+  margin-bottom: 10px;
+}
+
+/* 🔹 Responsividade */
+@media (max-width: 768px) {
+  .account-management-container {
+    padding: 60px 15px;
+  }
+
+  .account-management-section {
+    width: 100%;
+    max-width: 350px;
+  }
+
+  .account-management-title {
+    font-size: 1.3rem;
+  }
+
+  .account-management-btn {
+    font-size: 0.9rem;
+  }
+}
