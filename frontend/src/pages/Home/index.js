@@ -1,18 +1,38 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import "./home.css";
 
 export default function Home() {
+  const navigate = useNavigate();
+  const [token, setToken] = useState(null); // Estado para armazenar o token
+
+  // 🔹 Pega o token assim que a página for carregada
+  useEffect(() => {
+    const storedToken = localStorage.getItem("token");
+    setToken(storedToken); // Atualiza o estado
+  }, []);
+
+  const handleClientAreaClick = () => {
+    console.log("Token atual:", token); // 🔹 Verifica se o token está sendo lido corretamente
+
+    if (token) {
+      navigate("/dashboard");
+    } else {
+      navigate("/login");
+    }
+  };
+
   return (
     <div className="home-page">
       {/* 🔹 Cabeçalho */}
       <header className="home-header">
-      <h1 className="home-title">Calveludo</h1>
+        <h1 className="home-title">Calveludo</h1>
         <nav className="home-nav">
           <Link to="/about">Sobre</Link>
           <Link to="/contact">Contato</Link>
-          <Link to="/login" className="home-client-area">Área do Cliente</Link>
-          {/* <Link to="/register" className="home-client-area">Cadastrar</Link> */}
+          <button className="home-client-area" onClick={handleClientAreaClick}>
+            Área do Cliente
+          </button>
         </nav>
       </header>
 
