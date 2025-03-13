@@ -49,7 +49,7 @@ export default function AccountManagement() {
         <h1 className="account-management-title">Gerenciamento de Conta</h1>
         <nav className="account-management-nav">
           <Link to="/">Home</Link>
-          <Link to="/dashboard">Dashboard</Link>
+          <Link to="/dashboard">Área do Cliente</Link>
         </nav>
       </header>
 

@@ -31,7 +31,7 @@ export default function Home() {
           <Link to="/about">Sobre</Link>
           <Link to="/contact">Contato</Link>
           <button className="home-client-area" onClick={handleClientAreaClick}>
-            Área do Cliente
+            Login
           </button>
         </nav>
       </header>
