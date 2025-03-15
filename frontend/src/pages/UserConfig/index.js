@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
-import "./account-management.css"; // 🔹 Importando o CSS específico
+import "./account-management.css";  
 
 export default function AccountManagement() {
   const [newEmail, setNewEmail] = useState("");

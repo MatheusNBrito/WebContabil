@@ -8,13 +8,15 @@
   --light-gray: #909590;
   --soft-green: #9AE19D;
   --deep-green: #537A5A;
-  font-family: 'Poppins', sans-serif;
-  background-color: var(--dark-gray);
-  color: var(--light-gray);
-  margin: 0;
   padding: 0px;
   box-sizing: border-box;
-  margin-top: 10vh;
+  margin-top: 8.5vh;
+  content: "";
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
 }
 
 /* 🔹 Cabeçalho fixo e exclusivo da página Sobre */
@@ -30,12 +32,11 @@
   left: 0;
   width: 100%;
   z-index: 1000;
-  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.5);
 }
 
 /* 🔹 Ajuste para evitar que o conteúdo fique coberto pelo header */
 .sobre-page .sobre-page-container {
-  padding-top: calc(200px + 4000rem); /* Adapta dinamicamente a altura do header */
+  padding-top: 80px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -44,11 +45,11 @@
 
 /* 🔹 Estilização do Título Principal */
 .sobre-page .sobre-title {
-  font-size: 2rem;  /* Ajusta o tamanho */
-  font-weight: 600;  /* Deixa o título mais destacado */
-  color: var(--soft-green); /* Mantém a identidade visual */
+  font-size: 2rem;
+  font-weight: 600;
+  color: var(--soft-green);
   text-align: center;
-  margin-bottom: 20px;  /* Garante um espaçamento abaixo do título */
+  margin-bottom: 20px;
 }
 
 /* 🔹 Título do cabeçalho */
@@ -85,18 +86,36 @@
 /* 🔹 Caixa do conteúdo principal */
 .sobre-page .sobre-page-box {
   width: 100%;
-  max-width: 800px;
+  max-width: 100%;
   padding: 30px;
   background: rgba(0, 0, 0, 0.6);
   border-radius: 8px;
-  text-align: center;
-  color: white;
+  color: black;
+  position: relative;
 }
 
 /* 🔹 Estilização dos blocos de conteúdo */
 .sobre-page .sobre-page-intro,
 .sobre-page .sobre-page-servicos,
 .sobre-page .sobre-page-diferenciais {
+  margin-bottom: 10px;
+}
+
+/* 🔹 Estilização uniforme para todos os parágrafos */
+.sobre-page-texto {
+  font-size: 1rem;
+  color: white;
+  line-height: 1.6;
+  max-width: 100%;
+  margin: 0 auto 15px auto;
+}
+
+/* 🔹 Estilização para todos os títulos h3 */
+.sobre-page-subtitulo {
+  font-size: 1.4rem;
+  color: var(--soft-green);
+  font-weight: 600;
+  text-align: center;
   margin-bottom: 10px;
 }
 
@@ -130,47 +149,31 @@
   text-align: left;
 }
 
-/* 🔹 Botão de Contato */
+/* 🔹 Container para centralizar o botão APÓS a última seção */
+.sobre-page-contato-container {
+  display: flex;
+  justify-content: center; /* Centraliza horizontalmente */
+  align-items: center; /* Alinha verticalmente dentro do próprio espaço */
+  width: 100%;
+  margin-top: 50px; /* 🔹 Garante espaço após a última seção */
+}
+
+/* 🔹 Estilização do botão */
 .sobre-page .sobre-page-contato-btn {
   background-color: var(--deep-green);
   color: white;
   border: none;
-  padding: 12px 18px;
-  font-size: 1rem;
-  border-radius: 5px;
+  padding: 14px 22px;
+  font-size: 1.2rem;
+  border-radius: 8px;
   cursor: pointer;
   transition: background 0.3s ease, transform 0.2s ease;
   text-decoration: none;
-  display: inline-block;
-  margin-top: 15px;
+  text-align: center;
 }
 
 .sobre-page .sobre-page-contato-btn:hover {
   background-color: var(--soft-green);
-  transform: scale(1.05);
+  transform: scale(1.1);
   color: black;
-}
-
-/* 🔹 Responsividade */
-@media (max-width: 768px) {
-  .sobre-page .sobre-page-header {
-    flex-direction: column;
-    text-align: center;
-    padding: 8px;
-  }
-
-  .sobre-page .sobre-page-nav {
-    flex-direction: column;
-    gap: 8px;
-    margin-top: 5px;
-  }
-
-  .sobre-page .sobre-page-box {
-    padding: 25px;
-    width: 90%;
-  }
-
-  .sobre-page .sobre-page-servicos-lista {
-    flex-direction: column;
-  }
 }
