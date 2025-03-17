@@ -26,7 +26,7 @@ export default function Sobre() {
     <div className="sobre-page">
       {/* 🔹 Cabeçalho específico para a página Sobre */}
       <header className="sobre-page-header">
-        <h1 className="home-title">Sobre nós</h1>
+        <h1 className="sobre-page-title">Sobre nós</h1>
         <nav className="sobre-page-nav">
           <Link to="/" className="sobre-page-btn">Home</Link>
           <Link to="/contact" className="sobre-page-btn">Contato</Link>

@@ -10,7 +10,7 @@
   --deep-green: #537A5A;
   padding: 0px;
   box-sizing: border-box;
-  margin-top: 8.5vh;
+  margin-top: 8.0vh;
   content: "";
   top: 0;
   left: 0;
@@ -54,7 +54,7 @@
 
 /* 🔹 Título do cabeçalho */
 .sobre-page .sobre-page-header h1 {
-  font-size: 1.5rem;
+  font-size: 1.2rem;
   font-weight: 600;
   color: white;
 }

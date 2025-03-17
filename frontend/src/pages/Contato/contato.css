@@ -30,12 +30,7 @@
   box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.5);
 }
 
-/* 🔹 Título do cabeçalho */
-.contato-title {
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: white;
-}
+
 
 /* 🔹 Ajuste para evitar sobreposição do header */
 .contato-page-container {
@@ -49,7 +44,7 @@
 
 /* 🔹 Título do cabeçalho */
 .contato-page-header h1 {
-  font-size: 1.5rem;
+  font-size: 1.2rem;
   font-weight: 600;
   color: white;
 }
