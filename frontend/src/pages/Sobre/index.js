@@ -1,23 +1,38 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import "./sobre.css";
 
 export default function Sobre() {
+  const navigate = useNavigate();
+  const [token, setToken] = useState(null); // Estado para armazenar o token
+
+  // 🔹 Pega o token assim que a página for carregada
+  useEffect(() => {
+    const storedToken = localStorage.getItem("token");
+    setToken(storedToken); // Atualiza o estado
+  }, []);
+
+  const handleClientAreaClick = () => {
+    console.log("Token atual:", token); // 🔹 Verifica se o token está sendo lido corretamente
+
+    if (token) {
+      navigate("/dashboard"); // ✅ Se estiver autenticado, vai para o Dashboard
+    } else {
+      navigate("/login"); // ❌ Se não estiver autenticado, vai para o Login
+    }
+  };
+
   return (
     <div className="sobre-page">
       {/* 🔹 Cabeçalho específico para a página Sobre */}
       <header className="sobre-page-header">
         <h1 className="home-title">Sobre nós</h1>
         <nav className="sobre-page-nav">
-          <Link to="/" className="sobre-page-btn">
-            Home
-          </Link>
-          <Link to="/contact" className="sobre-page-btn">
-            Contato
-          </Link>
-          <Link to="/login" className="sobre-page-btn">
+          <Link to="/" className="sobre-page-btn">Home</Link>
+          <Link to="/contact" className="sobre-page-btn">Contato</Link>
+          <button onClick={handleClientAreaClick} className="sobre-page-btn">
             Login
-          </Link>
+          </button>
         </nav>
       </header>
 
